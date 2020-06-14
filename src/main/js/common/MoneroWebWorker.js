@@ -1,5 +1,6 @@
 const assert = require("assert");
 const MoneroError = require("./MoneroError");
+const LibraryUtils = require("./LibraryUtils");
 const MoneroDaemonRpc = require("../daemon/MoneroDaemonRpc");
 const MoneroWalletWasm = require("../wallet/MoneroWalletWasm");
 const MoneroBlock = require("../daemon/model/MoneroBlock");

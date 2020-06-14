@@ -88,7 +88,10 @@ class TxPoolWalletTracker {
           try {
             await StartMining.startMining();
             miningStarted = true;
-          } catch (e) { } // no problem
+          } catch (e) {
+            console.error("Error starting mining:");
+            console.error(e);
+          }
         }
       }
       
