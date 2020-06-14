@@ -1,3 +1,5 @@
+const StartMining = require("./StartMining");
+
 const monerojs = require("monero-javascript");
 const GenUtils = monerojs.GenUtils;
 const MoneroUtils = monerojs.MoneroUtils;
@@ -55,6 +57,7 @@ class TxPoolWalletTracker {
     // loop until all wallet txs clear from pool
     let isFirst = true;
     let miningStarted = false;
+    const TestUtils = require("./TestUtils");
     let daemon = await TestUtils.getDaemonRpc();
     while (true) {
       

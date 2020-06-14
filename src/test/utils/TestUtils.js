@@ -1,5 +1,6 @@
 const assert = require("assert");
 const TxPoolWalletTracker = require("./TxPoolWalletTracker");
+const WalletSyncPrinter = require("./WalletSyncPrinter");
 const monerojs = require("../../../index");
 const LibraryUtils = monerojs.LibraryUtils;
 const MoneroRpcError = monerojs.MoneroRpcError;

@@ -1,6 +1,11 @@
 // import test types
-require("./MoneroTestModel")();
-require("./utils/TestUtilsModule")();
+const TestSampleCode = require("./TestSampleCode");
+const TestMoneroUtils = require("./TestMoneroUtils");
+const TestMoneroDaemonRpc = require("./TestMoneroDaemonRpc");
+const TestMoneroWalletKeys = require("./TestMoneroWalletKeys");
+const TestMoneroWalletWasm = require("./TestMoneroWalletWasm");
+const TestMoneroWalletRpc = require("./TestMoneroWalletRpc");
+const TestDeveloperGuide = require("./TestDeveloperGuide");
 
 // test sample code for readme
 new TestSampleCode().runTests();

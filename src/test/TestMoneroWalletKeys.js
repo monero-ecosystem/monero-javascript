@@ -1,3 +1,4 @@
+const TestUtils = require("./utils/TestUtils");
 const TestMoneroWalletCommon = require("./TestMoneroWalletCommon");
 const monerojs = require("monero-javascript");
 const MoneroWalletKeys = monerojs.MoneroWalletKeys;

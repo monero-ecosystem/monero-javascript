@@ -1,4 +1,5 @@
 const assert = require("assert");
+const TestUtils = require("./TestUtils");
 const monerojs = require("monero-javascript");
 const GenUtils = monerojs.GenUtils;
 const MoneroTxQuery = monerojs.MoneroTxQuery;

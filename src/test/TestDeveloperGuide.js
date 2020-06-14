@@ -1,4 +1,5 @@
 const assert = require("assert");
+const TestUtils = require("./utils/TestUtils");
 const BigInteger = require("../main/js/common/biginteger").BigInteger;
 const monerojs = require("monero-javascript");
 const MoneroWalletWasm = monerojs.MoneroWalletWasm;

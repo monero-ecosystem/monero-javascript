@@ -1,4 +1,7 @@
 const assert = require("assert");
+const StartMining = require("./utils/StartMining");
+const TestUtils = require("./utils/TestUtils");
+
 const monerojs = require("monero-javascript");
 const MoneroWalletRpc = monerojs.MoneroWalletRpc;
 const MoneroWalletKeys = monerojs.MoneroWalletKeys;

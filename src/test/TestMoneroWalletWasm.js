@@ -1,5 +1,8 @@
 const assert = require("assert");
+const TestUtils = require("./utils/TestUtils");
 const TestMoneroWalletCommon = require("./TestMoneroWalletCommon");
+const StartMining = require("./utils/StartMining");
+
 const monerojs = require("monero-javascript");
 const MoneroWalletWasm = monerojs.MoneroWalletWasm;
 const MoneroWalletListener = monerojs.MoneroWalletListener;
@@ -14,6 +17,8 @@ const MoneroRpcConnection = monerojs.MoneroRpcConnection;
 const MoneroDestination = monerojs.MoneroDestination;
 const MoneroOutputQuery = monerojs.MoneroOutputQuery;
 const MoneroOutputWallet = monerojs.MoneroOutputWallet;
+const WalletSyncPrinter = require("./utils/WalletSyncPrinter");
+
 
 /**
  * Tests a Monero wallet using WebAssembly to bridge to monero-project's wallet2.
