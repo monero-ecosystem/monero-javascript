@@ -1,3 +1,5 @@
+const BigInteger = require("../../common/biginteger").BigInteger;
+
 /**
  * Model for the summation of miner emissions and fees.
  */

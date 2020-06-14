@@ -1,3 +1,40 @@
+const assert = require("assert");
+const MoneroUtils = require("../common/MoneroUtils");
+const BigInteger = require("../common/biginteger").BigInteger;
+const GenUtils = require("../common/GenUtils");
+const MoneroError = require("../common/MoneroError");
+const MoneroRpcError = require("../common/MoneroRpcError");
+const MoneroWallet = require("./MoneroWallet");
+const MoneroDaemonRpc = require("../daemon/MoneroDaemonRpc");
+const MoneroBlockHeader = require("../daemon/model/MoneroBlockHeader");
+const MoneroBlock = require("../daemon/model/MoneroBlock");
+const MoneroRpcConnection = require("../common/MoneroRpcConnection");
+const SslOptions = require("../common/SslOptions");
+const MoneroWalletConfig = require("./model/MoneroWalletConfig");
+const MoneroAccount = require("./model/MoneroAccount");
+const MoneroSubaddress = require("./model/MoneroSubaddress");
+const MoneroTxWallet = require("./model/MoneroTxWallet");
+const MoneroTxQuery = require("./model/MoneroTxQuery");
+const MoneroTransferQuery = require("./model/MoneroTransferQuery");
+const MoneroOutputQuery = require("./model/MoneroOutputQuery");
+const MoneroOutgoingTransfer = require("./model/MoneroOutgoingTransfer");
+const MoneroIncomingTransfer = require("./model/MoneroIncomingTransfer");
+const MoneroDestination = require("./model/MoneroDestination");
+const MoneroSyncResult = require("./model/MoneroSyncResult");
+const MoneroTxSet = require("./model/MoneroTxSet");
+const MoneroAccountTag = require("./model/MoneroAccountTag");
+const MoneroVersion = require("../daemon/model/MoneroVersion");
+const MoneroIntegratedAddress = require("./model/MoneroIntegratedAddress");
+const MoneroMultisigInitResult = require("./model/MoneroMultisigInitResult");
+const MoneroKeyImage = require("../daemon/model/MoneroKeyImage");
+const MoneroCheckReserve = require("./model/MoneroCheckReserve");
+const MoneroCheckTx = require("./model/MoneroCheckTx");
+const MoneroOutputWallet = require("./model/MoneroOutputWallet");
+const MoneroTxConfig = require("./model/MoneroTxConfig");
+const MoneroAddressBookEntry = require("./model/MoneroAddressBookEntry");
+const MoneroKeyImageImportResult = require("./model/MoneroKeyImageImportResult"); 
+const MoneroMultisigSignResult = require("./model/MoneroMultisigSignResult");
+
 /**
  * Copyright (c) 2017-2019 woodser
  *

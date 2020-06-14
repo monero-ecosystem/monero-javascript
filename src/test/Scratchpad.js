@@ -2,10 +2,24 @@ describe("Scratchpad", function() {
   
   it("Can be scripted easily", async function() {
     
+    // import library
+    const monerojs = require("monero-javascript");
+    const MoneroDaemonRpc = monerojs.MoneroDaemonRpc;
+    const MoneroWalletRpc = monerojs.MoneroWalletRpc;
+    const MoneroWalletWasm = monerojs.MoneroWalletWasm;
+    
     // get test wasm wallet
 //    let daemon = await TestUtils.getDaemonRpc();
 //    let walletRpc = await TestUtils.getWalletRpc();
 //    let walletWasm = await TestUtils.getWalletWasm();
+    
+//    let monerojs = require("monero-javascript");
+//    let walletRpc = await monerojs.createWalletRpcClient("http", "user", "abc123");
+//    let walletWasm = await monerojs.createWalletWasm({
+//      serverUri: 
+//    })
+//    let walletKeys = await monerojs.createWalletKeys({});
+    
     
     // initialize daemon rpc client
     let daemon = new MoneroDaemonRpc({

@@ -1,9 +1,14 @@
-const MoneroDaemonRpc = require("../../main/js/daemon/MoneroDaemonRpc");
-const MoneroWalletRpc = require("../../main/js/wallet/MoneroWalletRpc");
-const MoneroWalletKeys = require("../../main/js/wallet/MoneroWalletKeys");
-const MoneroWalletWasm = require("../../main/js/wallet/MoneroWalletWasm")
-
+const assert = require("assert");
 const TxPoolWalletTracker = require("./TxPoolWalletTracker");
+const monerojs = require("../../../index");
+const LibraryUtils = monerojs.LibraryUtils;
+const MoneroRpcError = monerojs.MoneroRpcError;
+const MoneroDaemonRpc = monerojs.MoneroDaemonRpc;
+const MoneroWalletRpc = monerojs.MoneroWalletRpc;
+const MoneroWalletWasm = monerojs.MoneroWalletWasm;
+const MoneroWalletKeys = monerojs.MoneroWalletKeys;
+const MoneroRpcConnection = monerojs.MoneroRpcConnection;
+const BigInteger = monerojs.BigInteger;
 
 /**
  * Collection of test utilities and configurations.
@@ -159,7 +164,7 @@ TestUtils.WALLET_PASSWORD = "supersecretpassword123";
 TestUtils.TEST_WALLETS_DIR = "./test_wallets";
 TestUtils.WALLET_WASM_PATH = TestUtils.TEST_WALLETS_DIR + "/" + TestUtils.WALLET_NAME;
 
-TestUtils.MAX_FEE = new BigInteger(7500000).multiply(new BigInteger(10000));
+TestUtils.MAX_FEE = new BigInteger("7500000").multiply(new BigInteger("10000"));
 TestUtils.NETWORK_TYPE = MoneroNetworkType.STAGENET;
 
 // default keypair to test

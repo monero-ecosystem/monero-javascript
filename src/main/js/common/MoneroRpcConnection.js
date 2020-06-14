@@ -1,3 +1,10 @@
+const MoneroError = require("../common/MoneroError");
+const MoneroRpcError = require("../common/MoneroRpcError");
+const HttpClient = require("./HttpClient");
+const GenUtils = require("./GenUtils");
+const MoneroUtils = require("./MoneroUtils");
+const LibraryUtils = require("./LibraryUtils");
+
 /**
  * Default RPC configuration.
  */

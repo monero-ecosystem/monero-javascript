@@ -1,3 +1,7 @@
+const assert = require("assert");
+const BigInteger = require("../../common/biginteger").BigInteger;
+const MoneroSubaddress = require("./MoneroSubaddress");
+
 /**
  * Monero account model.
  */

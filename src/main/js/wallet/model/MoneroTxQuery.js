@@ -1,3 +1,8 @@
+const assert = require("assert");
+const MoneroTxWallet = require("./MoneroTxWallet");
+const MoneroTransferQuery = require("./MoneroTransferQuery");
+const MoneroOutputQuery = require("./MoneroOutputQuery");
+
 /**
  * <p>Configuration to query transactions.</p>
  * 

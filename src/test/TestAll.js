@@ -1,6 +1,3 @@
-// import library models
-require("../../index.js");
-
 // import test types
 require("./MoneroTestModel")();
 require("./utils/TestUtilsModule")();

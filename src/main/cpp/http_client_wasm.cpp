@@ -10,6 +10,11 @@ using namespace std;
 EM_JS(const char*, js_send_json_request, (const char* uri, const char* username, const char* password, const char* reject_unauthorized_fn_id, const char* method, const char* body, std::chrono::milliseconds timeout), {
   //console.log("EM_JS js_send_json_request(" + UTF8ToString(uri) + ", " + UTF8ToString(username) + ", " + UTF8ToString(password) + ", " + UTF8ToString(method) + ")");
 
+  const monerojs = require("monero-javascript");
+  const HttpClient = monerojs.HttpClient;
+  const LibraryUtils = monerojs.LibraryUtils;
+  const GenUtils = monerojs.GenUtils;
+
   // use asyncify to synchronously return to C++
   return Asyncify.handleSleep(function(wakeUp) {
 
@@ -59,6 +64,11 @@ EM_JS(const char*, js_send_json_request, (const char* uri, const char* username,
 
 EM_JS(const char*, js_send_binary_request, (const char* uri, const char* username, const char* password, const char* reject_unauthorized_fn_id, const char* method, const char* body, int body_length, std::chrono::milliseconds timeout), {
   //console.log("EM_JS js_send_binary_request(" + UTF8ToString(uri) + ", " + UTF8ToString(username) + ", " + UTF8ToString(password) + ", " + UTF8ToString(method) + ")");
+
+  const monerojs = require("monero-javascript");
+  const HttpClient = monerojs.HttpClient;
+  const LibraryUtils = monerojs.LibraryUtils;
+  const GenUtils = monerojs.GenUtils;
 
   // use asyncify to synchronously return to C++
   return Asyncify.handleSleep(function(wakeUp) {

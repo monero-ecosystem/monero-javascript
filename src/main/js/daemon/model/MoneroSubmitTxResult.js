@@ -1,3 +1,5 @@
+const BigInteger = require("../../common/biginteger").BigInteger;
+
 /**
  * Models the result from submitting a tx to a daemon.
  */

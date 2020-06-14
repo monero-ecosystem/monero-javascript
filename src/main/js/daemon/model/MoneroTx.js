@@ -1,3 +1,8 @@
+const assert = require("assert");
+const BigInteger = require("../../common/biginteger").BigInteger;
+const GenUtils = require("../../common/GenUtils");
+const MoneroOutput = require("./MoneroOutput");
+
 /**
  * Represents a transaction on the Monero network.
  * 
@@ -426,6 +431,7 @@ class MoneroTx {
     if (this === tx) return this;
     
     // merge blocks if they're different which comes back to merging txs
+    const MoneroBlock = require("./MoneroBlock");
     if (this.getBlock() !== tx.getBlock()) {
       if (this.getBlock() === undefined) {
         this.setBlock(new MoneroBlock());

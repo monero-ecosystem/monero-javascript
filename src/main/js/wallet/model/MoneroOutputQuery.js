@@ -1,3 +1,6 @@
+const BigInteger = require("../../common/biginteger").BigInteger;
+const MoneroOutputWallet = require("./MoneroOutputWallet");
+
 /**
  * Configuration to query wallet outputs.
  * 
@@ -40,6 +43,7 @@ class MoneroOutputQuery extends MoneroOutputWallet {
     super(config);
     
     // deserialize if necessary
+    const MoneroTxQuery = require("./MoneroTxQuery");
     if (this.state.minAmount !== undefined && !(this.state.minAmount instanceof BigInteger)) this.state.minAmount = BigInteger.parse(this.state.minAmount);
     if (this.state.maxAmount !== undefined && !(this.state.maxAmount instanceof BigInteger)) this.state.maxAmount = BigInteger.parse(this.state.maxAmount);
     if (this.state.txQuery && !(this.state.txQuery instanceof MoneroTxQuery)) this.state.txQuery = new MoneroTxQuery(this.state.txQuery);
@@ -112,6 +116,7 @@ class MoneroOutputQuery extends MoneroOutputWallet {
    * @return {MoneroOutputQuery} this query for chaining
    */
   setIsLocked(isLocked) {
+    const MoneroTxQuery = require("./MoneroTxQuery");
     if (this.state.txQuery === undefined) this.state.txQuery = new MoneroTxQuery();
     this.state.txQuery.setIsLocked(isLocked);
     return this;

@@ -1,3 +1,7 @@
+const monerojs = require("monero-javascript");
+const GenUtils = monerojs.GenUtils;
+const MoneroUtils = monerojs.MoneroUtils;
+
 /**
  * Tracks wallets which are in sync with the tx pool and therefore whose txs in the pool
  * do not need to be waited on for up-to-date pool information e.g. to create txs.

@@ -1,3 +1,6 @@
+const MoneroCheck = require("./MoneroCheck");
+const BigInteger = require("../../common/biginteger").BigInteger;
+
 /**
  * Results from checking a reserve proof.
  * 

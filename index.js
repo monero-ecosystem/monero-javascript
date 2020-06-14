@@ -1,6 +1,6 @@
 'use strict'
 
 /**
- * Load production models to "this".
+ * Export entire model.
  */
-require("./src/main/js/MoneroModel")();
+module.exports = require("./src/main/js/MoneroModel");

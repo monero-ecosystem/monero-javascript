@@ -1,3 +1,12 @@
+const assert = require("assert");
+const monerojs = require("monero-javascript");
+const GenUtils = monerojs.GenUtils;
+const MoneroTxQuery = monerojs.MoneroTxQuery;
+const MoneroTransferQuery = monerojs.MoneroTransferQuery;
+const MoneroOutputQuery = monerojs.MoneroOutputQuery;
+const MoneroOutgoingTransfer = monerojs.MoneroOutgoingTransfer;
+const MoneroWalletRpc = monerojs.MoneroWalletRpc;
+
 /**
  * Utilities to deep compare wallets.
  */

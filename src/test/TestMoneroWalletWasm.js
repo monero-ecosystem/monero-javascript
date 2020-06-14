@@ -1,5 +1,19 @@
+const assert = require("assert");
 const TestMoneroWalletCommon = require("./TestMoneroWalletCommon");
-const MoneroWalletWasm = require("../main/js/wallet/MoneroWalletWasm");
+const monerojs = require("monero-javascript");
+const MoneroWalletWasm = monerojs.MoneroWalletWasm;
+const MoneroWalletListener = monerojs.MoneroWalletListener;
+const LibraryUtils = monerojs.LibraryUtils;
+const MoneroWalletConfig = monerojs.MoneroWalletConfig;
+const GenUtils = monerojs.GenUtils;
+const MoneroUtils = monerojs.MoneroUtils;
+const BigInteger = monerojs.BigInteger;
+const MoneroTxWallet = monerojs.MoneroTxWallet;
+const MoneroTxConfig = monerojs.MoneroTxConfig;
+const MoneroRpcConnection = monerojs.MoneroRpcConnection;
+const MoneroDestination = monerojs.MoneroDestination;
+const MoneroOutputQuery = monerojs.MoneroOutputQuery;
+const MoneroOutputWallet = monerojs.MoneroOutputWallet;
 
 /**
  * Tests a Monero wallet using WebAssembly to bridge to monero-project's wallet2.
@@ -1049,7 +1063,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
       // ----------------------------- NOTIFICATION TESTS -------------------------
       
       if (testConfig.testRelays)
-      it("Receives funds within 10 seconds", async function() {
+      it("Receives funds within 10 seconds.", async function() {
         await testReceivesFundsWithin10Seconds(false);
       });
       

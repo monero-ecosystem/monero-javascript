@@ -1,3 +1,8 @@
+const assert = require("assert");
+const GenUtils = require("../../common/GenUtils");
+const BigInteger = require("../../common/biginteger").BigInteger;
+const MoneroKeyImage = require("./MoneroKeyImage");
+
 /**
  * Models a Monero transaction output.
  * 

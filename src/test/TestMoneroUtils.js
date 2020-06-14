@@ -1,3 +1,8 @@
+const assert = require("assert");
+const monerojs = require("monero-javascript");
+const MoneroUtils = monerojs.MoneroUtils;
+const LibraryUtils = monerojs.LibraryUtils;
+
 /**
  * Test utilities including those implemented in WebAssembly.
  */

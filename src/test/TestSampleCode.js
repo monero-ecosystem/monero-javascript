@@ -10,7 +10,6 @@ class TestSampleCode {
       // initialize wallet
       before(async function() {
         try {
-          
           // all wallets need to wait for txs to confirm to reliably sync
           TestUtils.TX_POOL_WALLET_TRACKER.reset();
           
@@ -19,7 +18,8 @@ class TestSampleCode {
           await wallet.close();
           
           // create directory for test wallets if it doesn't exist
-          let fs = LibraryUtils.getDefaultFs();
+          const monerojs = require("monero-javascript");
+          let fs = monerojs.LibraryUtils.getDefaultFs();
           if (!fs.existsSync(TestUtils.TEST_WALLETS_DIR)) {
             if (!fs.existsSync(process.cwd())) fs.mkdirSync(process.cwd(), { recursive: true });  // create current process directory for relative paths which does not exist in memory fs
             fs.mkdirSync(TestUtils.TEST_WALLETS_DIR);
@@ -34,8 +34,16 @@ class TestSampleCode {
       // TODO: wrap test in try...catch and close wasm wallet
       it("Short sample code demonstration", async function() {
         
+        // *** USE IN README.MD ***
         // import library
-        //require("monero-javascript"); // *** USE IN README.MD ***
+        const assert = require("assert");
+        const monerojs = require("monero-javascript");
+        const MoneroDaemonRpc = monerojs.MoneroDaemonRpc; // TODO: await monerojs.createDaemonRpcClient(...)
+        const MoneroWalletRpc = monerojs.MoneroWalletRpc; // TODO: await monerojs.createWalletRpcClient(...)
+        const MoneroWalletWasm = monerojs.MoneroWalletWasm; // TODO: await monerojs.createWalletWasm({...});
+        const MoneroWalletListener = monerojs.MoneroWalletListener; // TODO: pass in js object instead of MoneroWalletListener class
+        const BigInteger = monerojs.BigInteger; // TODO: support string or BigInteger, then no need to import BigInteger
+        const GenUtils = monerojs.GenUtils;
         
         // connect to a daemon
         let daemon = new MoneroDaemonRpc("http://localhost:38081", "superuser", "abctesting123"); 

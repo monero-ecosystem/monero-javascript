@@ -1,3 +1,6 @@
+const GenUtils = require("../../common/GenUtils");
+const BigInteger = require("../../common/biginteger").BigInteger;
+
 /**
  * Models an outgoing transfer destination.
  */

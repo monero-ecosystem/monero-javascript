@@ -1,3 +1,7 @@
+const assert = require("assert");
+const BigInteger = require("../../common/biginteger").BigInteger;
+const GenUtils = require("../../common/GenUtils");
+
 /**
  * Models a base transfer of funds to or from the wallet.
  * 

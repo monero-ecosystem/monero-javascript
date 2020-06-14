@@ -1,3 +1,6 @@
+const GenUtils = require("../../common/GenUtils");
+const MoneroRpcConnection = require("../../common/MoneroRpcConnection");
+
 /**
  * Configuration to create a Monero wallet.
  */

@@ -1,3 +1,11 @@
+const assert = require("assert");
+const GenUtils = require("../../common/GenUtils");
+const BigInteger = require("../../common/biginteger").BigInteger;
+const MoneroTx = require("../../daemon/model/MoneroTx");
+const MoneroIncomingTransfer = require("./MoneroIncomingTransfer");
+const MoneroOutgoingTransfer = require("./MoneroOutgoingTransfer");
+const MoneroOutputWallet = require("./MoneroOutputWallet");
+
 /**
  * Models a Monero transaction with wallet extensions.
  * 
@@ -287,6 +295,7 @@ class MoneroTxWallet extends MoneroTx {
     super.merge(tx);
     
     // merge tx set if they're different which comes back to merging txs
+    const MoneroTxSet = require("./MoneroTxSet");
     if (this.getTxSet() !== tx.getTxSet()) {
       if (this.getTxSet() == undefined) {
         this.setTxSet(new MoneroTxSet().setTxs([this]));

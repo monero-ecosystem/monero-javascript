@@ -1,3 +1,7 @@
+const assert = require("assert");
+const MoneroError = require("../../common/MoneroError");
+const MoneroDestination = require("./MoneroDestination");
+
 /**
  * Configures a transaction to send, sweep, or create a payment URI.
  */

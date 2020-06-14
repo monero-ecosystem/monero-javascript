@@ -1,3 +1,30 @@
+const assert = require("assert");
+const LibraryUtils = require("../common/LibraryUtils");
+const MoneroUtils = require("../common/MoneroUtils");
+const MoneroDaemon = require("./MoneroDaemon");
+const GenUtils = require("../common/GenUtils");
+const BigInteger = require("../common/biginteger").BigInteger;
+const MoneroRpcConnection = require("../common/MoneroRpcConnection");
+const MoneroTx = require("./model/MoneroTx");
+const MoneroOutput = require("./model/MoneroOutput");
+const MoneroKeyImage = require("./model/MoneroKeyImage");
+const MoneroMiningStatus = require("./model/MoneroMiningStatus");
+const MoneroBlockHeader = require("./model/MoneroBlockHeader");
+const MoneroBlock = require("./model/MoneroBlock");
+const MoneroVersion = require("./model/MoneroVersion");
+const MoneroBlockTemplate = require("./model/MoneroBlockTemplate");
+const MoneroMinerTxSum = require("./model/MoneroMinerTxSum");
+const MoneroError = require("../common/MoneroError");
+const MoneroDaemonConnection = require("./model/MoneroDaemonConnection");
+const MoneroDaemonPeer = require("./model/MoneroDaemonPeer");
+const MoneroAltChain = require("./model/MoneroAltChain");
+const MoneroHardForkInfo = require("./model/MoneroHardForkInfo");
+const MoneroDaemonSyncInfo = require("./model/MoneroDaemonSyncInfo");
+const MoneroDaemonInfo = require("./model/MoneroDaemonInfo");
+const MoneroOutputHistogramEntry = require("./model/MoneroOutputHistogramEntry");
+const MoneroSubmitTxResult = require("./model/MoneroSubmitTxResult");
+const MoneroBan = require("./model/MoneroBan");
+
 /**
  * Copyright (c) 2017-2019 woodser
  *
@@ -1693,7 +1720,7 @@ class MoneroDaemonRpcProxy extends MoneroDaemon {
   async addBlockListener(listener) {
     let wrappedListener = new DaemonWorkerListener(listener);
     let listenerId = wrappedListener.getId();
-    MoneroUtils.WORKER_OBJECTS[this.daemonId].callbacks["onNewBlockHeader_" + listenerId] = [wrappedListener.onNewBlockHeader, wrappedListener];
+    LibraryUtils.WORKER_OBJECTS[this.daemonId].callbacks["onNewBlockHeader_" + listenerId] = [wrappedListener.onNewBlockHeader, wrappedListener];
     this.wrappedListeners.push(wrappedListener);
     return this._invokeWorker("daemonAddBlockListener", [listenerId]);
   }
@@ -1703,7 +1730,7 @@ class MoneroDaemonRpcProxy extends MoneroDaemon {
       if (this.wrappedListeners[i].getListener() === listener) {
         let listenerId = this.wrappedListeners[i].getId();
         await this._invokeWorker("daemonRemoveBlockListener", [listenerId]);
-        delete MoneroUtils.WORKER_OBJECTS[this.daemonId].callbacks["onNewBlockHeader_" + listenerId];
+        delete LibraryUtils.WORKER_OBJECTS[this.daemonId].callbacks["onNewBlockHeader_" + listenerId];
         this.wrappedListeners.splice(i, 1);
         return;
       }

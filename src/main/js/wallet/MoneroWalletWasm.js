@@ -1,3 +1,32 @@
+const assert = require("assert");
+const GenUtils = require("../common/GenUtils");
+const MoneroUtils = require("../common/MoneroUtils");
+const LibraryUtils = require("../common/LibraryUtils");
+const BigInteger = require("../common/biginteger").BigInteger;
+const MoneroError = require("../common/MoneroError");
+const MoneroRpcConnection = require("../common/MoneroRpcConnection");
+const MoneroBlock = require("../daemon/model/MoneroBlock");
+const MoneroWallet = require("./MoneroWallet");
+const MoneroWalletKeys = require("./MoneroWalletKeys");
+const MoneroWalletListener = require("./model/MoneroWalletListener");
+const MoneroWalletConfig = require("./model/MoneroWalletConfig");
+const MoneroOutputWallet = require("./model/MoneroOutputWallet");
+const MoneroTxWallet = require("./model/MoneroTxWallet");
+const MoneroTxSet = require("./model/MoneroTxSet");
+const MoneroSyncResult = require("./model/MoneroSyncResult");
+const MoneroAccount = require("./model/MoneroAccount");
+const MoneroSubaddress = require("./model/MoneroSubaddress");
+const MoneroNetworkType = require("../daemon/model/MoneroNetworkType");
+const MoneroMultisigInitResult = require("./model/MoneroMultisigInitResult");
+const MoneroMultisigInfo = require("./model/MoneroMultisigInfo");
+const MoneroIntegratedAddress = require("./model/MoneroIntegratedAddress");
+const MoneroKeyImage = require("../daemon/model/MoneroKeyImage");
+const MoneroKeyImageImportResult = require("./model/MoneroKeyImageImportResult");
+const MoneroTxConfig = require("./model/MoneroTxConfig");
+const MoneroDaemonRpc = require("../daemon/MoneroDaemonRpc");
+const MoneroAddressBookEntry = require("./model/MoneroAddressBookEntry");
+const MoneroMultisigSignResult = require("./model/MoneroMultisigSignResult");
+
 /**
  * Implements a MoneroWallet using WebAssembly bindings to monero-project's wallet2.
  * 
@@ -441,7 +470,7 @@ class MoneroWalletWasm extends MoneroWalletKeys {
   }
   
   /**
-   * Register a listener receive wallet notifications.
+   * Register a listener to receive wallet notifications.
    * 
    * @param {MoneroWalletListener} listener - listener to receive wallet notifications
    */
@@ -1796,7 +1825,7 @@ class SyncListenerWrapper extends MoneroWalletListener {
  * TODO: sort these methods according to master sort in MoneroWallet.js
  * TODO: probably only allow one listener to web worker then propogate to registered listeners for performance
  * TODO: ability to recycle worker for use in another wallet
- * TODO: using MoneroUtils.WORKER_OBJECTS directly breaks encapsulation
+ * TODO: using LibraryUtils.WORKER_OBJECTS directly breaks encapsulation
  * 
  * @private
  */
@@ -1968,10 +1997,10 @@ class MoneroWalletWasmProxy extends MoneroWallet {
   async addListener(listener) {
     let wrappedListener = new WalletWorkerListener(listener);
     let listenerId = wrappedListener.getId();
-    MoneroUtils.WORKER_OBJECTS[this._walletId].callbacks["onSyncProgress_" + listenerId] = [wrappedListener.onSyncProgress, wrappedListener];
-    MoneroUtils.WORKER_OBJECTS[this._walletId].callbacks["onNewBlock_" + listenerId] = [wrappedListener.onNewBlock, wrappedListener];
-    MoneroUtils.WORKER_OBJECTS[this._walletId].callbacks["onOutputReceived_" + listenerId] = [wrappedListener.onOutputReceived, wrappedListener];
-    MoneroUtils.WORKER_OBJECTS[this._walletId].callbacks["onOutputSpent_" + listenerId] = [wrappedListener.onOutputSpent, wrappedListener];
+    LibraryUtils.WORKER_OBJECTS[this._walletId].callbacks["onSyncProgress_" + listenerId] = [wrappedListener.onSyncProgress, wrappedListener];
+    LibraryUtils.WORKER_OBJECTS[this._walletId].callbacks["onNewBlock_" + listenerId] = [wrappedListener.onNewBlock, wrappedListener];
+    LibraryUtils.WORKER_OBJECTS[this._walletId].callbacks["onOutputReceived_" + listenerId] = [wrappedListener.onOutputReceived, wrappedListener];
+    LibraryUtils.WORKER_OBJECTS[this._walletId].callbacks["onOutputSpent_" + listenerId] = [wrappedListener.onOutputSpent, wrappedListener];
     this._wrappedListeners.push(wrappedListener);
     return this._invokeWorker("addListener", [listenerId]);
   }
@@ -1981,10 +2010,10 @@ class MoneroWalletWasmProxy extends MoneroWallet {
       if (this._wrappedListeners[i].getListener() === listener) {
         let listenerId = this._wrappedListeners[i].getId();
         await this._invokeWorker("removeListener", [listenerId]);
-        delete MoneroUtils.WORKER_OBJECTS[this._walletId].callbacks["onSyncProgress_" + listenerId];
-        delete MoneroUtils.WORKER_OBJECTS[this._walletId].callbacks["onNewBlock_" + listenerId];
-        delete MoneroUtils.WORKER_OBJECTS[this._walletId].callbacks["onOutputReceived_" + listenerId];
-        delete MoneroUtils.WORKER_OBJECTS[this._walletId].callbacks["onOutputSpent_" + listenerId];
+        delete LibraryUtils.WORKER_OBJECTS[this._walletId].callbacks["onSyncProgress_" + listenerId];
+        delete LibraryUtils.WORKER_OBJECTS[this._walletId].callbacks["onNewBlock_" + listenerId];
+        delete LibraryUtils.WORKER_OBJECTS[this._walletId].callbacks["onOutputReceived_" + listenerId];
+        delete LibraryUtils.WORKER_OBJECTS[this._walletId].callbacks["onOutputSpent_" + listenerId];
         this._wrappedListeners.splice(i, 1);
         return;
       }
@@ -2354,7 +2383,7 @@ class MoneroWalletWasmProxy extends MoneroWallet {
     if (save) await this.save();
     while (this._wrappedListeners.length) await this.removeListener(this._wrappedListeners[0].getListener());
     await this._invokeWorker("close");
-    delete MoneroUtils.WORKER_OBJECTS[this._walletId];
+    delete LibraryUtils.WORKER_OBJECTS[this._walletId];
   }
   
   async isClosed() {

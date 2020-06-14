@@ -1,3 +1,6 @@
+const assert = require("assert");
+const GenUtils = require("../../common/GenUtils");
+
 /**
  * Models a Monero key image.
  */

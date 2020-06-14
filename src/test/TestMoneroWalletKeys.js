@@ -1,5 +1,8 @@
 const TestMoneroWalletCommon = require("./TestMoneroWalletCommon");
-const MoneroWalletKeys = require("../main/js/wallet/MoneroWalletKeys");
+const monerojs = require("monero-javascript");
+const MoneroWalletKeys = monerojs.MoneroWalletKeys;
+const MoneroWalletConfig = monerojs.MoneroWalletConfig;
+const GenUtils = monerojs.GenUtils;
 
 /**
  * Tests the implementation of MoneroWallet which only manages keys using WebAssembly.
