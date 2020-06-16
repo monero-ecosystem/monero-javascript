@@ -1,3 +1,7 @@
+const assert = require("assert");
+const GenUtils = require("../../common/GenUtils");
+const MoneroTransfer = require("./MoneroTransfer");
+
 /**
  * Models an incoming transfer of funds to the wallet.
  * 

@@ -1,3 +1,5 @@
+const BigInteger = require("../../common/biginteger").BigInteger;
+
 /**
  * Models a peer to the daemon.
  */

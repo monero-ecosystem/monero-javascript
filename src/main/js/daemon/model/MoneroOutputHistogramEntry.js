@@ -1,3 +1,5 @@
+const BigInteger = require("../../common/biginteger").BigInteger;
+
 /**
  * Entry in a Monero output histogram (see get_output_histogram of Daemon RPC documentation).
  */

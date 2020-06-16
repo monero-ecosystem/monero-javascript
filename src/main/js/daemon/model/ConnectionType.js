@@ -1,3 +1,5 @@
+const assert = require("assert");
+
 /**
  * Enumerates connection types.
  * 

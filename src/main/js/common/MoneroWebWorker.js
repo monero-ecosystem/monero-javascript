@@ -1,4 +1,16 @@
-require("../MoneroModel")();
+const assert = require("assert");
+const LibraryUtils = require("./LibraryUtils");
+const MoneroBan = require("../daemon/model/MoneroBan");
+const MoneroBlock = require("../daemon/model/MoneroBlock");
+const MoneroDaemonRpc = require("../daemon/MoneroDaemonRpc");
+const MoneroError = require("./MoneroError");
+const MoneroKeyImage = require("../daemon/model/MoneroKeyImage");
+const MoneroRpcConnection = require("./MoneroRpcConnection");
+const MoneroTxConfig = require("../wallet/model/MoneroTxConfig");
+const MoneroTxSet = require("../wallet/model/MoneroTxSet");
+const MoneroUtils = require("./MoneroUtils");
+const MoneroWalletListener = require("../wallet/model/MoneroWalletListener");
+const MoneroWalletWasm = require("../wallet/MoneroWalletWasm");
 
 /**
  * Web worker to manage a daemon and wasm wallet off the main thread with messages.

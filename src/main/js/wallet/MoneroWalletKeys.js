@@ -1,3 +1,12 @@
+const assert = require("assert");
+const LibraryUtils = require("../common/LibraryUtils");
+const MoneroError = require("../common/MoneroError");
+const MoneroSubaddress = require("./model/MoneroSubaddress");
+const MoneroUtils = require("../common/MoneroUtils");
+const MoneroVersion = require("../daemon/model/MoneroVersion");
+const MoneroWallet = require("./MoneroWallet");
+const MoneroWalletConfig = require("./model/MoneroWalletConfig");
+
 /**
  * Implements a MoneroWallet which only manages keys using WebAssembly.
  * 

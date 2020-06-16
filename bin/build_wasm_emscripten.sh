@@ -11,10 +11,9 @@ export BOOST_LIBRARYDIR=$BOOSTROOT/lib
 # delete emscripten cache (enable if modifying em_js or its dependencies for full refresh)
 rm -rf ~/.emscripten_cache || exit 1
 
+# build wasm files
 HOST_NCORES=$(nproc 2>/dev/null || shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 1)
-
 [ -d build ] || mkdir -p build || exit 1
-
 cd build || exit 1
 emcmake cmake .. || exit 1
 emmake cmake --build . -j$HOST_NCORES || exit 1

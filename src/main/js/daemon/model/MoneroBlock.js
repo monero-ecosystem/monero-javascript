@@ -1,3 +1,10 @@
+const assert = require("assert");
+const GenUtils = require("../../common/GenUtils");
+const MoneroBlockHeader = require("./MoneroBlockHeader");
+const MoneroTx = require("./MoneroTx");
+const MoneroTxQuery = require("../../wallet/model/MoneroTxQuery");
+const MoneroTxWallet = require("../../wallet/model/MoneroTxWallet");
+
 /**
  * Models a Monero block in the blockchain.
  * 

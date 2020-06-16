@@ -1,3 +1,7 @@
+const MoneroIncomingTransfer = require("./MoneroIncomingTransfer");
+const MoneroOutgoingTransfer = require("./MoneroOutgoingTransfer");
+const MoneroTransfer = require("./MoneroTransfer");
+
 /**
  * Configuration to query wallet transfers.
  * 
@@ -36,6 +40,7 @@ class MoneroTransferQuery extends MoneroTransfer {
     super(config);
     
     // deserialize if necessary
+    const MoneroTxQuery = require("./MoneroTxQuery");
     if (this.state.txQuery && !(this.state.txQuery instanceof MoneroTxQuery)) this.state.txQuery = new MoneroTxQuery(this.state.txQuery);
     if (this.state.txQuery) this.state.txQuery.setTransferQuery(this);
     

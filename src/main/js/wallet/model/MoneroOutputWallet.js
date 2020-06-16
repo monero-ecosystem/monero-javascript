@@ -1,3 +1,7 @@
+const assert = require("assert");
+const GenUtils = require("../../common/GenUtils");
+const MoneroOutput = require("../../daemon/model/MoneroOutput");
+
 /**
  * Models a Monero output with wallet extensions.
  * 

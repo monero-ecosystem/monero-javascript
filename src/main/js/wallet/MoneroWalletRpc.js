@@ -1,3 +1,40 @@
+const assert = require("assert");
+const BigInteger = require("../common/biginteger").BigInteger;
+const GenUtils = require("../common/GenUtils");
+const MoneroAccount = require("./model/MoneroAccount");
+const MoneroAccountTag = require("./model/MoneroAccountTag");
+const MoneroAddressBookEntry = require("./model/MoneroAddressBookEntry");
+const MoneroBlock = require("../daemon/model/MoneroBlock");
+const MoneroBlockHeader = require("../daemon/model/MoneroBlockHeader");
+const MoneroCheckReserve = require("./model/MoneroCheckReserve");
+const MoneroCheckTx = require("./model/MoneroCheckTx");
+const MoneroDaemonRpc = require("../daemon/MoneroDaemonRpc");
+const MoneroDestination = require("./model/MoneroDestination");
+const MoneroError = require("../common/MoneroError");
+const MoneroIncomingTransfer = require("./model/MoneroIncomingTransfer");
+const MoneroIntegratedAddress = require("./model/MoneroIntegratedAddress");
+const MoneroKeyImage = require("../daemon/model/MoneroKeyImage");
+const MoneroKeyImageImportResult = require("./model/MoneroKeyImageImportResult");
+const MoneroMultisigInitResult = require("./model/MoneroMultisigInitResult");
+const MoneroMultisigSignResult = require("./model/MoneroMultisigSignResult");
+const MoneroOutgoingTransfer = require("./model/MoneroOutgoingTransfer");
+const MoneroOutputQuery = require("./model/MoneroOutputQuery");
+const MoneroOutputWallet = require("./model/MoneroOutputWallet");
+const MoneroRpcConnection = require("../common/MoneroRpcConnection");
+const MoneroRpcError = require("../common/MoneroRpcError");
+const MoneroSubaddress = require("./model/MoneroSubaddress");
+const MoneroSyncResult = require("./model/MoneroSyncResult");
+const MoneroTransferQuery = require("./model/MoneroTransferQuery");
+const MoneroTxConfig = require("./model/MoneroTxConfig");
+const MoneroTxQuery = require("./model/MoneroTxQuery");
+const MoneroTxSet = require("./model/MoneroTxSet");
+const MoneroTxWallet = require("./model/MoneroTxWallet");
+const MoneroUtils = require("../common/MoneroUtils");
+const MoneroVersion = require("../daemon/model/MoneroVersion");
+const MoneroWallet = require("./MoneroWallet");
+const MoneroWalletConfig = require("./model/MoneroWalletConfig");
+const SslOptions = require("../common/SslOptions");
+
 /**
  * Copyright (c) 2017-2019 woodser
  *

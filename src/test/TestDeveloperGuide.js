@@ -1,3 +1,9 @@
+const assert = require("assert");
+const TestUtils = require("./utils/TestUtils");
+const BigInteger = require("../main/js/common/biginteger").BigInteger;
+const monerojs = require("../../index");
+const MoneroWalletWasm = monerojs.MoneroWalletWasm;
+
 /**
  * Test the code in the developer guide.
  */

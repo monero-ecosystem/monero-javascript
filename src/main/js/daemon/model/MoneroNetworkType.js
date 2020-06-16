@@ -1,3 +1,5 @@
+const assert = require("assert");
+
 /**
  * Defines the Monero network types (mainnet, testnet, and stagenet).
  */

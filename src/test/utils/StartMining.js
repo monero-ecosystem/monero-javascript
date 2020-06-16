@@ -1,3 +1,5 @@
+const TestUtils = require("./TestUtils");
+
 /**
  * Utility class to start mining.
  */

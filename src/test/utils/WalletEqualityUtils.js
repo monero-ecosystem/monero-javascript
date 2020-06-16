@@ -1,3 +1,14 @@
+const assert = require("assert");
+const TestUtils = require("./TestUtils");
+const monerojs = require("../../../index");
+const BigInteger = monerojs.BigInteger;
+const GenUtils = monerojs.GenUtils;
+const MoneroTxQuery = monerojs.MoneroTxQuery;
+const MoneroTransferQuery = monerojs.MoneroTransferQuery;
+const MoneroOutputQuery = monerojs.MoneroOutputQuery;
+const MoneroOutgoingTransfer = monerojs.MoneroOutgoingTransfer;
+const MoneroWalletRpc = monerojs.MoneroWalletRpc;
+
 /**
  * Utilities to deep compare wallets.
  */

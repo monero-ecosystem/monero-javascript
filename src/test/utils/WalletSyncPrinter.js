@@ -1,3 +1,5 @@
+const MoneroWalletListener = require("../../main/js/wallet/model/MoneroWalletListener");
+
 /**
  * Print sync progress every X blocks.
  */

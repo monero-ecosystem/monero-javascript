@@ -1,3 +1,5 @@
+const BigInteger = require("../../common/biginteger").BigInteger;
+
 /**
  * Models results from importing key images.
  */

@@ -1,5 +1,16 @@
-const MoneroDaemonRpc = require("../main/js/daemon/MoneroDaemonRpc");
-const MoneroWalletKeys = require("../main/js/wallet/MoneroWalletKeys");
+const assert = require("assert");
+const TestUtils = require("./utils/TestUtils");
+const monerojs = require("../../index");
+const BigInteger = monerojs.BigInteger;
+const MoneroOutput = monerojs.MoneroOutput;
+const MoneroTxConfig = monerojs.MoneroTxConfig;
+const MoneroBan = monerojs.MoneroBan;
+const MoneroKeyImage = monerojs.MoneroKeyImage;
+const MoneroTx = monerojs.MoneroTx;
+const MoneroAltChain = monerojs.MoneroAltChain;
+const MoneroDaemonSyncInfo = monerojs.MoneroDaemonSyncInfo;
+const MoneroDaemonConnection = monerojs.MoneroDaemonConnection;
+const MoneroDaemonPeer = monerojs.MoneroDaemonPeer;
 
 // context for testing binary blocks
 // TODO: binary blocks have inconsistent client-side pruning

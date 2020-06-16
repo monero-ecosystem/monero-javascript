@@ -1,3 +1,5 @@
+const MoneroDaemonPeer = require("./MoneroDaemonPeer");
+
 /**
  * Monero daemon connection.
  */

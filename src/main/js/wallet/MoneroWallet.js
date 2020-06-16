@@ -1,3 +1,11 @@
+const assert = require("assert");
+const MoneroBlock = require("../daemon/model/MoneroBlock");
+const MoneroError = require("../common/MoneroError");
+const MoneroOutputQuery = require("./model/MoneroOutputQuery");
+const MoneroTransferQuery = require("./model/MoneroTransferQuery");
+const MoneroTxConfig = require("./model/MoneroTxConfig");
+const MoneroTxQuery = require("./model/MoneroTxQuery");
+
 /**
  * Copyright (c) 2017-2019 woodser
  *

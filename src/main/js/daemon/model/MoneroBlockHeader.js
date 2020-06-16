@@ -1,3 +1,7 @@
+const assert = require("assert");
+const BigInteger = require("../../common/biginteger").BigInteger;
+const GenUtils = require("../../common/GenUtils");
+
 /**
  * Models a Monero block header which contains information about the block.
  * 

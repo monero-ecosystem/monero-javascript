@@ -1,5 +1,9 @@
+const TestUtils = require("./utils/TestUtils");
+const WalletEqualityUtils = require("./utils/WalletEqualityUtils");
 const TestMoneroWalletCommon = require("./TestMoneroWalletCommon");
-const MoneroWalletKeys = require("../main/js/wallet/MoneroWalletKeys");
+const monerojs = require("../../index");
+const MoneroWalletConfig = monerojs.MoneroWalletConfig;
+const GenUtils = monerojs.GenUtils;
 
 /**
  * Tests the implementation of MoneroWallet which only manages keys using WebAssembly.
@@ -31,11 +35,11 @@ class TestMoneroWalletKeys extends TestMoneroWalletCommon {
     if (config.getServer()) throw new Error("Cannot initialize keys wallet with connection");
     
     // create wallet
-    return await MoneroWalletKeys.createWallet(config);
+    return await monerojs.createWalletKeys(config);
   }
 
   async getMnemonicLanguages() {
-    return await MoneroWalletKeys.getMnemonicLanguages();
+    return await monerojs.MoneroWalletKeys.getMnemonicLanguages();
   }
   
   runTests() {
@@ -78,7 +82,7 @@ class TestMoneroWalletKeys extends TestMoneroWalletCommon {
         await walletRpc.createWallet({path: GenUtils.getUUID(), password: TestUtils.WALLET_PASSWORD, mnemonic: await walletRpc.getMnemonic(), restoreHeight: TestUtils.FIRST_RECEIVE_HEIGHT, seedOffset: seedOffset});
         
         // create keys-only wallet with offset
-        let walletKeys = await MoneroWalletKeys.createWallet({
+        let walletKeys = await monerojs.createWalletKeys({
             networkType: TestUtils.NETWORK_TYPE,
             mnemonic: TestUtils.MNEMONIC,
             seedOffset: seedOffset

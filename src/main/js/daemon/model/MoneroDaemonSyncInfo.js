@@ -1,3 +1,7 @@
+const BigInteger = require("../../common/biginteger").BigInteger;
+const MoneroDaemonConnection = require("./MoneroDaemonConnection");
+const MoneroDaemonConnectionSpan = require("./MoneroDaemonConnectionSpan");
+
 /**
  * Models daemon synchronization information.
  */

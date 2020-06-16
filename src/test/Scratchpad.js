@@ -1,3 +1,7 @@
+const TestUtils = require("./utils/TestUtils");
+const WalletSyncPrinter = require("./utils/WalletSyncPrinter");
+const monerojs = require("../../index");
+
 describe("Scratchpad", function() {
   
   it("Can be scripted easily", async function() {
@@ -7,8 +11,9 @@ describe("Scratchpad", function() {
 //    let walletRpc = await TestUtils.getWalletRpc();
 //    let walletWasm = await TestUtils.getWalletWasm();
     
+    
     // initialize daemon rpc client
-    let daemon = new MoneroDaemonRpc({
+    let daemon = monerojs.connectToDaemonRpc({
       uri: "http://localhost:38081",
       username: "superuser",
       password: "abctesting123",
@@ -18,7 +23,7 @@ describe("Scratchpad", function() {
     console.log("Daemon height: " + await daemon.getHeight());
     
     // initialize wallet rpc client
-    let walletRpc = new MoneroWalletRpc({
+    let walletRpc = monerojs.connectToWalletRpc({
       uri: "http://localhost:38083",
       username: "rpc_user",
       password: "abc123",
@@ -28,15 +33,15 @@ describe("Scratchpad", function() {
     console.log("RPC wallet mnemonic: " + await walletRpc.getMnemonic());
     
     // create in-memory wallet with mnemonic
-    let walletWasm = await MoneroWalletWasm.createWallet({
+    let walletWasm = await monerojs.createWalletWasm({
       //path: "./test_wallets/" + GenUtils.getUUID(), // in-memory wallet if not given
       password: "abctesting123",
       networkType: "stagenet",
       serverUri: "http://localhost:38081",
       serverUsername: "superuser",
       serverPassword: "abctesting123",
-      mnemonic: "spying swept ashtray going hence jester swagger cease spying unusual boss vain dyslexic divers among unfit asleep bays ostrich maverick skirting jaunt scenic shuffled spying",
-      restoreHeight: 573800,
+      mnemonic: "hijack lucky rally sober hockey robot gumball amaze gave fifteen organs gecko skater wizard demonstrate upright system vegan tobacco tsunami lurk withdrawn tomorrow uphill organs",
+      restoreHeight: 589429,
       proxyToWorker: TestUtils.PROXY_TO_WORKER,
       rejectUnauthorized: false
     });

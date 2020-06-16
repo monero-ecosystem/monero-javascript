@@ -1,3 +1,6 @@
+const BigInteger = require("../../common/biginteger").BigInteger;
+const GenUtils = require("../../common/GenUtils");
+
 /**
  * Monero subaddress model.
  */

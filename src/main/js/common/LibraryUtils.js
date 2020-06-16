@@ -1,3 +1,6 @@
+const assert = require("assert");
+const GenUtils = require("./GenUtils");
+const MoneroError = require("./MoneroError");
 
 /**
  * Collection of helper utilities for the library.
@@ -10,8 +13,8 @@ class LibraryUtils {
    * @return nodejs-compatible file system
    */
   static getDefaultFs() {
-    if (!MoneroUtils.FS) MoneroUtils.FS = GenUtils.isBrowser() ? require('memfs') : require('fs');
-    return MoneroUtils.FS;
+    if (!LibraryUtils.FS) LibraryUtils.FS = GenUtils.isBrowser() ? require('memfs') : require('fs');
+    return LibraryUtils.FS;
   }
   
   /**
@@ -64,7 +67,7 @@ class LibraryUtils {
   static async loadCoreModule() {
     
     // use cache if suitable, core module supersedes keys module because it is superset
-    if (LibraryUtils.WASM_MODULE && MoneroUtils.CORE_LOADED) return LibraryUtils.WASM_MODULE;
+    if (LibraryUtils.WASM_MODULE && LibraryUtils.CORE_LOADED) return LibraryUtils.WASM_MODULE;
     
     // load module
     delete LibraryUtils.WASM_MODULE;
@@ -73,7 +76,7 @@ class LibraryUtils {
       LibraryUtils.WASM_MODULE.then(module => {
         LibraryUtils.WASM_MODULE = module
         delete LibraryUtils.WASM_MODULE.then;
-        MoneroUtils.CORE_LOADED = true;
+        LibraryUtils.CORE_LOADED = true;
         LibraryUtils._initWasmModule(LibraryUtils.WASM_MODULE);
         resolve(LibraryUtils.WASM_MODULE);
       });
@@ -111,9 +114,9 @@ class LibraryUtils {
    * @param {function} fn - function to inform if unauthorized requests should be rejected
    */
   static setRejectUnauthorizedFn(fnId, fn) {
-    if (!MoneroUtils.REJECT_UNAUTHORIZED_FNS) MoneroUtils.REJECT_UNAUTHORIZED_FNS = [];
-    if (fn === undefined) delete MoneroUtils.REJECT_UNAUTHORIZED_FNS[fnId];
-    else MoneroUtils.REJECT_UNAUTHORIZED_FNS[fnId] = fn;
+    if (!LibraryUtils.REJECT_UNAUTHORIZED_FNS) LibraryUtils.REJECT_UNAUTHORIZED_FNS = [];
+    if (fn === undefined) delete LibraryUtils.REJECT_UNAUTHORIZED_FNS[fnId];
+    else LibraryUtils.REJECT_UNAUTHORIZED_FNS[fnId] = fn;
   }
   
   /**
@@ -122,8 +125,8 @@ class LibraryUtils {
    * @param {string} fnId - uniquely identifies the function
    */
   static isRejectUnauthorized(fnId) {
-    if (!MoneroUtils.REJECT_UNAUTHORIZED_FNS[fnId]) throw new Error("No function registered with id " + fnId + " to inform if unauthorized reqs should be rejected");
-    return MoneroUtils.REJECT_UNAUTHORIZED_FNS[fnId]();
+    if (!LibraryUtils.REJECT_UNAUTHORIZED_FNS[fnId]) throw new Error("No function registered with id " + fnId + " to inform if unauthorized reqs should be rejected");
+    return LibraryUtils.REJECT_UNAUTHORIZED_FNS[fnId]();
   }
   
   /**
@@ -136,14 +139,14 @@ class LibraryUtils {
     // one time initialization
     if (!LibraryUtils.WORKER) {
       LibraryUtils.WORKER = new Worker("MoneroWebWorker.dist.js");
-      MoneroUtils.WORKER_OBJECTS = {};  // store per object running in the worker
+      LibraryUtils.WORKER_OBJECTS = {};  // store per object running in the worker
       
       // catch worker messages
       LibraryUtils.WORKER.onmessage = function(e) {
         
         // lookup object id, callback function, and this arg
         let thisArg = null;
-        let callbackFn = MoneroUtils.WORKER_OBJECTS[e.data[0]].callbacks[e.data[1]]; // look up by object id then by function name
+        let callbackFn = LibraryUtils.WORKER_OBJECTS[e.data[0]].callbacks[e.data[1]]; // look up by object id then by function name
         if (callbackFn === undefined) throw new Error("No worker callback function defined for key '" + e.data[1] + "'");
         if (callbackFn instanceof Array) {  // this arg may be stored with callback function
           thisArg = callbackFn[1];
@@ -168,9 +171,9 @@ class LibraryUtils {
   static async invokeWorker(objectId, fnName, args) {
     assert(fnName.length >= 2);
     let worker = LibraryUtils.getWorker();
-    if (!MoneroUtils.WORKER_OBJECTS[objectId]) MoneroUtils.WORKER_OBJECTS[objectId] = {callbacks: {}};
+    if (!LibraryUtils.WORKER_OBJECTS[objectId]) LibraryUtils.WORKER_OBJECTS[objectId] = {callbacks: {}};
     return new Promise(function(resolve, reject) {
-      MoneroUtils.WORKER_OBJECTS[objectId].callbacks["on" + fnName.charAt(0).toUpperCase() + fnName.substring(1)] = function(resp) {  // TODO: this defines function once per callback
+      LibraryUtils.WORKER_OBJECTS[objectId].callbacks["on" + fnName.charAt(0).toUpperCase() + fnName.substring(1)] = function(resp) {  // TODO: this defines function once per callback
         resp ? (resp.error ? reject(new MoneroError(resp.error)) : resolve(resp.result)) : resolve();
       };
       worker.postMessage([objectId, fnName].concat(args === undefined ? [] : GenUtils.listify(args)));

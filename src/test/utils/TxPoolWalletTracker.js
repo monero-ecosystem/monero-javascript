@@ -1,3 +1,7 @@
+const monerojs = require("../../../index");
+const GenUtils = monerojs.GenUtils;
+const MoneroUtils = monerojs.MoneroUtils;
+
 /**
  * Tracks wallets which are in sync with the tx pool and therefore whose txs in the pool
  * do not need to be waited on for up-to-date pool information e.g. to create txs.
@@ -51,6 +55,7 @@ class TxPoolWalletTracker {
     // loop until all wallet txs clear from pool
     let isFirst = true;
     let miningStarted = false;
+    const TestUtils = require("./TestUtils");
     let daemon = await TestUtils.getDaemonRpc();
     while (true) {
       
@@ -79,9 +84,13 @@ class TxPoolWalletTracker {
         let miningStatus = await daemon.getMiningStatus();
         if (!miningStatus.isActive()) {
           try {
+            const StartMining = require("./StartMining");
             await StartMining.startMining();
             miningStarted = true;
-          } catch (e) { } // no problem
+          } catch (e) {
+            console.error("Error starting mining:");
+            console.error(e);
+          }
         }
       }
       

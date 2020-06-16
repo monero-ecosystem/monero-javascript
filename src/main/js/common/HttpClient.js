@@ -1,5 +1,6 @@
-const Request = require("request-promise");
+const MoneroUtils = require("./MoneroUtils");
 const PromiseThrottle = require("promise-throttle");
+const Request = require("request-promise");
 
 /**
  * Handle HTTP requests with a uniform interface.

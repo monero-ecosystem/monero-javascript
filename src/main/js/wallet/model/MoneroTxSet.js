@@ -1,3 +1,8 @@
+const assert = require("assert");
+const GenUtils = require("../../common/GenUtils");
+const MoneroTxWallet = require("./MoneroTxWallet");
+const MoneroUtils = require("../../common/MoneroUtils");
+
 /**
  * Groups transactions who share common hex data which is needed in order to
  * sign and submit the transactions.

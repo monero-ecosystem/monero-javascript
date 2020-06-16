@@ -1,5 +1,23 @@
+const assert = require("assert");
+const TestUtils = require("./utils/TestUtils");
 const TestMoneroWalletCommon = require("./TestMoneroWalletCommon");
-const MoneroWalletWasm = require("../main/js/wallet/MoneroWalletWasm");
+const StartMining = require("./utils/StartMining");
+const WalletSyncPrinter = require("./utils/WalletSyncPrinter");
+const WalletEqualityUtils = require("./utils/WalletEqualityUtils");
+
+const monerojs = require("../../index");
+const MoneroWalletListener = monerojs.MoneroWalletListener;
+const LibraryUtils = monerojs.LibraryUtils;
+const MoneroWalletConfig = monerojs.MoneroWalletConfig;
+const GenUtils = monerojs.GenUtils;
+const MoneroUtils = monerojs.MoneroUtils;
+const BigInteger = monerojs.BigInteger;
+const MoneroTxWallet = monerojs.MoneroTxWallet;
+const MoneroTxConfig = monerojs.MoneroTxConfig;
+const MoneroRpcConnection = monerojs.MoneroRpcConnection;
+const MoneroDestination = monerojs.MoneroDestination;
+const MoneroOutputQuery = monerojs.MoneroOutputQuery;
+const MoneroOutputWallet = monerojs.MoneroOutputWallet;
 
 /**
  * Tests a Monero wallet using WebAssembly to bridge to monero-project's wallet2.
@@ -28,7 +46,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
     if (config.getServer() === undefined && config.getServerUri() === undefined) config.setServer(TestUtils.getDaemonRpcConnection());
     
     // open wallet
-    let wallet = await MoneroWalletWasm.openWallet(config);
+    let wallet = await monerojs.openWalletWasm(config);
     if (startSyncing !== false && await wallet.isConnected()) await wallet.startSyncing();
     return wallet;
   }
@@ -46,7 +64,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
     if (config.getProxyToWorker() === undefined) config.setProxyToWorker(TestUtils.PROXY_TO_WORKER);
     
     // create wallet
-    let wallet = await MoneroWalletWasm.createWallet(config);
+    let wallet = await monerojs.createWalletWasm(config);
     if (!random) assert.equal(await wallet.getSyncHeight(), config.getRestoreHeight() === undefined ? 0 : config.getRestoreHeight());
     if (startSyncing !== false && await wallet.isConnected()) await wallet.startSyncing();
     return wallet;
@@ -54,13 +72,13 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
   
   async getWalletGt() {
     let path = TestUtils.TEST_WALLETS_DIR + "/ground_truth";
-    let wallet = await MoneroWalletWasm.walletExists(path) ? await this.openWallet({path: path}) : await this.createWallet({path: path, mnemonic: TestUtils.MNEMONIC, restoreHeight: TestUtils.FIRST_RECEIVE_HEIGHT, proxyToWorker: TestUtils.PROXY_TO_WORKER});
+    let wallet = await monerojs.MoneroWalletWasm.walletExists(path) ? await this.openWallet({path: path}) : await this.createWallet({path: path, mnemonic: TestUtils.MNEMONIC, restoreHeight: TestUtils.FIRST_RECEIVE_HEIGHT, proxyToWorker: TestUtils.PROXY_TO_WORKER});
     await wallet.sync();
     return wallet;
   }
   
   async getMnemonicLanguages() {
-    return await MoneroWalletWasm.getMnemonicLanguages();
+    return await monerojs.MoneroWalletWasm.getMnemonicLanguages();
   }
   
   // ------------------------------- BEGIN TESTS ------------------------------
@@ -855,7 +873,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
         let path = TestMoneroWalletWasm._getRandomWalletPath();
         
         // wallet does not exist
-        assert(!(await MoneroWalletWasm.walletExists(path)));
+        assert(!(await monerojs.MoneroWalletWasm.walletExists(path)));
         
         // cannot open non-existant wallet
         try {
@@ -872,7 +890,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
         // test wallet at newly created state
         let err;
         try {
-          assert(await MoneroWalletWasm.walletExists(path));
+          assert(await monerojs.MoneroWalletWasm.walletExists(path));
           assert.equal(await wallet.getMnemonic(), TestUtils.MNEMONIC);
           assert.equal(await wallet.getNetworkType(), TestUtils.NETWORK_TYPE);
           assert.equal(await wallet.getDaemonConnection(), undefined);
@@ -893,7 +911,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
           wallet = await that.openWallet({path: path});
           
           // test wallet is at newly created state
-          assert(await MoneroWalletWasm.walletExists(path));
+          assert(await monerojs.MoneroWalletWasm.walletExists(path));
           assert.equal(await wallet.getMnemonic(), TestUtils.MNEMONIC);
           assert.equal(await wallet.getNetworkType(), TestUtils.NETWORK_TYPE);
           assert.equal(await wallet.getDaemonConnection(), undefined);
@@ -926,7 +944,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
           assert(await wallet.isConnected());
           assert.equal(await wallet.getHeight(), prevHeight);
           assert.equal(await wallet.getSyncHeight(), 0); // TODO monero core: restoreHeight is reset to 0 after closing
-          assert(await MoneroWalletWasm.walletExists(path));
+          assert(await monerojs.MoneroWalletWasm.walletExists(path));
           assert.equal(await wallet.getMnemonic(), TestUtils.MNEMONIC);
           assert.equal(await wallet.getNetworkType(), TestUtils.NETWORK_TYPE);
           assert.equal(await wallet.getMnemonicLanguage(), "English");
@@ -953,7 +971,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
           let path = TestUtils.TEST_WALLETS_DIR + "/" + walletName;
           
           // wallet does not exist
-          assert(!await MoneroWalletWasm.walletExists(path));
+          assert(!await monerojs.MoneroWalletWasm.walletExists(path));
           
           // create wallet at the path
           let restoreHeight = await that.daemon.getHeight() - 200;
@@ -963,18 +981,18 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
           await wallet.save();
           
           // wallet exists
-          assert(await MoneroWalletWasm.walletExists(path));
+          assert(await monerojs.MoneroWalletWasm.walletExists(path));
           
           // move wallet to a subdirectory
           let movedPath = TestUtils.TEST_WALLETS_DIR + "/moved/" + walletName;
           await wallet.moveTo(movedPath, TestUtils.WALLET_PASSWORD);
-          assert(!(await MoneroWalletWasm.walletExists(path)));
+          assert(!(await monerojs.MoneroWalletWasm.walletExists(path)));
           assert(!(await MoneroWalletWasm.walletExists(movedPath))); // wallet does not exist until saved
           await wallet.save();
-          assert(!(await MoneroWalletWasm.walletExists(path)));
+          assert(!(await monerojs.MoneroWalletWasm.walletExists(path)));
           assert(await MoneroWalletWasm.walletExists(movedPath));
           await wallet.close();
-          assert(!(await MoneroWalletWasm.walletExists(path)));
+          assert(!(await monerojs.MoneroWalletWasm.walletExists(path)));
           assert(await MoneroWalletWasm.walletExists(movedPath));
           
           // re-open and test wallet
@@ -983,13 +1001,13 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
           
           // move wallet back
           await wallet.moveTo(path, TestUtils.WALLET_PASSWORD);
-          assert(!(await MoneroWalletWasm.walletExists(path)));  // wallet does not exist until saved
+          assert(!(await monerojs.MoneroWalletWasm.walletExists(path)));  // wallet does not exist until saved
           assert(!(await MoneroWalletWasm.walletExists(movedPath)));
           await wallet.save();
-          assert(await MoneroWalletWasm.walletExists(path));
+          assert(await monerojs.MoneroWalletWasm.walletExists(path));
           assert(!(await MoneroWalletJni.walletExists(movedPath)));
           await wallet.close();
-          assert(await MoneroWalletWasm.walletExists(path));
+          assert(await monerojs.MoneroWalletWasm.walletExists(path));
           assert(!(await MoneroWalletWasm.walletExists(movedPath)));
         } catch (e) {
           err = e;
@@ -1049,7 +1067,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
       // ----------------------------- NOTIFICATION TESTS -------------------------
       
       if (testConfig.testRelays)
-      it("Receives funds within 10 seconds", async function() {
+      it("Receives funds within 10 seconds.", async function() {
         await testReceivesFundsWithin10Seconds(false);
       });
       
