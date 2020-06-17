@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/main/js/daemon/model/MoneroDaemonConnection.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/main/js/daemon/model/MoneroDaemonConnection.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const MoneroDaemonPeer = require("./MoneroDaemonPeer");
+
+/**
+ * Monero daemon connection.
+ */
+class MoneroDaemonConnection {
+  
+  constructor(state) {
+    this.state = Object.assign({}, state);
+    if (this.state.peer !== undefined &amp;&amp; !(this.state.peer instanceof MoneroDaemonPeer)) this.state.peer = new MoneroDaemonPeer(this.state.peer);
+  }
+  
+  toJson() {
+    let json = Object.assign({}, this.state);
+    if (json.peer) json.peer = json.peer.toJson();
+    return json;
+  }
+  
+  getPeer() {
+    return this.state.peer;
+  }
+
+  setPeer(peer) {
+    this.state.peer = peer;
+    return this;
+  }
+  
+  getId() {
+    return this.state.id;
+  }
+
+  setId(id) {
+    this.state.id = id;
+    return this;
+  }
+
+  getAvgDownload() {
+    return this.state.avgDownload;
+  }
+
+  setAvgDownload(avgDownload) {
+    this.state.avgDownload = avgDownload;
+    return this;
+  }
+
+  getAvgUpload() {
+    return this.state.avgUpload;
+  }
+
+  setAvgUpload(avgUpload) {
+    this.state.avgUpload = avgUpload;
+    return this;
+  }
+
+  getCurrentDownload() {
+    return this.state.currentDownload;
+  }
+
+  setCurrentDownload(currentDownload) {
+    this.state.currentDownload = currentDownload;
+    return this;
+  }
+
+  getCurrentUpload() {
+    return this.state.currentUpload;
+  }
+
+  setCurrentUpload(currentUpload) {
+    this.state.currentUpload = currentUpload;
+    return this;
+  }
+
+  getHeight() {
+    return this.state.height;
+  }
+
+  setHeight(height) {
+    this.state.height = height;
+    return this;
+  }
+
+  isIncoming() {
+    return this.state.isIncoming;
+  }
+
+  setIsIncoming(isIncoming) {
+    this.state.isIncoming = isIncoming;
+    return this;
+  }
+
+  getLiveTime() {
+    return this.state.liveTime;
+  }
+
+  setLiveTime(liveTime) {
+    this.state.liveTime = liveTime;
+    return this;
+  }
+
+  isLocalIp() {
+    return this.state.isLocalIp;
+  }
+
+  setIsLocalIp(isLocalIp) {
+    this.state.isLocalIp = isLocalIp;
+    return this;
+  }
+
+  isLocalHost() {
+    return this.state.isLocalHost;
+  }
+
+  setIsLocalHost(isLocalHost) {
+    this.state.isLocalHost = isLocalHost;
+    return this;
+  }
+
+  getNumReceives() {
+    return this.state.numReceives;
+  }
+
+  setNumReceives(numReceives) {
+    this.state.numReceives = numReceives;
+    return this;
+  }
+
+  getNumSends() {
+    return this.state.numSends;
+  }
+
+  setNumSends(numSends) {
+    this.state.numSends = numSends;
+    return this;
+  }
+
+  getReceiveIdleTime() {
+    return this.state.receiveIdleTime;
+  }
+
+  setReceiveIdleTime(receiveIdleTime) {
+    this.state.receiveIdleTime = receiveIdleTime;
+    return this;
+  }
+
+  getSendIdleTime() {
+    return this.state.sendIdleTime;
+  }
+
+  setSendIdleTime(sendIdleTime) {
+    this.state.sendIdleTime = sendIdleTime;
+    return this;
+  }
+
+  getState() {
+    return this.state.state;
+  }
+
+  setState(state) {
+    this.state.state = state;
+    return this;
+  }
+
+  getNumSupportFlags() {
+    return this.state.numSupportFlags;
+  }
+
+  setNumSupportFlags(numSupportFlags) {
+    this.state.numSupportFlags = numSupportFlags;
+    return this;
+  }
+  
+  getType() {
+    return this.state.type;
+  }
+  
+  setType(type) {
+    this.state.type = type;
+    return this;
+  }
+}
+
+module.exports = MoneroDaemonConnection;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ConnectionType.html">ConnectionType</a></li><li><a href="GenUtils.html">GenUtils</a></li><li><a href="HttpClient.html">HttpClient</a></li><li><a href="LibraryUtils.html">LibraryUtils</a></li><li><a href="MoneroAccount.html">MoneroAccount</a></li><li><a href="MoneroAccountTag.html">MoneroAccountTag</a></li><li><a href="MoneroAddressBookEntry.html">MoneroAddressBookEntry</a></li><li><a href="MoneroAltChain.html">MoneroAltChain</a></li><li><a href="MoneroBan.html">MoneroBan</a></li><li><a href="MoneroBlock.html">MoneroBlock</a></li><li><a href="MoneroBlockHeader.html">MoneroBlockHeader</a></li><li><a href="MoneroBlockTemplate.html">MoneroBlockTemplate</a></li><li><a href="MoneroCheck.html">MoneroCheck</a></li><li><a href="MoneroCheckReserve.html">MoneroCheckReserve</a></li><li><a href="MoneroCheckTx.html">MoneroCheckTx</a></li><li><a href="MoneroDaemonConnection.html">MoneroDaemonConnection</a></li><li><a href="MoneroDaemonConnectionSpan.html">MoneroDaemonConnectionSpan</a></li><li><a href="MoneroDaemonInfo.html">MoneroDaemonInfo</a></li><li><a href="MoneroDaemonPeer.html">MoneroDaemonPeer</a></li><li><a href="MoneroDaemonRpc.html">MoneroDaemonRpc</a></li><li><a href="MoneroDaemonSyncInfo.html">MoneroDaemonSyncInfo</a></li><li><a href="MoneroDaemonUpdateCheckResult.html">MoneroDaemonUpdateCheckResult</a></li><li><a href="MoneroDaemonUpdateDownloadResult.html">MoneroDaemonUpdateDownloadResult</a></li><li><a href="MoneroDestination.html">MoneroDestination</a></li><li><a href="MoneroError.html">MoneroError</a></li><li><a href="MoneroHardForkInfo.html">MoneroHardForkInfo</a></li><li><a href="MoneroIncomingTransfer.html">MoneroIncomingTransfer</a></li><li><a href="MoneroIntegratedAddress.html">MoneroIntegratedAddress</a></li><li><a href="MoneroKeyImage.html">MoneroKeyImage</a></li><li><a href="MoneroKeyImageImportResult.html">MoneroKeyImageImportResult</a></li><li><a href="MoneroKeyImageSpentStatus.html">MoneroKeyImageSpentStatus</a></li><li><a href="MoneroMinerTxSum.html">MoneroMinerTxSum</a></li><li><a href="MoneroMiningStatus.html">MoneroMiningStatus</a></li><li><a href="MoneroMultisigInfo.html">MoneroMultisigInfo</a></li><li><a href="MoneroMultisigInitResult.html">MoneroMultisigInitResult</a></li><li><a href="MoneroMultisigSignResult.html">MoneroMultisigSignResult</a></li><li><a href="MoneroNetworkType.html">MoneroNetworkType</a></li><li><a href="MoneroOutgoingTransfer.html">MoneroOutgoingTransfer</a></li><li><a href="MoneroOutput.html">MoneroOutput</a></li><li><a href="MoneroOutputHistogramEntry.html">MoneroOutputHistogramEntry</a></li><li><a href="MoneroOutputQuery.html">MoneroOutputQuery</a></li><li><a href="MoneroOutputWallet.html">MoneroOutputWallet</a></li><li><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></li><li><a href="MoneroRpcError.html">MoneroRpcError</a></li><li><a href="MoneroSubaddress.html">MoneroSubaddress</a></li><li><a href="MoneroSubmitTxResult.html">MoneroSubmitTxResult</a></li><li><a href="MoneroSyncResult.html">MoneroSyncResult</a></li><li><a href="MoneroTransfer.html">MoneroTransfer</a></li><li><a href="MoneroTransferQuery.html">MoneroTransferQuery</a></li><li><a href="MoneroTx.html">MoneroTx</a></li><li><a href="MoneroTxConfig.html">MoneroTxConfig</a></li><li><a href="MoneroTxPoolStats.html">MoneroTxPoolStats</a></li><li><a href="MoneroTxPriority.html">MoneroTxPriority</a></li><li><a href="MoneroTxQuery.html">MoneroTxQuery</a></li><li><a href="MoneroTxSet.html">MoneroTxSet</a></li><li><a href="MoneroTxWallet.html">MoneroTxWallet</a></li><li><a href="MoneroUtils.html">MoneroUtils</a></li><li><a href="MoneroVersion.html">MoneroVersion</a></li><li><a href="MoneroWalletConfig.html">MoneroWalletConfig</a></li><li><a href="MoneroWalletKeys.html">MoneroWalletKeys</a></li><li><a href="MoneroWalletListener.html">MoneroWalletListener</a></li><li><a href="MoneroWalletRpc.html">MoneroWalletRpc</a></li><li><a href="MoneroWalletWasm.html">MoneroWalletWasm</a></li><li><a href="SslOptions.html">SslOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="MoneroDaemon.html">MoneroDaemon</a></li><li><a href="MoneroWallet.html">MoneroWallet</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectToDaemonRpc">connectToDaemonRpc</a></li><li><a href="global.html#connectToWalletRpc">connectToWalletRpc</a></li><li><a href="global.html#createWalletKeys">createWalletKeys</a></li><li><a href="global.html#createWalletWasm">createWalletWasm</a></li><li><a href="global.html#openWalletWasm">openWalletWasm</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Jun 17 2020 17:37:07 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

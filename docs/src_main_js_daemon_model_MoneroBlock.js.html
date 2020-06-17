@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/main/js/daemon/model/MoneroBlock.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/main/js/daemon/model/MoneroBlock.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const assert = require("assert");
+const GenUtils = require("../../common/GenUtils");
+const MoneroBlockHeader = require("./MoneroBlockHeader");
+const MoneroTx = require("./MoneroTx");
+const MoneroTxQuery = require("../../wallet/model/MoneroTxQuery");
+const MoneroTxWallet = require("../../wallet/model/MoneroTxWallet");
+
+/**
+ * Models a Monero block in the blockchain.
+ * 
+ * @extends {MoneroBlockHeader}
+ */
+class MoneroBlock extends MoneroBlockHeader {
+  
+  /**
+   * Construct the model.
+   * 
+   * @param {MoneroBlock|MoneroBlockHeader|object} state is existing state to initialize from (optional)
+   * @param {MoneroBlock.DeserializationType} txType informs the tx deserialization type (MoneroTx, MoneroTxWallet, MoneroTxQuery)
+   */
+  constructor(state, txType) {
+    super(state);
+    state = this.state;
+    
+    // deserialize miner tx
+    if (state.minerTx &amp;&amp; !(state.minerTx instanceof MoneroTx)) state.minerTx = new MoneroTx(state.minerTx).setBlock(this);
+    
+    // deserialize non-miner txs
+    if (state.txs) {
+      for (let i = 0; i &lt; state.txs.length; i++) {
+        if (txType === MoneroBlock.DeserializationType.TX || txType === undefined) {
+          if (!(state.txs[i] instanceof MoneroTx)) state.txs[i] = new MoneroTx(state.txs[i]).setBlock(this);
+        } else if (txType === MoneroBlock.DeserializationType.TX_WALLET) {
+          if (!(state.txs[i] instanceof MoneroTxWallet)) state.txs[i] = new MoneroTxWallet(state.txs[i]).setBlock(this);
+        } else if (txType === MoneroBlock.DeserializationType.TX_QUERY) {
+          if (!(state.txs[i] instanceof MoneroTxQuery)) state.txs[i] = new MoneroTxQuery(state.txs[i]).setBlock(this);
+        } else {
+          throw new Error("Unrecognized tx deserialization type: " + txType);
+        }
+      }
+    }
+  }
+  
+  getHex() {
+    return this.state.hex;
+  }
+  
+  setHex(hex) {
+    this.state.hex = hex;
+    return this;
+  }
+  
+  getMinerTx() {
+    return this.state.minerTx;
+  }
+  
+  setMinerTx(minerTx) {
+    this.state.minerTx = minerTx;
+    return this;
+  }
+  
+  getTxs() {
+    return this.state.txs;
+  }
+  
+  setTxs(txs) {
+    this.state.txs = txs;
+    return this;
+  }
+  
+  getTxHashes() {
+    return this.state.txHashes;
+  }
+  
+  setTxHashes(txHashes) {
+    this.state.txHashes = txHashes;
+    return this;
+  }
+  
+  copy() {
+    return new MoneroBlock(this);
+  }
+  
+  toJson() {
+    let json = super.toJson();
+    if (this.getMinerTx()) json.minerTx = this.getMinerTx().toJson();
+    if (this.getTxs()) {
+      json.txs = [];
+      for (let tx of this.getTxs()) json.txs.push(tx.toJson());
+    }
+    return json;
+  }
+  
+  merge(block) {
+    assert(block instanceof MoneroBlock);
+    if (this === block) return this;
+    
+    // merge header fields
+    super.merge(block);
+    
+    // merge reconcilable block extensions
+    this.setHex(GenUtils.reconcile(this.getHex(), block.getHex()));
+    this.setTxHashes(GenUtils.reconcile(this.getTxHashes(), block.getTxHashes()));
+    
+    // merge miner tx
+    if (this.getMinerTx() === undefined) this.setMinerTx(block.getMinerTx());
+    if (block.getMinerTx() !== undefined) {
+      block.getMinerTx().setBlock(this);
+      minerTx.merge(block.getMinerTx());
+    }
+    
+    // merge non-miner txs
+    if (block.getTxs() !== undefined) {
+      for (let tx of block.getTxs()) {
+        tx.setBlock(this);
+        MoneroBlock._mergeTx(this.getTxs(), tx);
+      }
+    }
+
+    return this;
+  }
+  
+  toString(indent = 0) {
+    let str = super.toString(indent) + "\n";
+    str += GenUtils.kvLine("Hex", this.getHex(), indent);
+    if (this.getTxs()) {
+      str += GenUtils.kvLine("Txs", "", indent);
+      for (let tx of this.getTxs()) {
+        str += tx.toString(indent + 1) + "\n";
+      }
+    }
+    if (this.getMinerTx()) {
+      str += GenUtils.kvLine("Miner tx", "", indent);
+      str += this.getMinerTx().toString(indent + 1) + "\n";
+    }
+    str += GenUtils.kvLine("Txs hashes", this.getTxHashes(), indent);
+    return str[str.length - 1] === "\n" ? str.slice(0, str.length - 1) : str  // strip last newline
+  }
+  
+  // private helper to merge txs
+  static _mergeTx(txs, tx) {
+    for (let aTx of txs) {
+      if (aTx.getHash() === tx.getHash()) {
+        aTx.merge(tx);
+        return;
+      }
+    }
+    txs.push(tx);
+  }
+}
+
+MoneroBlock.DeserializationType = {
+    TX: 0,
+    TX_WALLET: 1,
+    TX_QUERY: 2
+}
+
+module.exports = MoneroBlock;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ConnectionType.html">ConnectionType</a></li><li><a href="GenUtils.html">GenUtils</a></li><li><a href="HttpClient.html">HttpClient</a></li><li><a href="LibraryUtils.html">LibraryUtils</a></li><li><a href="MoneroAccount.html">MoneroAccount</a></li><li><a href="MoneroAccountTag.html">MoneroAccountTag</a></li><li><a href="MoneroAddressBookEntry.html">MoneroAddressBookEntry</a></li><li><a href="MoneroAltChain.html">MoneroAltChain</a></li><li><a href="MoneroBan.html">MoneroBan</a></li><li><a href="MoneroBlock.html">MoneroBlock</a></li><li><a href="MoneroBlockHeader.html">MoneroBlockHeader</a></li><li><a href="MoneroBlockTemplate.html">MoneroBlockTemplate</a></li><li><a href="MoneroCheck.html">MoneroCheck</a></li><li><a href="MoneroCheckReserve.html">MoneroCheckReserve</a></li><li><a href="MoneroCheckTx.html">MoneroCheckTx</a></li><li><a href="MoneroDaemonConnection.html">MoneroDaemonConnection</a></li><li><a href="MoneroDaemonConnectionSpan.html">MoneroDaemonConnectionSpan</a></li><li><a href="MoneroDaemonInfo.html">MoneroDaemonInfo</a></li><li><a href="MoneroDaemonPeer.html">MoneroDaemonPeer</a></li><li><a href="MoneroDaemonRpc.html">MoneroDaemonRpc</a></li><li><a href="MoneroDaemonSyncInfo.html">MoneroDaemonSyncInfo</a></li><li><a href="MoneroDaemonUpdateCheckResult.html">MoneroDaemonUpdateCheckResult</a></li><li><a href="MoneroDaemonUpdateDownloadResult.html">MoneroDaemonUpdateDownloadResult</a></li><li><a href="MoneroDestination.html">MoneroDestination</a></li><li><a href="MoneroError.html">MoneroError</a></li><li><a href="MoneroHardForkInfo.html">MoneroHardForkInfo</a></li><li><a href="MoneroIncomingTransfer.html">MoneroIncomingTransfer</a></li><li><a href="MoneroIntegratedAddress.html">MoneroIntegratedAddress</a></li><li><a href="MoneroKeyImage.html">MoneroKeyImage</a></li><li><a href="MoneroKeyImageImportResult.html">MoneroKeyImageImportResult</a></li><li><a href="MoneroKeyImageSpentStatus.html">MoneroKeyImageSpentStatus</a></li><li><a href="MoneroMinerTxSum.html">MoneroMinerTxSum</a></li><li><a href="MoneroMiningStatus.html">MoneroMiningStatus</a></li><li><a href="MoneroMultisigInfo.html">MoneroMultisigInfo</a></li><li><a href="MoneroMultisigInitResult.html">MoneroMultisigInitResult</a></li><li><a href="MoneroMultisigSignResult.html">MoneroMultisigSignResult</a></li><li><a href="MoneroNetworkType.html">MoneroNetworkType</a></li><li><a href="MoneroOutgoingTransfer.html">MoneroOutgoingTransfer</a></li><li><a href="MoneroOutput.html">MoneroOutput</a></li><li><a href="MoneroOutputHistogramEntry.html">MoneroOutputHistogramEntry</a></li><li><a href="MoneroOutputQuery.html">MoneroOutputQuery</a></li><li><a href="MoneroOutputWallet.html">MoneroOutputWallet</a></li><li><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></li><li><a href="MoneroRpcError.html">MoneroRpcError</a></li><li><a href="MoneroSubaddress.html">MoneroSubaddress</a></li><li><a href="MoneroSubmitTxResult.html">MoneroSubmitTxResult</a></li><li><a href="MoneroSyncResult.html">MoneroSyncResult</a></li><li><a href="MoneroTransfer.html">MoneroTransfer</a></li><li><a href="MoneroTransferQuery.html">MoneroTransferQuery</a></li><li><a href="MoneroTx.html">MoneroTx</a></li><li><a href="MoneroTxConfig.html">MoneroTxConfig</a></li><li><a href="MoneroTxPoolStats.html">MoneroTxPoolStats</a></li><li><a href="MoneroTxPriority.html">MoneroTxPriority</a></li><li><a href="MoneroTxQuery.html">MoneroTxQuery</a></li><li><a href="MoneroTxSet.html">MoneroTxSet</a></li><li><a href="MoneroTxWallet.html">MoneroTxWallet</a></li><li><a href="MoneroUtils.html">MoneroUtils</a></li><li><a href="MoneroVersion.html">MoneroVersion</a></li><li><a href="MoneroWalletConfig.html">MoneroWalletConfig</a></li><li><a href="MoneroWalletKeys.html">MoneroWalletKeys</a></li><li><a href="MoneroWalletListener.html">MoneroWalletListener</a></li><li><a href="MoneroWalletRpc.html">MoneroWalletRpc</a></li><li><a href="MoneroWalletWasm.html">MoneroWalletWasm</a></li><li><a href="SslOptions.html">SslOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="MoneroDaemon.html">MoneroDaemon</a></li><li><a href="MoneroWallet.html">MoneroWallet</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectToDaemonRpc">connectToDaemonRpc</a></li><li><a href="global.html#connectToWalletRpc">connectToWalletRpc</a></li><li><a href="global.html#createWalletKeys">createWalletKeys</a></li><li><a href="global.html#createWalletWasm">createWalletWasm</a></li><li><a href="global.html#openWalletWasm">openWalletWasm</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Jun 17 2020 17:37:07 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

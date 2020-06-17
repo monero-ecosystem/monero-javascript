@@ -94,21 +94,215 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
             
-<h4 class="name" id="ConnectionType"><span class="type-signature"></span>ConnectionType<span class="type-signature"></span></h4>
 
+    
+
+    
+    <h4 class="name" id="connectToDaemonRpc"><span class="type-signature"></span>connectToDaemonRpc<span class="signature">(uriOrConfigOrConnection, username, password, rejectUnauthorized, pollInterval, proxyToWorker)</span><span class="type-signature"> &rarr; {<a href="MoneroDaemonRpc.html">MoneroDaemonRpc</a>}</span></h4>
+    
+
+    
 
 
 
 <div class="description">
-    Enumerates connection types.
+    <p>Create a client connected to monero-daemon-rpc.<p>
 
-Based on enums.h in monero-project.
+<p>Examples:<p>
+
+<code>
+let daemon = monerojs.connectToDaemonRpc("http://localhost:38081", "superuser", "abctesting123");<br><br>
+
+let daemon = monerojs.connectToDaemonRpc({<br>
+&nbsp;&nbsp; uri: "http://localhost:38081",<br>
+&nbsp;&nbsp; username: "superuser",<br>
+&nbsp;&nbsp; password: "abctesting123"<br>
+});
+</code>
 </div>
 
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uriOrConfigOrConnection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">object</span>
+|
+
+<span class="param-type"><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">uri of monero-daemon-rpc or JS config object or MoneroRpcConnection</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>username</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">username to authenticate with monero-daemon-rpc (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">password to authenticate with monero-daemon-rpc (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rejectUnauthorized</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">rejects self-signed certificates if true (default true)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pollInterval</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">poll interval to query for updates in ms (default 5000)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>proxyToWorker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">runs the daemon client in a web worker if true (default true if browser, false otherwise)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -144,7 +338,7 @@ Based on enums.h in monero-project.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="daemon_model_ConnectionType.js.html">daemon/model/ConnectionType.js</a>, <a href="daemon_model_ConnectionType.js.html#line6">line 6</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line111">line 111</a>
     </li></ul></dd>
     
 
@@ -160,17 +354,297 @@ Based on enums.h in monero-project.
 
 
 
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the daemon RPC client
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="MoneroDaemonRpc.html">MoneroDaemonRpc</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
         
             
-<h4 class="name" id="MoneroKeyImageSpentStatus"><span class="type-signature"></span>MoneroKeyImageSpentStatus<span class="type-signature"></span></h4>
 
+    
+
+    
+    <h4 class="name" id="connectToWalletRpc"><span class="type-signature"></span>connectToWalletRpc<span class="signature">(uriOrConfigOrConnection, username, password, rejectUnauthorized)</span><span class="type-signature"> &rarr; {<a href="MoneroWalletRpc.html">MoneroWalletRpc</a>}</span></h4>
+    
+
+    
 
 
 
 <div class="description">
-    Enumerate key image spent statuses.
+    <p>Create a client connected to monero-wallet-rpc.</p>
+
+<p>Examples:</p>
+
+<code>
+let walletRpc = new MoneroWalletRpc("http://localhost:38081", "superuser", "abctesting123");<br><br>
+
+let walletRpc = new MoneroWalletRpc({<br>
+&nbsp;&nbsp; uri: "http://localhost:38081",<br>
+&nbsp;&nbsp; username: "superuser",<br>
+&nbsp;&nbsp; password: "abctesting123",<br>
+&nbsp;&nbsp; rejectUnauthorized: false // e.g. local development<br>
+});
+</code>
 </div>
 
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uriOrConfigOrConnection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">object</span>
+|
+
+<span class="param-type"><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">uri of monero-wallet-rpc or JS config object or MoneroRpcConnection
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>username</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">username to authenticate with monero-wallet-rpc (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">password to authenticate with monero-wallet-rpc (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rejectUnauthorized</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">rejects self-signed certificates if true (default true)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>username</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">username to authenticate with monero-wallet-rpc (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">password to authenticate with monero-wallet-rpc (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rejectUnauthorized</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">rejects self-signed certificates if true (default true)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -206,7 +680,7 @@ Based on enums.h in monero-project.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="daemon_model_MoneroKeyImageSpentStatus.js.html">daemon/model/MoneroKeyImageSpentStatus.js</a>, <a href="daemon_model_MoneroKeyImageSpentStatus.js.html#line4">line 4</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line138">line 138</a>
     </li></ul></dd>
     
 
@@ -222,17 +696,317 @@ Based on enums.h in monero-project.
 
 
 
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the wallet RPC client
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="MoneroWalletRpc.html">MoneroWalletRpc</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
         
             
-<h4 class="name" id="MoneroNetworkType"><span class="type-signature"></span>MoneroNetworkType<span class="type-signature"></span></h4>
 
+    
+
+    
+    <h4 class="name" id="createWalletKeys"><span class="type-signature"></span>createWalletKeys<span class="signature">(config)</span><span class="type-signature"> &rarr; {<a href="MoneroWalletKeys.html">MoneroWalletKeys</a>}</span></h4>
+    
+
+    
 
 
 
 <div class="description">
-    Defines the Monero network types (mainnet, testnet, and stagenet).
+    <p>Create a wallet using WebAssembly bindings to monero-core.</p>
+
+<p>Example:</p>
+
+<code>
+let wallet = await monerojs.createWalletKeys({<br>
+&nbsp;&nbsp; password: "abc123",<br>
+&nbsp;&nbsp; networkType: MoneroNetworkType.STAGENET,<br>
+&nbsp;&nbsp; mnemonic: "coexist igloo pamphlet lagoon..."<br>
+});
+</code>
 </div>
 
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="MoneroWalletConfig.html">MoneroWalletConfig</a></span>
+|
+
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">MoneroWalletConfig or equivalent config object
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>networkType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">network type of the wallet to create (one of "mainnet", "testnet", "stagenet" or MoneroNetworkType.MAINNET|TESTNET|STAGENET)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mnemonic</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">mnemonic of the wallet to create (optional, random wallet created if neither mnemonic nor keys given)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>seedOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the offset used to derive a new seed from the given mnemonic to recover a secret wallet from the mnemonic phrase</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>primaryAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">primary address of the wallet to create (only provide if restoring from keys)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>privateViewKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">private view key of the wallet to create (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>privateSpendKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">private spend key of the wallet to create (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>language</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">language of the wallet's mnemonic phrase (defaults to "English" or auto-detected)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -268,7 +1042,7 @@ Based on enums.h in monero-project.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="daemon_model_MoneroNetworkType.js.html">daemon/model/MoneroNetworkType.js</a>, <a href="daemon_model_MoneroNetworkType.js.html#line4">line 4</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line246">line 246</a>
     </li></ul></dd>
     
 
@@ -284,17 +1058,553 @@ Based on enums.h in monero-project.
 
 
 
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the created wallet
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="MoneroWalletKeys.html">MoneroWalletKeys</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
         
             
-<h4 class="name" id="MoneroRpcConfigDefault"><span class="type-signature">(constant) </span>MoneroRpcConfigDefault<span class="type-signature"></span></h4>
 
+    
+
+    
+    <h4 class="name" id="createWalletWasm"><span class="type-signature"></span>createWalletWasm<span class="signature">(config)</span><span class="type-signature"> &rarr; {<a href="MoneroWalletWasm.html">MoneroWalletWasm</a>}</span></h4>
+    
+
+    
 
 
 
 <div class="description">
-    Default RPC configuration.
+    <p>Create a wallet using WebAssembly bindings to monero-core.<p>
+
+<p>Example:</p>
+
+<code>
+let wallet = await monerojs.createWalletWasm({<br>
+&nbsp;&nbsp; path: "./test_wallets/wallet1", // leave blank for in-memory wallet<br>
+&nbsp;&nbsp; password: "supersecretpassword",<br>
+&nbsp;&nbsp; networkType: MoneroNetworkType.STAGENET,<br>
+&nbsp;&nbsp; mnemonic: "coexist igloo pamphlet lagoon...",<br>
+&nbsp;&nbsp; restoreHeight: 1543218,<br>
+&nbsp;&nbsp; server: new monerojs.MoneroRpcConnection("http://localhost:38081", "daemon_user", "daemon_password_123"),<br>
+});
+</code>
 </div>
 
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+|
+
+<span class="param-type"><a href="MoneroWalletConfig.html">MoneroWalletConfig</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">MoneroWalletConfig or equivalent config object
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">path of the wallet to create (optional, in-memory wallet if not given)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">password of the wallet to create</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>networkType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">network type of the wallet to create (one of "mainnet", "testnet", "stagenet" or MoneroNetworkType.MAINNET|TESTNET|STAGENET)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mnemonic</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">mnemonic of the wallet to create (optional, random wallet created if neither mnemonic nor keys given)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>seedOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the offset used to derive a new seed from the given mnemonic to recover a secret wallet from the mnemonic phrase</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>primaryAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">primary address of the wallet to create (only provide if restoring from keys)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>privateViewKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">private view key of the wallet to create (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>privateSpendKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">private spend key of the wallet to create (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>restoreHeight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">block height to start scanning frsom (defaults to 0 unless generating random wallet)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>language</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">language of the wallet's mnemonic phrase (defaults to "English" or auto-detected)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>serverUri</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">uri of the wallet's daemon (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>serverUsername</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">username to authenticate with the daemon (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>serverPassword</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">password to authenticate with the daemon (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rejectUnauthorized</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">reject self-signed server certificates if true (defaults to true)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>server</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></span>
+|
+
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">MoneroRpcConnection or equivalent JS object providing daemon configuration (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>proxyToWorker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">proxies wallet operations to a web worker in order to not block the browser's main thread (default true if browser, false otherwise)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">fs</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Node.js compatible file system to use (defaults to disk or in-memory FS if browser)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -330,7 +1640,7 @@ Based on enums.h in monero-project.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_MoneroRpcConnection.js.html">common/MoneroRpcConnection.js</a>, <a href="common_MoneroRpcConnection.js.html#line4">line 4</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line176">line 176</a>
     </li></ul></dd>
     
 
@@ -346,22 +1656,569 @@ Based on enums.h in monero-project.
 
 
 
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the created wallet
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="MoneroWalletWasm.html">MoneroWalletWasm</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
         
             
-<h4 class="name" id="MoneroTxPriority"><span class="type-signature"></span>MoneroTxPriority<span class="type-signature"></span></h4>
 
+    
+
+    
+    <h4 class="name" id="openWalletWasm"><span class="type-signature"></span>openWalletWasm<span class="signature">(configOrPath, password, networkType, daemonUriOrConnection, proxyToWorker, fs)</span><span class="type-signature"> &rarr; {<a href="MoneroWalletWasm.html">MoneroWalletWasm</a>}</span></h4>
+    
+
+    
 
 
 
 <div class="description">
-    Enumerates send priorities:<br><br>
+    <p>Open an existing wallet using WebAssembly bindings to monero-core.</p>
 
-&nbsp;&nbsp; DEFAULT (NORMAL)<br>
-&nbsp;&nbsp; UNIMPORTANT<br>
-&nbsp;&nbsp; NORMAL<br>
-&nbsp;&nbsp; ELEVATED<br>
+<p>Examples:<p>
+
+<code>
+let wallet1 = await monerojs.openWalletWasm(<br>
+&nbsp;&nbsp; "./wallets/wallet1",<br>
+&nbsp;&nbsp; "supersecretpassword",<br>
+&nbsp;&nbsp; MoneroNetworkType.STAGENET,<br>
+&nbsp;&nbsp; "http://localhost:38081" // daemon uri<br>
+);<br><br>
+
+let wallet2 = await monerojs.openWalletWasm({<br>
+&nbsp;&nbsp; path: "./wallets/wallet2",<br>
+&nbsp;&nbsp; password: "supersecretpassword",<br>
+&nbsp;&nbsp; networkType: MoneroNetworkType.STAGENET,<br>
+&nbsp;&nbsp; serverUri: "http://localhost:38081", // daemon configuration<br>
+&nbsp;&nbsp; serverUsername: "superuser",<br>
+&nbsp;&nbsp; serverPassword: "abctesting123"<br>
+});
+</code>
 </div>
 
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>configOrPath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="MoneroWalletConfig.html">MoneroWalletConfig</a></span>
+|
+
+<span class="param-type">object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">MoneroWalletConfig or equivalent config object or a path to a wallet to open
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">path of the wallet to open (optional if 'keysData' provided)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">password of the wallet to open</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>networkType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">network type of the wallet to open (one of "mainnet", "testnet", "stagenet" or MoneroNetworkType.MAINNET|TESTNET|STAGENET)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>keysData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Uint8Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">wallet keys data to open (optional if path provided)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cacheData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Uint8Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">wallet cache data to open (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>serverUri</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">uri of the wallet's daemon (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>serverUsername</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">username to authenticate with the daemon (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>serverPassword</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">password to authenticate with the daemon (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rejectUnauthorized</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">reject self-signed server certificates if true (defaults to true)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>server</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></span>
+|
+
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">MoneroRpcConnection or equivalent JS object configuring the daemon connection (optional)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>proxyToWorker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">proxies wallet operations to a web worker in order to not block the browser's main thread (default true if browser, false otherwise)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">fs</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Node.js compatible file system to use (defaults to disk or in-memory FS if browser)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">password of the wallet to open</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>networkType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">network type of the wallet to open</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>daemonUriOrConnection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">daemon URI or MoneroRpcConnection</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>proxyToWorker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">proxies wallet operations to a web worker in order to not block the browser's main thread (default true if browser, false otherwise)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">fs</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Node.js compatible file system to use (defaults to disk or in-memory FS if browser)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -397,7 +2254,7 @@ Based on enums.h in monero-project.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wallet_model_MoneroTxPriority.js.html">wallet/model/MoneroTxPriority.js</a>, <a href="wallet_model_MoneroTxPriority.js.html#line9">line 9</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line221">line 221</a>
     </li></ul></dd>
     
 
@@ -413,9 +2270,43 @@ Based on enums.h in monero-project.
 
 
 
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
         
+<div class="param-desc">
+    the opened wallet
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="MoneroWalletWasm.html">MoneroWalletWasm</a></span>
+
+
+    </dd>
+</dl>
+
     
 
+
+
+
+
+        
     
 
     
@@ -431,13 +2322,13 @@ Based on enums.h in monero-project.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GenUtils.html">GenUtils</a></li><li><a href="HttpClient.html">HttpClient</a></li><li><a href="LibraryUtils.html">LibraryUtils</a></li><li><a href="MoneroAccount.html">MoneroAccount</a></li><li><a href="MoneroAccountTag.html">MoneroAccountTag</a></li><li><a href="MoneroAddressBookEntry.html">MoneroAddressBookEntry</a></li><li><a href="MoneroAltChain.html">MoneroAltChain</a></li><li><a href="MoneroBan.html">MoneroBan</a></li><li><a href="MoneroBlock.html">MoneroBlock</a></li><li><a href="MoneroBlockHeader.html">MoneroBlockHeader</a></li><li><a href="MoneroBlockTemplate.html">MoneroBlockTemplate</a></li><li><a href="MoneroCheck.html">MoneroCheck</a></li><li><a href="MoneroCheckReserve.html">MoneroCheckReserve</a></li><li><a href="MoneroCheckTx.html">MoneroCheckTx</a></li><li><a href="MoneroDaemonConnection.html">MoneroDaemonConnection</a></li><li><a href="MoneroDaemonConnectionSpan.html">MoneroDaemonConnectionSpan</a></li><li><a href="MoneroDaemonInfo.html">MoneroDaemonInfo</a></li><li><a href="MoneroDaemonPeer.html">MoneroDaemonPeer</a></li><li><a href="MoneroDaemonRpc.html">MoneroDaemonRpc</a></li><li><a href="MoneroDaemonSyncInfo.html">MoneroDaemonSyncInfo</a></li><li><a href="MoneroDaemonUpdateCheckResult.html">MoneroDaemonUpdateCheckResult</a></li><li><a href="MoneroDaemonUpdateDownloadResult.html">MoneroDaemonUpdateDownloadResult</a></li><li><a href="MoneroDestination.html">MoneroDestination</a></li><li><a href="MoneroError.html">MoneroError</a></li><li><a href="MoneroHardForkInfo.html">MoneroHardForkInfo</a></li><li><a href="MoneroIncomingTransfer.html">MoneroIncomingTransfer</a></li><li><a href="MoneroIntegratedAddress.html">MoneroIntegratedAddress</a></li><li><a href="MoneroKeyImage.html">MoneroKeyImage</a></li><li><a href="MoneroKeyImageImportResult.html">MoneroKeyImageImportResult</a></li><li><a href="MoneroMinerTxSum.html">MoneroMinerTxSum</a></li><li><a href="MoneroMiningStatus.html">MoneroMiningStatus</a></li><li><a href="MoneroMultisigInfo.html">MoneroMultisigInfo</a></li><li><a href="MoneroMultisigInitResult.html">MoneroMultisigInitResult</a></li><li><a href="MoneroMultisigSignResult.html">MoneroMultisigSignResult</a></li><li><a href="MoneroOutgoingTransfer.html">MoneroOutgoingTransfer</a></li><li><a href="MoneroOutput.html">MoneroOutput</a></li><li><a href="MoneroOutputHistogramEntry.html">MoneroOutputHistogramEntry</a></li><li><a href="MoneroOutputQuery.html">MoneroOutputQuery</a></li><li><a href="MoneroOutputWallet.html">MoneroOutputWallet</a></li><li><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></li><li><a href="MoneroRpcError.html">MoneroRpcError</a></li><li><a href="MoneroSubaddress.html">MoneroSubaddress</a></li><li><a href="MoneroSubmitTxResult.html">MoneroSubmitTxResult</a></li><li><a href="MoneroSyncResult.html">MoneroSyncResult</a></li><li><a href="MoneroTransfer.html">MoneroTransfer</a></li><li><a href="MoneroTransferQuery.html">MoneroTransferQuery</a></li><li><a href="MoneroTx.html">MoneroTx</a></li><li><a href="MoneroTxConfig.html">MoneroTxConfig</a></li><li><a href="MoneroTxPoolStats.html">MoneroTxPoolStats</a></li><li><a href="MoneroTxQuery.html">MoneroTxQuery</a></li><li><a href="MoneroTxSet.html">MoneroTxSet</a></li><li><a href="MoneroTxWallet.html">MoneroTxWallet</a></li><li><a href="MoneroUtils.html">MoneroUtils</a></li><li><a href="MoneroVersion.html">MoneroVersion</a></li><li><a href="MoneroWalletConfig.html">MoneroWalletConfig</a></li><li><a href="MoneroWalletKeys.html">MoneroWalletKeys</a></li><li><a href="MoneroWalletListener.html">MoneroWalletListener</a></li><li><a href="MoneroWalletRpc.html">MoneroWalletRpc</a></li><li><a href="MoneroWalletWasm.html">MoneroWalletWasm</a></li><li><a href="SslOptions.html">SslOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="MoneroDaemon.html">MoneroDaemon</a></li><li><a href="MoneroWallet.html">MoneroWallet</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ConnectionType">ConnectionType</a></li><li><a href="global.html#MoneroKeyImageSpentStatus">MoneroKeyImageSpentStatus</a></li><li><a href="global.html#MoneroNetworkType">MoneroNetworkType</a></li><li><a href="global.html#MoneroRpcConfigDefault">MoneroRpcConfigDefault</a></li><li><a href="global.html#MoneroTxPriority">MoneroTxPriority</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ConnectionType.html">ConnectionType</a></li><li><a href="GenUtils.html">GenUtils</a></li><li><a href="HttpClient.html">HttpClient</a></li><li><a href="LibraryUtils.html">LibraryUtils</a></li><li><a href="MoneroAccount.html">MoneroAccount</a></li><li><a href="MoneroAccountTag.html">MoneroAccountTag</a></li><li><a href="MoneroAddressBookEntry.html">MoneroAddressBookEntry</a></li><li><a href="MoneroAltChain.html">MoneroAltChain</a></li><li><a href="MoneroBan.html">MoneroBan</a></li><li><a href="MoneroBlock.html">MoneroBlock</a></li><li><a href="MoneroBlockHeader.html">MoneroBlockHeader</a></li><li><a href="MoneroBlockTemplate.html">MoneroBlockTemplate</a></li><li><a href="MoneroCheck.html">MoneroCheck</a></li><li><a href="MoneroCheckReserve.html">MoneroCheckReserve</a></li><li><a href="MoneroCheckTx.html">MoneroCheckTx</a></li><li><a href="MoneroDaemonConnection.html">MoneroDaemonConnection</a></li><li><a href="MoneroDaemonConnectionSpan.html">MoneroDaemonConnectionSpan</a></li><li><a href="MoneroDaemonInfo.html">MoneroDaemonInfo</a></li><li><a href="MoneroDaemonPeer.html">MoneroDaemonPeer</a></li><li><a href="MoneroDaemonRpc.html">MoneroDaemonRpc</a></li><li><a href="MoneroDaemonSyncInfo.html">MoneroDaemonSyncInfo</a></li><li><a href="MoneroDaemonUpdateCheckResult.html">MoneroDaemonUpdateCheckResult</a></li><li><a href="MoneroDaemonUpdateDownloadResult.html">MoneroDaemonUpdateDownloadResult</a></li><li><a href="MoneroDestination.html">MoneroDestination</a></li><li><a href="MoneroError.html">MoneroError</a></li><li><a href="MoneroHardForkInfo.html">MoneroHardForkInfo</a></li><li><a href="MoneroIncomingTransfer.html">MoneroIncomingTransfer</a></li><li><a href="MoneroIntegratedAddress.html">MoneroIntegratedAddress</a></li><li><a href="MoneroKeyImage.html">MoneroKeyImage</a></li><li><a href="MoneroKeyImageImportResult.html">MoneroKeyImageImportResult</a></li><li><a href="MoneroKeyImageSpentStatus.html">MoneroKeyImageSpentStatus</a></li><li><a href="MoneroMinerTxSum.html">MoneroMinerTxSum</a></li><li><a href="MoneroMiningStatus.html">MoneroMiningStatus</a></li><li><a href="MoneroMultisigInfo.html">MoneroMultisigInfo</a></li><li><a href="MoneroMultisigInitResult.html">MoneroMultisigInitResult</a></li><li><a href="MoneroMultisigSignResult.html">MoneroMultisigSignResult</a></li><li><a href="MoneroNetworkType.html">MoneroNetworkType</a></li><li><a href="MoneroOutgoingTransfer.html">MoneroOutgoingTransfer</a></li><li><a href="MoneroOutput.html">MoneroOutput</a></li><li><a href="MoneroOutputHistogramEntry.html">MoneroOutputHistogramEntry</a></li><li><a href="MoneroOutputQuery.html">MoneroOutputQuery</a></li><li><a href="MoneroOutputWallet.html">MoneroOutputWallet</a></li><li><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></li><li><a href="MoneroRpcError.html">MoneroRpcError</a></li><li><a href="MoneroSubaddress.html">MoneroSubaddress</a></li><li><a href="MoneroSubmitTxResult.html">MoneroSubmitTxResult</a></li><li><a href="MoneroSyncResult.html">MoneroSyncResult</a></li><li><a href="MoneroTransfer.html">MoneroTransfer</a></li><li><a href="MoneroTransferQuery.html">MoneroTransferQuery</a></li><li><a href="MoneroTx.html">MoneroTx</a></li><li><a href="MoneroTxConfig.html">MoneroTxConfig</a></li><li><a href="MoneroTxPoolStats.html">MoneroTxPoolStats</a></li><li><a href="MoneroTxPriority.html">MoneroTxPriority</a></li><li><a href="MoneroTxQuery.html">MoneroTxQuery</a></li><li><a href="MoneroTxSet.html">MoneroTxSet</a></li><li><a href="MoneroTxWallet.html">MoneroTxWallet</a></li><li><a href="MoneroUtils.html">MoneroUtils</a></li><li><a href="MoneroVersion.html">MoneroVersion</a></li><li><a href="MoneroWalletConfig.html">MoneroWalletConfig</a></li><li><a href="MoneroWalletKeys.html">MoneroWalletKeys</a></li><li><a href="MoneroWalletListener.html">MoneroWalletListener</a></li><li><a href="MoneroWalletRpc.html">MoneroWalletRpc</a></li><li><a href="MoneroWalletWasm.html">MoneroWalletWasm</a></li><li><a href="SslOptions.html">SslOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="MoneroDaemon.html">MoneroDaemon</a></li><li><a href="MoneroWallet.html">MoneroWallet</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectToDaemonRpc">connectToDaemonRpc</a></li><li><a href="global.html#connectToWalletRpc">connectToWalletRpc</a></li><li><a href="global.html#createWalletKeys">createWalletKeys</a></li><li><a href="global.html#createWalletWasm">createWalletWasm</a></li><li><a href="global.html#openWalletWasm">openWalletWasm</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed May 27 2020 20:41:00 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Jun 17 2020 17:37:07 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

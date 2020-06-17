@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/main/js/common/LibraryUtils.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/main/js/common/LibraryUtils.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const assert = require("assert");
+const GenUtils = require("./GenUtils");
+const MoneroError = require("./MoneroError");
+
+/**
+ * Collection of helper utilities for the library.
+ */
+class LibraryUtils {
+  
+  /**
+   * Get a default file system.  Uses an in-memory file system if running in the browser.
+   * 
+   * @return nodejs-compatible file system
+   */
+  static getDefaultFs() {
+    if (!LibraryUtils.FS) LibraryUtils.FS = GenUtils.isBrowser() ? require('memfs') : require('fs');
+    return LibraryUtils.FS;
+  }
+  
+  /**
+   * Get the total memory used by WebAssembly.
+   * 
+   * @return {int} the total memory used by WebAssembly
+   */
+  static async getWasmMemoryUsed() {
+    let total = 0;
+    if (LibraryUtils.WORKER) total += await LibraryUtils.invokeWorker(GenUtils.getUUID(), "getWasmMemoryUsed", []);
+    if (LibraryUtils.getWasmModule() &amp;&amp; LibraryUtils.getWasmModule().HEAP8) total += LibraryUtils.getWasmModule().HEAP8.length;
+    return total;
+  }
+  
+  /**
+   * Get the WebAssembly module in the current context (nodejs, browser main thread or worker).
+   */
+  static getWasmModule() {
+    return LibraryUtils.WASM_MODULE;
+  }
+  
+  /**
+   * Load the WebAssembly keys module with caching.
+   */
+  static async loadKeysModule() {
+    
+    // use cache if suitable, core module supersedes keys module because it is superset
+    if (LibraryUtils.WASM_MODULE) return LibraryUtils.WASM_MODULE;
+    
+    // load module
+    delete LibraryUtils.WASM_MODULE;
+    LibraryUtils.WASM_MODULE = require("../../../../dist/monero_core_keys")();
+    return new Promise(function(resolve, reject) {
+      LibraryUtils.WASM_MODULE.then(module => {
+        LibraryUtils.WASM_MODULE = module
+        delete LibraryUtils.WASM_MODULE.then;
+        LibraryUtils._initWasmModule(LibraryUtils.WASM_MODULE);
+        resolve(LibraryUtils.WASM_MODULE);
+      });
+    });
+  }
+  
+  /**
+   * Load the WebAssembly core module with caching.
+   * 
+   * The core module is a superset of the keys module and overrides it.
+   * 
+   * TODO: this is separate static function from loadKeysModule() because webpack cannot bundle WebWorker using runtime param for conditional import
+   */
+  static async loadCoreModule() {
+    
+    // use cache if suitable, core module supersedes keys module because it is superset
+    if (LibraryUtils.WASM_MODULE &amp;&amp; LibraryUtils.CORE_LOADED) return LibraryUtils.WASM_MODULE;
+    
+    // load module
+    delete LibraryUtils.WASM_MODULE;
+    LibraryUtils.WASM_MODULE = require("../../../../dist/monero_core")();
+    return new Promise(function(resolve, reject) {
+      LibraryUtils.WASM_MODULE.then(module => {
+        LibraryUtils.WASM_MODULE = module
+        delete LibraryUtils.WASM_MODULE.then;
+        LibraryUtils.CORE_LOADED = true;
+        LibraryUtils._initWasmModule(LibraryUtils.WASM_MODULE);
+        resolve(LibraryUtils.WASM_MODULE);
+      });
+    });
+  }
+  
+  /**
+   * Private helper to initialize the wasm module with data structures to synchronize access.
+   */
+  static _initWasmModule(wasmModule) {
+    
+    // initialize data structure to synchronize access to wasm module
+    const async = require("async");
+    wasmModule.taskQueue = async.queue(function(asyncFn, callback) {
+      if (asyncFn.then) asyncFn.then(resp => { callback(resp); }).catch(err => { callback(undefined, err); });
+      else asyncFn().then(resp => { callback(resp); }).catch(err => { callback(undefined, err); });
+    }, 1);
+    
+    // initialize method to synchronize access to wasm module
+    wasmModule.queueTask = async function(asyncFn) {
+      return new Promise(function(resolve, reject) {
+        wasmModule.taskQueue.push(asyncFn, function(resp, err) {
+          if (err !== undefined) reject(err);
+          else resolve(resp);
+        });
+      });
+    }
+  }
+  
+  /**
+   * Register a function by id which informs if unauthorized requests (e.g.
+   * self-signed certificates) should be rejected.
+   * 
+   * @param {string} fnId - unique identifier for the function
+   * @param {function} fn - function to inform if unauthorized requests should be rejected
+   */
+  static setRejectUnauthorizedFn(fnId, fn) {
+    if (!LibraryUtils.REJECT_UNAUTHORIZED_FNS) LibraryUtils.REJECT_UNAUTHORIZED_FNS = [];
+    if (fn === undefined) delete LibraryUtils.REJECT_UNAUTHORIZED_FNS[fnId];
+    else LibraryUtils.REJECT_UNAUTHORIZED_FNS[fnId] = fn;
+  }
+  
+  /**
+   * Indicate if unauthorized requests should be rejected.
+   * 
+   * @param {string} fnId - uniquely identifies the function
+   */
+  static isRejectUnauthorized(fnId) {
+    if (!LibraryUtils.REJECT_UNAUTHORIZED_FNS[fnId]) throw new Error("No function registered with id " + fnId + " to inform if unauthorized reqs should be rejected");
+    return LibraryUtils.REJECT_UNAUTHORIZED_FNS[fnId]();
+  }
+  
+  /**
+   * Get a singleton instance of a web worker to share.
+   * 
+   * @return {Worker} a worker to share among wallet instances
+   */
+  static getWorker() {
+    
+    // one time initialization
+    if (!LibraryUtils.WORKER) {
+      LibraryUtils.WORKER = new Worker("MoneroWebWorker.dist.js");
+      LibraryUtils.WORKER_OBJECTS = {};  // store per object running in the worker
+      
+      // catch worker messages
+      LibraryUtils.WORKER.onmessage = function(e) {
+        
+        // lookup object id, callback function, and this arg
+        let thisArg = null;
+        let callbackFn = LibraryUtils.WORKER_OBJECTS[e.data[0]].callbacks[e.data[1]]; // look up by object id then by function name
+        if (callbackFn === undefined) throw new Error("No worker callback function defined for key '" + e.data[1] + "'");
+        if (callbackFn instanceof Array) {  // this arg may be stored with callback function
+          thisArg = callbackFn[1];
+          callbackFn = callbackFn[0];
+        }
+        
+        // invoke callback function with this arg and arguments
+        callbackFn.apply(thisArg, e.data.slice(2));
+      }
+    }
+    return LibraryUtils.WORKER;
+  }
+  
+  /**
+   * Invoke a web worker function and get the result with error handling.
+   * 
+   * @param {objectId} identifies the worker object to invoke
+   * @param {string} fnName is the name of the function to invoke
+   * @param {Object[]} args are function arguments to invoke with
+   * @return {Promise} resolves with response payload from the worker or an error
+   */
+  static async invokeWorker(objectId, fnName, args) {
+    assert(fnName.length >= 2);
+    let worker = LibraryUtils.getWorker();
+    if (!LibraryUtils.WORKER_OBJECTS[objectId]) LibraryUtils.WORKER_OBJECTS[objectId] = {callbacks: {}};
+    return new Promise(function(resolve, reject) {
+      LibraryUtils.WORKER_OBJECTS[objectId].callbacks["on" + fnName.charAt(0).toUpperCase() + fnName.substring(1)] = function(resp) {  // TODO: this defines function once per callback
+        resp ? (resp.error ? reject(new MoneroError(resp.error)) : resolve(resp.result)) : resolve();
+      };
+      worker.postMessage([objectId, fnName].concat(args === undefined ? [] : GenUtils.listify(args)));
+    });
+  }
+}
+
+module.exports = LibraryUtils;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ConnectionType.html">ConnectionType</a></li><li><a href="GenUtils.html">GenUtils</a></li><li><a href="HttpClient.html">HttpClient</a></li><li><a href="LibraryUtils.html">LibraryUtils</a></li><li><a href="MoneroAccount.html">MoneroAccount</a></li><li><a href="MoneroAccountTag.html">MoneroAccountTag</a></li><li><a href="MoneroAddressBookEntry.html">MoneroAddressBookEntry</a></li><li><a href="MoneroAltChain.html">MoneroAltChain</a></li><li><a href="MoneroBan.html">MoneroBan</a></li><li><a href="MoneroBlock.html">MoneroBlock</a></li><li><a href="MoneroBlockHeader.html">MoneroBlockHeader</a></li><li><a href="MoneroBlockTemplate.html">MoneroBlockTemplate</a></li><li><a href="MoneroCheck.html">MoneroCheck</a></li><li><a href="MoneroCheckReserve.html">MoneroCheckReserve</a></li><li><a href="MoneroCheckTx.html">MoneroCheckTx</a></li><li><a href="MoneroDaemonConnection.html">MoneroDaemonConnection</a></li><li><a href="MoneroDaemonConnectionSpan.html">MoneroDaemonConnectionSpan</a></li><li><a href="MoneroDaemonInfo.html">MoneroDaemonInfo</a></li><li><a href="MoneroDaemonPeer.html">MoneroDaemonPeer</a></li><li><a href="MoneroDaemonRpc.html">MoneroDaemonRpc</a></li><li><a href="MoneroDaemonSyncInfo.html">MoneroDaemonSyncInfo</a></li><li><a href="MoneroDaemonUpdateCheckResult.html">MoneroDaemonUpdateCheckResult</a></li><li><a href="MoneroDaemonUpdateDownloadResult.html">MoneroDaemonUpdateDownloadResult</a></li><li><a href="MoneroDestination.html">MoneroDestination</a></li><li><a href="MoneroError.html">MoneroError</a></li><li><a href="MoneroHardForkInfo.html">MoneroHardForkInfo</a></li><li><a href="MoneroIncomingTransfer.html">MoneroIncomingTransfer</a></li><li><a href="MoneroIntegratedAddress.html">MoneroIntegratedAddress</a></li><li><a href="MoneroKeyImage.html">MoneroKeyImage</a></li><li><a href="MoneroKeyImageImportResult.html">MoneroKeyImageImportResult</a></li><li><a href="MoneroKeyImageSpentStatus.html">MoneroKeyImageSpentStatus</a></li><li><a href="MoneroMinerTxSum.html">MoneroMinerTxSum</a></li><li><a href="MoneroMiningStatus.html">MoneroMiningStatus</a></li><li><a href="MoneroMultisigInfo.html">MoneroMultisigInfo</a></li><li><a href="MoneroMultisigInitResult.html">MoneroMultisigInitResult</a></li><li><a href="MoneroMultisigSignResult.html">MoneroMultisigSignResult</a></li><li><a href="MoneroNetworkType.html">MoneroNetworkType</a></li><li><a href="MoneroOutgoingTransfer.html">MoneroOutgoingTransfer</a></li><li><a href="MoneroOutput.html">MoneroOutput</a></li><li><a href="MoneroOutputHistogramEntry.html">MoneroOutputHistogramEntry</a></li><li><a href="MoneroOutputQuery.html">MoneroOutputQuery</a></li><li><a href="MoneroOutputWallet.html">MoneroOutputWallet</a></li><li><a href="MoneroRpcConnection.html">MoneroRpcConnection</a></li><li><a href="MoneroRpcError.html">MoneroRpcError</a></li><li><a href="MoneroSubaddress.html">MoneroSubaddress</a></li><li><a href="MoneroSubmitTxResult.html">MoneroSubmitTxResult</a></li><li><a href="MoneroSyncResult.html">MoneroSyncResult</a></li><li><a href="MoneroTransfer.html">MoneroTransfer</a></li><li><a href="MoneroTransferQuery.html">MoneroTransferQuery</a></li><li><a href="MoneroTx.html">MoneroTx</a></li><li><a href="MoneroTxConfig.html">MoneroTxConfig</a></li><li><a href="MoneroTxPoolStats.html">MoneroTxPoolStats</a></li><li><a href="MoneroTxPriority.html">MoneroTxPriority</a></li><li><a href="MoneroTxQuery.html">MoneroTxQuery</a></li><li><a href="MoneroTxSet.html">MoneroTxSet</a></li><li><a href="MoneroTxWallet.html">MoneroTxWallet</a></li><li><a href="MoneroUtils.html">MoneroUtils</a></li><li><a href="MoneroVersion.html">MoneroVersion</a></li><li><a href="MoneroWalletConfig.html">MoneroWalletConfig</a></li><li><a href="MoneroWalletKeys.html">MoneroWalletKeys</a></li><li><a href="MoneroWalletListener.html">MoneroWalletListener</a></li><li><a href="MoneroWalletRpc.html">MoneroWalletRpc</a></li><li><a href="MoneroWalletWasm.html">MoneroWalletWasm</a></li><li><a href="SslOptions.html">SslOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="MoneroDaemon.html">MoneroDaemon</a></li><li><a href="MoneroWallet.html">MoneroWallet</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectToDaemonRpc">connectToDaemonRpc</a></li><li><a href="global.html#connectToWalletRpc">connectToWalletRpc</a></li><li><a href="global.html#createWalletKeys">createWalletKeys</a></li><li><a href="global.html#createWalletWasm">createWalletWasm</a></li><li><a href="global.html#openWalletWasm">openWalletWasm</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Jun 17 2020 17:37:07 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
