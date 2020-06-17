@@ -147,7 +147,6 @@ class MoneroWalletWasm extends MoneroWalletKeys {
    * 
    * @param {object|MoneroWalletConfig} config - MoneroWalletConfig or equivalent config object
    * @param {string} config.path - path of the wallet to create (optional, in-memory wallet if not given)
-   * @param {string} config.path - path of the wallet to create (optional, in-memory wallet if not given)
    * @param {string} config.password - password of the wallet to create
    * @param {string|number} config.networkType - network type of the wallet to create (one of "mainnet", "testnet", "stagenet" or MoneroNetworkType.MAINNET|TESTNET|STAGENET)
    * @param {string} config.mnemonic - mnemonic of the wallet to create (optional, random wallet created if neither mnemonic nor keys given)
