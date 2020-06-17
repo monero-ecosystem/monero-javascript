@@ -6,16 +6,6 @@ const MoneroRpcError = require("../common/MoneroRpcError");
 const MoneroUtils = require("./MoneroUtils");
 
 /**
- * Default RPC configuration.
- */
-const MoneroRpcConfigDefault = {
-    uri: undefined,
-    username: undefined,
-    password: undefined,
-    rejectUnauthorized: true  // reject self-signed certificates if true
-}
-
-/**
  * Maintains a connection and sends requests to a Monero RPC API.
  */
 class MoneroRpcConnection {
@@ -62,7 +52,7 @@ class MoneroRpcConnection {
     }
     
     // merge default config
-    this.config = Object.assign({}, MoneroRpcConfigDefault, this.config);
+    this.config = Object.assign({}, MoneroRpcConnection.DEFAULT_CONFIG, this.config);
     
     // standardize uri
     if (this.config.uri) this.config.uri = this.config.uri.replace(/\/$/, ""); // strip trailing slash
@@ -200,6 +190,17 @@ class MoneroRpcConnection {
       else throw new MoneroRpcError(e, undefined, path, params);
     }
   }
+}
+
+
+/**
+ * Default RPC configuration.
+ */
+MoneroRpcConnection.DEFAULT_CONFIG = {
+    uri: undefined,
+    username: undefined,
+    password: undefined,
+    rejectUnauthorized: true  // reject self-signed certificates if true
 }
 
 MoneroRpcConnection.SUPPORTED_FIELDS = ["uri", "username", "password", "rejectUnauthorized"];

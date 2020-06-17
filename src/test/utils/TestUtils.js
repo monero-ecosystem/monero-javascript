@@ -5,6 +5,7 @@ const LibraryUtils = monerojs.LibraryUtils;
 const MoneroRpcError = monerojs.MoneroRpcError;
 const MoneroRpcConnection = monerojs.MoneroRpcConnection;
 const BigInteger = monerojs.BigInteger;
+const MoneroNetworkType = monerojs.MoneroNetworkType;
 
 /**
  * Collection of test utilities and configurations.

@@ -1,5 +1,6 @@
 support listener js object
 support strings in js objects for BIs in MoneroTxConfig, queries, etc
+wallet.waitForTxsToClearPool()?
 http request timeout
 run testSendToMultiple() a few times to start wallet or send to random subaddress
 monerowalletrpc.js/java can use subaddr_indices_all instead of manually setting all indices (wallet_rpc_server.cpp:1420)

@@ -1,9 +1,10 @@
 'use strict';
 
 module.exports = {
-    "plugins": ['configs/jsdoc_plugins'],
+    "plugins": ['./configs/jsdoc_plugins'],
     "recurseDepth": 100,
     "source": {
+        "include": ["./index.js", "./src/main/js/"],
         "includePattern": ".+\\.js(doc|x)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },

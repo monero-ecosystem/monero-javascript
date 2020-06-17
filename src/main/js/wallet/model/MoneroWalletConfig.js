@@ -21,7 +21,7 @@ class MoneroWalletConfig {
    * @param {Uint8Array} config.keysData - wallet keys data to open (optional)
    * @param {Uint8Array} config.cacheData - wallet cache data to open (optional)
    * @param {boolean} config.proxyToWorker - proxies wallet operations to a web worker in order to not block the browser's main thread (default: false)
-   * @param {fs} config.fs - node-js compatible file system to use (defaults to disk or in-memory FS if browser)
+   * @param {fs} config.fs - Node.js compatible file system to use (defaults to disk or in-memory FS if browser)
    * @param {boolean} config.saveCurrent - specifies if the current RPC wallet should be saved before being closed
    */
   constructor(config) {

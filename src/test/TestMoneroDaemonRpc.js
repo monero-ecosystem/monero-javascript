@@ -11,6 +11,7 @@ const MoneroAltChain = monerojs.MoneroAltChain;
 const MoneroDaemonSyncInfo = monerojs.MoneroDaemonSyncInfo;
 const MoneroDaemonConnection = monerojs.MoneroDaemonConnection;
 const MoneroDaemonPeer = monerojs.MoneroDaemonPeer;
+const MoneroKeyImageSpentStatus = monerojs.MoneroKeyImageSpentStatus;
 
 // context for testing binary blocks
 // TODO: binary blocks have inconsistent client-side pruning

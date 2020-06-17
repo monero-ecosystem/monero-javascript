@@ -1,6 +1,7 @@
 const assert = require("assert");
 const LibraryUtils = require("../common/LibraryUtils");
 const MoneroError = require("../common/MoneroError");
+const MoneroNetworkType = require("../daemon/model/MoneroNetworkType");
 const MoneroSubaddress = require("./model/MoneroSubaddress");
 const MoneroUtils = require("../common/MoneroUtils");
 const MoneroVersion = require("../daemon/model/MoneroVersion");
@@ -38,6 +39,7 @@ class MoneroWalletKeys extends MoneroWallet {
    * @param {string} config.privateViewKey - private view key of the wallet to create (optional)
    * @param {string} config.privateSpendKey - private spend key of the wallet to create (optional)
    * @param {string} config.language - language of the wallet's mnemonic phrase (defaults to "English" or auto-detected)
+   * @return {MoneroWalletKeys} the created wallet
    */
   static async createWallet(config) {
     

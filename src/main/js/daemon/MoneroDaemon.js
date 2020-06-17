@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017-2019 woodser
+ * Copyright (c) woodser
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const assert = require("assert");
 
 /**
  * Monero daemon interface and default implementations.
@@ -288,6 +287,7 @@ class MoneroDaemon {
    * @param {string} txHash - hash of the transaction to relay
    */
   async relayTxByHash(txHash) {
+    const assert = require("assert");
     assert.equal(typeof txHash, "string", "Must provide a transaction hash");
     await this.relayTxsByHash([txHash]);
   }

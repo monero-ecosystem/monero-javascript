@@ -1,16 +1,28 @@
 /**
- * Enumerates send priorities:<br><br>
+ * Enumerates send priorities.
  * 
- * &nbsp;&nbsp; DEFAULT (NORMAL)<br>
- * &nbsp;&nbsp; UNIMPORTANT<br>
- * &nbsp;&nbsp; NORMAL<br>
- * &nbsp;&nbsp; ELEVATED<br>
+ * @hideconstructor
  */
-MoneroTxPriority = {
-    DEFAULT: 0,
-    UNIMPORTANT: 1,
-    NORMAL: 2,
-    ELEVATED: 3
-}
+class MoneroTxPriority {}
+
+/**
+ * Default priority (i.e. normal) (value=0).
+ */
+MoneroTxPriority.DEFAULT = 0;
+
+/**
+ * Unimportant priority (value=1).
+ */
+MoneroTxPriority.UNIMPORTANT = 1;
+
+/**
+ * Normal priority (value=2).
+ */
+MoneroTxPriority.NORMAL = 2;
+
+/**
+ * Elevated priority (value=3).
+ */
+MoneroTxPriority.ELEVATED = 3;
 
 module.exports = MoneroTxPriority;

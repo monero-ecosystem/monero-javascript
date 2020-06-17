@@ -11,7 +11,7 @@
     "build_web_worker": "webpack --config ./webpack.worker.js",
     "build_web_tests": "webpack --config ./webpack.tests.js",
     "test": "node --experimental-wasm-threads --experimental-wasm-bulk-memory node_modules/mocha/bin/_mocha 'src/test/TestAll' --timeout 900000000 --exit",
-    "jsdoc": "jsdoc ./src/main/js -r -c ./configs/jsdoc_config.js -d ./docs"
+    "jsdoc": "jsdoc -r -c ./configs/jsdoc_config.js -d ./docs"
   },
   "build": {
     "publish": [
