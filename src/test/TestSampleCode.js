@@ -1,3 +1,4 @@
+const assert = require("assert");
 const TestUtils = require("./utils/TestUtils");
 
 /**
@@ -37,11 +38,7 @@ class TestSampleCode {
       it("Short sample code demonstration", async function() {
         
         // import library
-        const assert = require("assert");
-        const monerojs = require("../../index");	// *** REPLACE WITH monero-javascript ***
-        const MoneroWalletListener = monerojs.MoneroWalletListener; // TODO: pass in js object instead of MoneroWalletListener class
-        const BigInteger = monerojs.BigInteger; // TODO: support string or BigInteger, then no need to import BigInteger
-        const GenUtils = monerojs.GenUtils;
+        const monerojs = require("../../index");	// *** CHANGE README TO "monero-javascript" ***
         
         // connect to a daemon
         let daemon = monerojs.connectToDaemonRpc("http://localhost:38081", "superuser", "abctesting123");
@@ -58,18 +55,18 @@ class TestSampleCode {
         
         // create wallet from mnemonic phrase using WebAssembly bindings to Monero Core
         let walletWasm = await monerojs.createWalletWasm({
-          path: "./test_wallets/" + GenUtils.getUUID(),           // *** CHANGE README TO "sample_wallet_wasm"
+          path: "./test_wallets/" + monerojs.GenUtils.getUUID(),  // *** CHANGE README TO "sample_wallet_wasm"
           password: "supersecretpassword123",
           networkType: "stagenet",
           serverUri: "http://localhost:38081",
           serverUsername: "superuser",
           serverPassword: "abctesting123",
-          mnemonic: TestUtils.MNEMONIC,                 // *** REPLACE WITH MNEMONIC IN README ***
-          restoreHeight: TestUtils.FIRST_RECEIVE_HEIGHT // *** REPLACE WITH FIRST RECEIVE HEIGHT IN README ***
+          mnemonic: TestUtils.MNEMONIC,                 // *** REPLACE README WITH MNEMONIC ***
+          restoreHeight: TestUtils.FIRST_RECEIVE_HEIGHT // *** REPLACE README WITH FIRST RECEIVE HEIGHT ***
         });
         
         // synchronize with progress notifications
-        await walletWasm.sync(new class extends MoneroWalletListener {
+        await walletWasm.sync(new class extends monerojs.MoneroWalletListener {
           onSyncProgress(height, startHeight, endHeight, percentDone, message) {
             // feed a progress bar?
           }
@@ -80,7 +77,7 @@ class TestSampleCode {
         
         // listen for incoming transfers
         let fundsReceived = false;
-        await walletWasm.addListener(new class extends MoneroWalletListener {
+        await walletWasm.addListener(new class extends monerojs.MoneroWalletListener {
           onOutputReceived(output) {
             let amount = output.getAmount();
             let txHash = output.getTx().getHash();
@@ -93,7 +90,7 @@ class TestSampleCode {
         let createdTx = await walletRpc.createTx({
           accountIndex: 0,
           address: await walletWasm.getAddress(1, 0),
-          amount: new BigInteger("50000"), // amount to transfer in atomic units
+          amount: new monerojs.BigInteger("50000"), // amount to transfer in atomic units
           relay: false // create transaction and relay to the network if true
         });
         let fee = createdTx.getFee(); // "Are you sure you want to send... ?"

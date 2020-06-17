@@ -37,23 +37,23 @@ This code introduces the API used in monero-javascript.  See the [JSDocs](https:
 
 ```js
 // import library
-require("monero-javascript");
+const monerojs = require("monero-javascript");
 
 // connect to a daemon
-let daemon = new MoneroDaemonRpc("http://localhost:38081", "superuser", "abctesting123"); 
+let daemon = monerojs.connectToDaemonRpc("http://localhost:38081", "superuser", "abctesting123");
 let height = await daemon.getHeight();            // 1523651
 let feeEstimate = await daemon.getFeeEstimate();  // 1014313512
 let txsInPool = await daemon.getTxPool();         // get transactions in the pool
 
 // open wallet on monero-wallet-rpc
-let walletRpc = new MoneroWalletRpc("http://localhost:38083", "rpc_user", "abc123");
+let walletRpc = monerojs.connectToWalletRpc("http://localhost:38083", "rpc_user", "abc123");
 await walletRpc.openWallet("sample_wallet_rpc", "supersecretpassword123");
 let primaryAddress = await walletRpc.getPrimaryAddress(); // 555zgduFhmKd2o8rPUz...
 let balance = await walletRpc.getBalance();               // 533648366742
 let txs = await walletRpc.getTxs();                       // get transactions containing transfers to/from the wallet
 
 // create wallet from mnemonic phrase using WebAssembly bindings to Monero Core
-let walletWasm = await MoneroWalletWasm.createWallet({
+let walletWasm = await monerojs.createWalletWasm({
   path: "sample_wallet_wasm",
   password: "supersecretpassword123",
   networkType: "stagenet",
@@ -65,7 +65,7 @@ let walletWasm = await MoneroWalletWasm.createWallet({
 });
 
 // synchronize with progress notifications
-await walletWasm.sync(new class extends MoneroWalletListener {
+await walletWasm.sync(new class extends monerojs.MoneroWalletListener {
   onSyncProgress(height, startHeight, endHeight, percentDone, message) {
     // feed a progress bar?
   }
@@ -76,7 +76,7 @@ await walletWasm.startSyncing();
 
 // listen for incoming transfers
 let fundsReceived = false;
-await walletWasm.addListener(new class extends MoneroWalletListener {
+await walletWasm.addListener(new class extends monerojs.MoneroWalletListener {
   onOutputReceived(output) {
     let amount = output.getAmount();
     let txHash = output.getTx().getHash();
@@ -88,7 +88,7 @@ await walletWasm.addListener(new class extends MoneroWalletListener {
 let createdTx = await walletRpc.createTx({
   accountIndex: 0,
   address: await walletWasm.getAddress(1, 0),
-  amount: new BigInteger("50000"), // amount to transfer in atomic units
+  amount: new monerojs.BigInteger("50000"), // amount to transfer in atomic units
   relay: false // create transaction and relay to the network if true
 });
 let fee = createdTx.getFee(); // "Are you sure you want to send... ?"
