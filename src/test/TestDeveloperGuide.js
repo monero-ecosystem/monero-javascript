@@ -173,7 +173,7 @@ class TestDeveloperGuide {
       it("Test developer guide send funds", async function() {
         
         // create in-memory test wallet with randomly generated mnemonic
-        let wallet = await MoneroWalletWasm.createWallet({
+        let wallet = await monerojs.createWalletWasm({
           password: "abctesting123",
           networkType: "stagenet",
           serverUri: "http://localhost:38081",
