@@ -66,7 +66,7 @@ fi
 
 cd $EMSCRIPTEN
 
-python ./embuilder.py build zlib \
+python3 ./embuilder.py build zlib \
 || {
   echo "EMSDK build zlib failed.."
   exit 1

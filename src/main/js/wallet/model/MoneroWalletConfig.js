@@ -1,7 +1,7 @@
 const GenUtils = require("../../common/GenUtils");
+const MoneroError = require("../../common/MoneroError");
 const MoneroNetworkType = require("../../daemon/model/MoneroNetworkType");
 const MoneroRpcConnection = require("../../common/MoneroRpcConnection");
-const MoneroError = require("../../common/MoneroError");
 
 /**
  * Configuration to create a Monero wallet.
