@@ -56,6 +56,7 @@ include_directories("${MONERO_CORE}/external/easylogging++")
 include_directories("${MONERO_CORE}/external/rapidjson/include")
 include_directories("${MONERO_CORE}/external/unbound/libunbound")
 include_directories("${MONERO_CORE}/external/db_drivers/liblmdb")
+include_directories("${MONERO_CORE}/external/supercop/include")
 include_directories("${MONERO_CORE}/contrib/epee/include")
 include_directories("${MONERO_CORE}/contrib/epee/include/net")
 
@@ -63,6 +64,7 @@ include_directories("${MONERO_CORE}/contrib/epee/include/net")
 #include_directories("${MONERO_CORE_SRC}/wallet/api")
 
 include_directories("${MONERO_CORE}/build/release/translations")
+include_directories("${MONERO_CORE}/build/release/generated_include")
 
 #############
 # OpenSSL

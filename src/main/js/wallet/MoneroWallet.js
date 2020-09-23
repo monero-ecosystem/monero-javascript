@@ -698,20 +698,23 @@ class MoneroWallet {
   /**
    * Sign a message.
    * 
-   * @param {string} msg - message to sign
+   * @param {string} message - the message to sign
+   * @param {MoneroMessageSignatureType} signatureType - sign with spend key or view key (default spend key)
+   * @param {int} accountIdx - the account index of the message signature (default 0)
+   * @param {int} subaddressIdx - the subaddress index of the message signature (default 0)
    * @return {string} the signature
    */
-  async signMessage(message) {
+  async signMessage(message, signatureType, accountIdx, subaddressIdx) {
     throw new MoneroError("Not supported");
   }
   
   /**
    * Verify a signature on a message.
    * 
-   * @param {string} msg - signed message
+   * @param {string} message - signed message
    * @param {string} address - signing address
    * @param {string} signature - signature
-   * @return {boolean} true if the signature is good, false otherwise
+   * @return {MoneroMessageSignatureResult} true if the signature is good, false otherwise
    */
   async verifyMessage(message, address, signature) {
     throw new MoneroError("Not supported");

@@ -27,6 +27,8 @@ const MoneroWallet = require("./MoneroWallet");
 const MoneroWalletConfig = require("./model/MoneroWalletConfig");
 const MoneroWalletKeys = require("./MoneroWalletKeys");
 const MoneroWalletListener = require("./model/MoneroWalletListener");
+const MoneroMessageSignatureType = require("./model/MoneroMessageSignatureType");
+const MoneroMessageSignatureResult = require("./model/MoneroMessageSignatureResult");
 
 /**
  * Implements a MoneroWallet using WebAssembly bindings to monero-project's wallet2.
@@ -1164,11 +1166,18 @@ class MoneroWalletWasm extends MoneroWalletKeys {
     });
   }
   
-  async signMessage(message) {
+  async signMessage(message, signatureType, accountIdx, subaddressIdx) {
+    
+    // assign defaults
+    signatureType = signatureType || MoneroMessageSignatureType.SIGN_WITH_SPEND_KEY;
+    accountIdx = accountIdx || 0;
+    subaddressIdx = subaddressIdx || 0;
+    
+    // queue task to sign message
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.sign_message(that._cppAddress, message);
+      return that._module.sign_message(that._cppAddress, message, signatureType === MoneroMessageSigatureType.SIGN_WITH_SPEND_KEY ? 0 : 1, accountIdx, subaddressIdx);
     });
   }
   
@@ -1176,7 +1185,9 @@ class MoneroWalletWasm extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.verify_message(that._cppAddress, message, address, signature);
+      let resultJson = that._module.verify_message(that._cppAddress, message, address, signature);
+      console.log("Got result verifying message!!! " + resultJson);
+      throw new Error("now what verifying message?");
     });
   }
   

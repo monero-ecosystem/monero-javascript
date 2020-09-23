@@ -796,14 +796,15 @@ void monero_wasm_bridge::submit_txs(int handle, const string& signed_tx_hex, ems
   callback(monero_utils::serialize(doc));
 }
 
-string monero_wasm_bridge::sign_message(int handle, const string& msg) {
+string monero_wasm_bridge::sign_message(int handle, const string& msg, uint32_t signature_type_num, uint32_t account_idx, uint32_t subaddress_idx) {
   monero_wallet* wallet = (monero_wallet*) handle;
-  return wallet->sign_message(msg);
+  monero_message_signature_type signature_type = signature_type_num == 0 ? monero_message_signature_type::SIGN_WITH_SPEND_KEY : monero_message_signature_type::SIGN_WITH_VIEW_KEY;
+  return wallet->sign_message(msg, signature_type, account_idx, subaddress_idx);
 }
 
-bool monero_wasm_bridge::verify_message(int handle, const string& msg, const string& address, const string& signature) {
+string monero_wasm_bridge::verify_message(int handle, const string& msg, const string& address, const string& signature) {
   monero_wallet* wallet = (monero_wallet*) handle;
-  return wallet->verify_message(msg, address, signature);
+  return wallet->verify_message(msg, address, signature).serialize();
 }
 
 string monero_wasm_bridge::get_tx_key(int handle, const string& tx_hash) {

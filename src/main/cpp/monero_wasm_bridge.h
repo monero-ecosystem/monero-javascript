@@ -95,8 +95,8 @@ namespace monero_wasm_bridge
   string parse_tx_set(int handle, const string& tx_set_str);
   string sign_txs(int handle, const string& unsigned_tx_hex);
   void submit_txs(int handle, const string& signed_tx_hex, emscripten::val callback);
-  string sign_message(int handle, const string& msg);
-  bool verify_message(int handle, const string& msg, const string& address, const string& signature);
+  string sign_message(int handle, const string& msg, uint32_t signature_type_num, uint32_t account_idx, uint32_t subaddress_idx);
+  string verify_message(int handle, const string& msg, const string& address, const string& signature);
   string get_tx_key(int handle, const string& tx_hash);
   string check_tx_key(int handle, const string& tx_hash, const string& tx_key, const string& address);
   string get_tx_proof(int handle, const string& tx_hash, const string& address, const string& message);

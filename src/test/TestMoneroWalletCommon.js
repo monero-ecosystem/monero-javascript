@@ -19,9 +19,12 @@ const MoneroTxConfig = monerojs.MoneroTxConfig;
 const MoneroTxWallet = monerojs.MoneroTxWallet;
 const MoneroDestination = monerojs.MoneroDestination;
 const MoneroAddressBookEntry = monerojs.MoneroAddressBookEntry;
+const MoneroSubaddress = monerojs.MoneroSubaddress;
 const MoneroKeyImage = monerojs.MoneroKeyImage;
 const Filter = monerojs.Filter; // TODO: don't export filter
 const MoneroTx = monerojs.MoneroTx;
+const MoneroMessageSignatureType = monerojs.MoneroMessageSignatureType;
+const MoneroMessageSignatureResult = monerojs.MoneroMessageSignatureResult;
 
 // test constants
 const MIXIN = 11;
@@ -1991,12 +1994,40 @@ class TestMoneroWalletCommon {
       
       if (testConfig.testNonRelays)
       it("Can sign and verify messages", async function() {
+        
+        // message to sign and subaddresses to test
         let msg = "This is a super important message which needs to be signed and verified.";
-        let signature = await that.wallet.signMessage(msg);
-        let verified = await that.wallet.verifyMessage(msg, await that.wallet.getAddress(0, 0), signature);
-        assert.equal(verified, true);
-        verified = await that.wallet.verifyMessage(msg, await TestUtils.getExternalWalletAddress(), signature);
-        assert.equal(verified, false);
+        let subaddresses = [new MoneroSubaddress(0, 0), new MoneroSubaddress(0, 1), new MoneroSubaddress(1, 0)];
+        
+        // test signing message with subaddresses
+        for (let subaddress of subaddresses) {
+          
+          // sign and verify message with spend key
+          let signature = await that.wallet.signMessage(msg, MoneroMessageSignatureType.SIGN_WITH_SPEND_KEY, subaddress.getAccountIndex(), subaddress.getIndex());
+          let result = await that.wallet.verifyMessage(msg, await that.wallet.getAddress(subaddress.getAccountIndex(), subaddress.getIndex()), signature);
+          assert.deepEqual(result, new MoneroMessageSignatureResult(true, false, MoneroMessageSignatureType.SIGN_WITH_SPEND_KEY, 2));
+          
+          // verify message with incorrect address
+          result = await that.wallet.verifyMessage(msg, await that.wallet.getAddress(0, 2), signature);
+          assert.deepEqual(result, new MoneroMessageSignatureResult(false));
+          
+          // verify message with invalid address
+          result = await that.wallet.verifyMessage(msg, "invalid address", signature);
+          assert.deepEqual(result, new MoneroMessageSignatureResult(false));
+          
+          // sign and verify message with view key
+          signature = await that.wallet.signMessage(msg, MoneroMessageSignatureType.SIGN_WITH_VIEW_KEY, subaddress.getAccountIndex(), subaddress.getIndex());
+          result = await that.wallet.verifyMessage(msg, await that.wallet.getAddress(subaddress.getAccountIndex(), subaddress.getIndex()), signature);
+          assert.deepEqual(result, new MoneroMessageSignatureResult(true, false, MoneroMessageSignatureType.SIGN_WITH_VIEW_KEY, 2));
+          
+          // verify message with incorrect address
+          result = await that.wallet.verifyMessage(msg, await that.wallet.getAddress(0, 2), signature);
+          assert.deepEqual(result, new MoneroMessageSignatureResult(false));
+          
+          // verify message with invalid address
+          result = await that.wallet.verifyMessage(msg, "invalid address", signature);
+          assert.deepEqual(result, new MoneroMessageSignatureResult(false));
+        }
       });
       
       if (testConfig.testNonRelays)

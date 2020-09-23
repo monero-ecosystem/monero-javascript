@@ -1744,7 +1744,7 @@ async function getConfirmedTxHashes(daemon) {
   let numTxs = 5;
   let txHashes = [];
   let height = await daemon.getHeight();
-  while (txHashes.length < numTxs) {
+  while (txHashes.length < numTxs && height >= 0) {
     let block = await daemon.getBlockByHeight(--height);
     for (let txHash of block.getTxHashes()) txHashes.push(txHash);
   }
