@@ -26,6 +26,7 @@ namespace epee
           disconnect();
         }
 
+        bool set_proxy(const std::string& address) override;
         void set_server(std::string host, std::string port, boost::optional<login> user, ssl_options_t ssl_options = ssl_support_t::e_ssl_support_autodetect) override;
         void set_auto_connect(bool auto_connect) override;
         bool connect(std::chrono::milliseconds timeout) override;
