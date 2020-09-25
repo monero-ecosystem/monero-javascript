@@ -115,7 +115,7 @@ await walletWasm.close(true);
 
 ## Building WebAssembly binaries from source
 
-This project uses WebAssembly to package and execute Monero's source code for use in a browser or other WebAssembly-supported environments.
+This project uses WebAssembly to package and execute Monero's source code for use in a browser or other WebAssembly-supported environment.
 
 Compiled WebAssembly binaries are committed to ./dist for convenience, but these files can be built independently from source code:
 
@@ -126,6 +126,8 @@ Compiled WebAssembly binaries are committed to ./dist for convenience, but these
 	4. `export EMSCRIPTEN=path/to/emsdk/upstream/emscripten` (change for your system)
 2. Clone monero-javascript repository: `git clone https://github.com/monero-ecosystem/monero-javascript.git`
 3. `cd monero-javascript`
+4. `./bin/update_submodules.sh`
+5. Modify ./external/monero-cpp/external/monero-core/src/crypto/wallet/CMakeLists.txt from `set(MONERO_WALLET_CRYPTO_LIBRARY "auto"...` to `set(MONERO_WALLET_CRYPTO_LIBRARY "cn"...`
 4. `./bin/build_all.sh`
 
 ## Developer guide

@@ -10,9 +10,6 @@
       exit 1
     }
   }
-  
-# update submodules
-./bin/update_submodules.sh || exit 1
 
 # build monero-core translations directory
 cd ./external/monero-cpp/external/monero-core || exit 1
