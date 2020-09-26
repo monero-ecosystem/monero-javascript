@@ -1997,7 +1997,7 @@ class TestMoneroWalletCommon {
         
         // message to sign and subaddresses to test
         let msg = "This is a super important message which needs to be signed and verified.";
-        let subaddresses = [new MoneroSubaddress(0, 0), new MoneroSubaddress(0, 1), new MoneroSubaddress(1, 0)];
+        let subaddresses = [new MoneroSubaddress(undefined, 0, 0), new MoneroSubaddress(undefined, 0, 1), new MoneroSubaddress(undefined, 1, 0)];
         
         // test signing message with subaddresses
         for (let subaddress of subaddresses) {
@@ -2011,6 +2011,10 @@ class TestMoneroWalletCommon {
           result = await that.wallet.verifyMessage(msg, await that.wallet.getAddress(0, 2), signature);
           assert.deepEqual(result, new MoneroMessageSignatureResult(false));
           
+          // verify message with external address
+          result = await that.wallet.verifyMessage(msg, await TestUtils.getExternalWalletAddress(), signature);
+          assert.deepEqual(result, new MoneroMessageSignatureResult(false));
+          
           // verify message with invalid address
           result = await that.wallet.verifyMessage(msg, "invalid address", signature);
           assert.deepEqual(result, new MoneroMessageSignatureResult(false));
@@ -2022,6 +2026,10 @@ class TestMoneroWalletCommon {
           
           // verify message with incorrect address
           result = await that.wallet.verifyMessage(msg, await that.wallet.getAddress(0, 2), signature);
+          assert.deepEqual(result, new MoneroMessageSignatureResult(false));
+          
+          // verify message with external address
+          result = await that.wallet.verifyMessage(msg, await TestUtils.getExternalWalletAddress(), signature);
           assert.deepEqual(result, new MoneroMessageSignatureResult(false));
           
           // verify message with invalid address

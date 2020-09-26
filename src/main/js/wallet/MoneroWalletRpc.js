@@ -35,6 +35,8 @@ const MoneroVersion = require("../daemon/model/MoneroVersion");
 const MoneroWallet = require("./MoneroWallet");
 const MoneroWalletConfig = require("./model/MoneroWalletConfig");
 const SslOptions = require("../common/SslOptions");
+const MoneroMessageSignatureType = require("./model/MoneroMessageSignatureType");
+const MoneroMessageSignatureResult = require("./model/MoneroMessageSignatureResult");
 
 /**
  * Copyright (c) woodser
@@ -985,14 +987,29 @@ class MoneroWalletRpc extends MoneroWallet {
     return resp.result.tx_hash_list;
   }
   
-  async signMessage(message) {
-    let resp = await this.rpc.sendJsonRequest("sign", {data: message});
+  async signMessage(message, signatureType, accountIdx, subaddressIdx) {
+    let resp = await this.rpc.sendJsonRequest("sign", {
+        data: message,
+        signature_type: signatureType === MoneroMessageSignatureType.SIGN_WITH_SPEND_KEY ? "spend" : "view",
+        account_index: accountIdx,
+        address_index: subaddressIdx
+    });
     return resp.result.signature;
   }
   
   async verifyMessage(message, address, signature) {
-    let resp = await this.rpc.sendJsonRequest("verify", {data: message, address: address, signature: signature});
-    return resp.result.good;
+    try {
+      let resp = await this.rpc.sendJsonRequest("verify", {data: message, address: address, signature: signature});
+      let result = new MoneroMessageSignatureResult(
+        resp.result.good,
+        !resp.result.good ? undefined : resp.result.old,
+        !resp.result.good ? undefined : !resp.result.signature_type ? undefined : resp.result.signature_type === "view" ? MoneroMessageSignatureType.SIGN_WITH_VIEW_KEY : MoneroMessageSignatureType.SIGN_WITH_SPEND_KEY,
+        !resp.result.good ? undefined : resp.result.version);
+      return result;
+    } catch (e) {
+      if (e.getCode() === -2) return new MoneroMessageSignatureResult(false);
+      throw e;
+    }
   }
   
   async getTxKey(txHash) {

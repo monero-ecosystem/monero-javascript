@@ -1177,7 +1177,7 @@ class MoneroWalletWasm extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.sign_message(that._cppAddress, message, signatureType === MoneroMessageSigatureType.SIGN_WITH_SPEND_KEY ? 0 : 1, accountIdx, subaddressIdx);
+      return that._module.sign_message(that._cppAddress, message, signatureType === MoneroMessageSignatureType.SIGN_WITH_SPEND_KEY ? 0 : 1, accountIdx, subaddressIdx);
     });
   }
   
@@ -1185,9 +1185,19 @@ class MoneroWalletWasm extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      let resultJson = that._module.verify_message(that._cppAddress, message, address, signature);
-      console.log("Got result verifying message!!! " + resultJson);
-      throw new Error("now what verifying message?");
+      let resultJson;
+      try {
+        MoneroUtils.validateAddress(address);   // avoid tools::dns_utils::get_account_address_as_str_from_url() on bad address
+        resultJson = JSON.parse(that._module.verify_message(that._cppAddress, message, address, signature));
+      } catch (err) {
+        resultJson = {isGood: false};
+      }
+      let result = new MoneroMessageSignatureResult(
+        resultJson.isGood,
+        !resultJson.isGood ? undefined : resultJson.isOld,
+        !resultJson.isGood ? undefined : resultJson.signatureType === "spend" ? MoneroMessageSignatureType.SIGN_WITH_SPEND_KEY : MoneroMessageSignatureType.SIGN_WITH_VIEW_KEY,
+        !resultJson.isGood ? undefined : resultJson.version);
+      return result;
     });
   }
   

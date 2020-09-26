@@ -5,12 +5,17 @@
  */
 class MoneroMessageSignatureResult {
   
-  constructor(isGood, isOld, signatureType, version) {
-    this.state = {};
-    this.state.isGood = isGood;
-    this.state.isOld = isOld;
-    this.state.signatureType = signatureType;
-    this.state.version = version;
+  constructor(stateOrIsGood, isOld, signatureType, version) {
+    if (typeof stateOrIsGood === "boolean") {
+      this.state = {};
+      this.state.isGood = stateOrIsGood;
+      this.state.isOld = isOld;
+      this.state.signatureType = signatureType;
+      this.state.version = version;
+    } else {
+      this.state = stateOrIsGood;
+    }
+
   }
 
   isGood() {
