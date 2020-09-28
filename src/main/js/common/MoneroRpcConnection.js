@@ -111,7 +111,8 @@ class MoneroRpcConnection {
       
       // process response
       resp = JSON.parse(resp.body.replace(/("[^"]*"\s*:\s*)(\d{16,})/g, '$1"$2"'));  // replace 16 or more digits with strings and parse
-      //console.log("Received response: " + JSON.stringify(resp));
+      //let respStr = JSON.stringify(resp);
+      //console.log("Received response: " + respStr.substring(0, Math.min(1000, respStr.length)));
       if (resp.error) throw new MoneroRpcError(resp.error.message, resp.error.code, method, params);
       return resp;
     } catch (e) {
