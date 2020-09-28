@@ -2304,12 +2304,12 @@ class MoneroWalletWasmProxy extends MoneroWallet {
     return this._invokeWorker("submitTxs", Array.from(arguments));
   }
   
-  async signMessage(message) {
+  async signMessage(message, signatureType, accountIdx, subaddressIdx) {
     return this._invokeWorker("signMessage", Array.from(arguments));
   }
   
   async verifyMessage(message, address, signature) {
-    return this._invokeWorker("verifyMessage", Array.from(arguments));
+    return new MoneroMessageSignatureResult(await this._invokeWorker("verifyMessage", Array.from(arguments)));
   }
   
   async getTxKey(txHash) {

@@ -32,7 +32,7 @@ class TestDeveloperGuide {
       it("Test developer guide transaction queries", async function() {
         
         // get a transaction by hash
-        let tx = await wallet.getTx("2bcb953fcd29c02474edc495c1ae069d25689039bd605331dcb9bb467615d362");
+        let tx = await wallet.getTx("9fb2cb7c73743002f131b72874e77b1152891968dc1f2849d3439ace8bae6d8e");
         
         // get unconfirmed transactions
         let txs = await wallet.getTxs({
@@ -249,7 +249,7 @@ class TestDeveloperGuide {
             relay: true
           });
         } catch (e) {
-          assert.equal(e.message, "No unlocked balance in the entire wallet");
+          assert.equal(e.message, "No unlocked balance in the specified account");
         }
         
         try {
@@ -260,7 +260,7 @@ class TestDeveloperGuide {
             relay: true
           });
         } catch (e) {
-          assert.equal(e.message, "No unlocked balance in the entire wallet");
+          assert.equal(e.message, "No unlocked balance in the specified account");
         }
         
         try {
@@ -272,7 +272,7 @@ class TestDeveloperGuide {
             relay: true
           });
         } catch (e) {
-          assert.equal(e.message, "No unlocked balance in the entire wallet");
+          assert.equal(e.message, "No unlocked balance in the specified account");
         }
       });
     });

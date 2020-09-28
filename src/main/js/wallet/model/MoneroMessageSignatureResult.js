@@ -15,7 +15,10 @@ class MoneroMessageSignatureResult {
     } else {
       this.state = stateOrIsGood;
     }
-
+  }
+  
+  toJson() {
+    return Object.assign({}, this.state);
   }
 
   isGood() {

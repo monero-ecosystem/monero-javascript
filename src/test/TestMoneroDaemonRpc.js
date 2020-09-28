@@ -1445,6 +1445,7 @@ function testInfo(info) {
   assert(info.getNumOutgoingConnections() >= 0);
   assert(info.getNumRpcConnections() >= 0);
   assert(info.getStartTimestamp());
+  assert(info.getAdjustedTimestamp());
   assert(info.getTarget());
   assert(info.getTargetHeight() >= 0);
   assert(info.getNumTxs() >= 0);

@@ -764,12 +764,12 @@ self.submitTxs = async function(walletId, signedTxHex) {
   return self.WORKER_OBJECTS[walletId].submitTxs(signedTxHex);
 }
 
-self.signMessage = async function(walletId, message) {
-  return self.WORKER_OBJECTS[walletId].signMessage(message);
+self.signMessage = async function(walletId, message, signatureType, accountIdx, subaddressIdx) {
+  return self.WORKER_OBJECTS[walletId].signMessage(message, signatureType, accountIdx, subaddressIdx);
 }
 
 self.verifyMessage = async function(walletId, message, address, signature) {
-  return self.WORKER_OBJECTS[walletId].verifyMessage(message, address, signature);
+  return (await self.WORKER_OBJECTS[walletId].verifyMessage(message, address, signature)).toJson();
 }
 
 self.getTxKey = async function(walletId, txHash) {

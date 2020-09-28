@@ -1372,6 +1372,7 @@ class TestMoneroWalletWasm extends TestMoneroWalletCommon {
         // run until test completes
         while (!listener.testComplete) await new Promise(function(resolve) { setTimeout(resolve, 10000); });
         if ((await that.daemon.getMiningStatus()).isActive()) await that.daemon.stopMining();
+        await receiver.close();
         assert.equal(undefined, listener.testError);
         assert(listener.confirmedHeight !== undefined, "No notification of output confirmed", );
         assert(listener.unlockedSeen, "No notification of output unlocked");

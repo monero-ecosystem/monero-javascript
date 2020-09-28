@@ -203,6 +203,15 @@ class MoneroDaemonInfo {
     return this;
   }
   
+  getAdjustedTimestamp() {
+    return this.state.adjustedTimestamp;
+  }
+  
+  setAdjustedTimestamp(adjustedTimestamp) {
+    this.state.adjustedTimestamp = adjustedTimestamp;
+    return this;
+  }
+  
   getTarget() {
     return this.state.target;
   }

@@ -1123,6 +1123,7 @@ class MoneroDaemonRpc extends MoneroDaemon {
       else if (key === "outgoing_connections_count") info.setNumOutgoingConnections(val);
       else if (key === "rpc_connections_count") info.setNumRpcConnections(val);
       else if (key === "start_time") info.setStartTimestamp(val);
+      else if (key === "adjusted_time") info.setAdjustedTimestamp(val);
       else if (key === "status") {}  // handled elsewhere
       else if (key === "target") info.setTarget(val);
       else if (key === "target_height") info.setTargetHeight(val);

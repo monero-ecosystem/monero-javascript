@@ -97,12 +97,12 @@ class MoneroTxSet {
   
   toString(indent = 0) {
     let str = "";
-    str += GenUtils.kvLine("Multisig tx hex: ", getMultisigTxHex(), indent);
-    str += GenUtils.kvLine("Unsigned tx hex: ", getUnsignedTxHex(), indent);
-    str += GenUtils.kvLine("Signed tx hex: ", getSignedTxHex(), indent);
-    if (getTxs() !== undefined) {
+    str += GenUtils.kvLine("Multisig tx hex: ", this.getMultisigTxHex(), indent);
+    str += GenUtils.kvLine("Unsigned tx hex: ", this.getUnsignedTxHex(), indent);
+    str += GenUtils.kvLine("Signed tx hex: ", this.getSignedTxHex(), indent);
+    if (this.getTxs() !== undefined) {
       str += GenUtils.kvLine("Txs", "", indent);
-      for (let tx of getTxs()) {
+      for (let tx of this.getTxs()) {
         str += tx.toString(indent + 1) + "\n";
       }
     }
