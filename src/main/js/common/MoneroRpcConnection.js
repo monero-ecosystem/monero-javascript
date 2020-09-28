@@ -89,27 +89,29 @@ class MoneroRpcConnection {
    * @return {object} is the response map
    */
   async sendJsonRequest(method, params) {
-    //console.log("sendJsonRequest(" + method + ", " + JSON.stringify(params) + ")");
     
     try {
       // tx config
+      let body = JSON.stringify({  // body is stringified so text/plain is returned so BigIntegers are preserved
+        id: "0",
+        jsonrpc: "2.0",
+        method: method,
+        params: params
+      });
+      //console.log("Sending json request with method '" + method + "' and body: " + body);
       let resp = await HttpClient.request({
         method: "POST",
         uri: this.getUri() + '/json_rpc',
         username: this.getUsername(),
         password: this.getPassword(),
-        body: JSON.stringify({  // body is stringified so text/plain is returned so BigIntegers are preserved
-          id: "0",
-          jsonrpc: "2.0",
-          method: method,
-          params: params
-        }),
+        body: body,
         rejectUnauthorized: this.config.rejectUnauthorized,
         requestApi: GenUtils.isFirefox() ? "xhr" : "fetch"  // firefox issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1491010
       });
       
       // process response
       resp = JSON.parse(resp.body.replace(/("[^"]*"\s*:\s*)(\d{16,})/g, '$1"$2"'));  // replace 16 or more digits with strings and parse
+      //console.log("Received response: " + JSON.stringify(resp));
       if (resp.error) throw new MoneroRpcError(resp.error.message, resp.error.code, method, params);
       return resp;
     } catch (e) {

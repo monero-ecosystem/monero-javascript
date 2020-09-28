@@ -249,7 +249,7 @@ class TestMoneroDaemonRpc {
       it("Can get blocks by range using chunked requests", async function() {
         
         // get long height range
-        let numBlocks = 1000;
+        let numBlocks = Math.min(await that.daemon.getHeight() - 2, 1440); // test up to ~2 days of blocks
         assert(numBlocks > 0);
         let height = await that.daemon.getHeight();
         assert(height - numBlocks - 1 < height);

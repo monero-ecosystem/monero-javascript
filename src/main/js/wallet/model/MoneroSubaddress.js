@@ -1,5 +1,6 @@
 const BigInteger = require("../../common/biginteger").BigInteger;
 const GenUtils = require("../../common/GenUtils");
+const assert = require("assert");
 
 /**
  * Monero subaddress model.
