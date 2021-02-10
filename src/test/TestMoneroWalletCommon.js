@@ -3114,7 +3114,7 @@ class TestMoneroWalletCommon {
       
       if (testConfig.testRelays)
       it("Can send to an address with split transactions", async function() {
-        await testSendToSingle(new MoneroTxConfig().setCanSplit(true));
+        await testSendToSingle(new MoneroTxConfig().setCanSplit(true).setRelay(true));
       });
       
       if (testConfig.testRelays)
@@ -3162,7 +3162,6 @@ class TestMoneroWalletCommon {
         config.setDestinations([new MoneroDestination(address, sendAmount)]);
         config.setAccountIndex(fromAccount.getIndex());
         config.setSubaddressIndices([fromSubaddress.getIndex()]);
-        config.setRelay(true);
         let reqCopy = config.copy();
         
         // send to self
