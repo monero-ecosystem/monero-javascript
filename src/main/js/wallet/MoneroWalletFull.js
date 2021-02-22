@@ -1200,7 +1200,7 @@ class MoneroWalletFull extends MoneroWalletKeys {
   }
   
   async checkTxKey(txHash, txKey, address) {
-    //throw new Error("MoneroWalletFull.checkTxKey() not supported because of possible bug in emscripten: https://www.mail-archive.com/emscripten-discuss@googlegroups.com/msg08964.html")
+    throw new Error("MoneroWalletFull.checkTxKey() not supported because of possible bug in emscripten: https://www.mail-archive.com/emscripten-discuss@googlegroups.com/msg08964.html")
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();

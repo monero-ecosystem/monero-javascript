@@ -47,7 +47,7 @@ get_boost_github() {
   [ -d ${SDK_PATH} ] || { echo "get_boost_github: Missing directory: ${SDK_PATH}"; return 1; }
 
   echo "Downloading boost from GitHub..."
-  git clone --recursive https://github.com/boostorg/boost.git --branch "boost-1.72.0" "${SDK_PATH}/boost-sdk" \
+  git clone --recursive https://github.com/boostorg/boost.git --branch "boost-1.75.0" "${SDK_PATH}/boost-sdk" \
   || {
     echo "Download failed"
     return 1
@@ -147,9 +147,9 @@ get_boost_source() {
   [ -d ${SDK_PATH} ] || { echo "get_boost_source: Missing directory: ${SDK_PATH}"; return 1; }
 
   # Github source is missing stuff
-  #local DL_URL="https://github.com/boostorg/boost/archive/boost-1.72.0.tar.gz"
-  local DL_URL="https://dl.bintray.com/boostorg/release/1.72.0/source"
-  local DL_FILE="boost_1_72_0.tar.gz"
+  #local DL_URL="https://github.com/boostorg/boost/archive/boost-1.75.0.tar.gz"
+  local DL_URL="https://dl.bintray.com/boostorg/release/1.75.0/source"
+  local DL_FILE="boost_1_75_0.tar.gz"
 
   check_archive "${SDK_PATH}/${DL_FILE}" \
   && {
