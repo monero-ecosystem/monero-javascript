@@ -65,6 +65,10 @@ struct wallet_wasm_listener : public monero_wallet_listener {
 
 // ------------------------------- UTILITIES ----------------------------------
 
+string monero_wasm_bridge::get_exception_message(int exception_ptr) {
+  return std::string(reinterpret_cast<std::exception *>(exception_ptr)->what());
+}
+
 string monero_wasm_bridge::malloc_binary_from_json(const std::string &buff_json)
 {
   // convert json to binary string

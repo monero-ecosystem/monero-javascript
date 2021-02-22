@@ -1126,7 +1126,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return new MoneroTxSet(JSON.parse(GenUtils.stringifyBIs(that._module.parse_tx_set(that._cppAddress, JSON.stringify(txSet.toJson())))));
+      try { return new MoneroTxSet(JSON.parse(GenUtils.stringifyBIs(that._module.parse_tx_set(that._cppAddress, JSON.stringify(txSet.toJson()))))); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1134,7 +1135,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.sign_txs(that._cppAddress, unsignedTxHex);
+      try { return that._module.sign_txs(that._cppAddress, unsignedTxHex); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1144,7 +1146,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
       that._assertNotClosed();
       return new Promise(function(resolve, reject) {
         let callbackFn = function(resp) {
-          resolve(JSON.parse(resp).txHashes);
+          if (resp.charAt(0) !== "{") reject(new MoneroError(resp));
+          else resolve(JSON.parse(resp).txHashes);
         }
         that._module.submit_txs(that._cppAddress, signedTxHex, callbackFn);
       });
@@ -1162,7 +1165,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.sign_message(that._cppAddress, message, signatureType === MoneroMessageSignatureType.SIGN_WITH_SPEND_KEY ? 0 : 1, accountIdx, subaddressIdx);
+      try { return that._module.sign_message(that._cppAddress, message, signatureType === MoneroMessageSignatureType.SIGN_WITH_SPEND_KEY ? 0 : 1, accountIdx, subaddressIdx); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1190,16 +1194,19 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.get_tx_key(that._cppAddress, txHash);
+      try { return that._module.get_tx_key(that._cppAddress, txHash); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
   async checkTxKey(txHash, txKey, address) {
-    throw new Error("MoneroWalletFull.checkTxKey() not supported because of possible bug in emscripten: https://www.mail-archive.com/emscripten-discuss@googlegroups.com/msg08964.html")
+    //throw new Error("MoneroWalletFull.checkTxKey() not supported because of possible bug in emscripten: https://www.mail-archive.com/emscripten-discuss@googlegroups.com/msg08964.html")
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return new MoneroCheckTx(JSON.parse(GenUtils.stringifyBIs(that._module.check_tx_key(that._cppAddress, txHash, txKey, address))));
+      let result = that._module.check_tx_key(that._cppAddress, txHash, txKey, address);
+      try { return new MoneroCheckTx(JSON.parse(GenUtils.stringifyBIs(result))); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1208,7 +1215,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.get_tx_proof(that._cppAddress, txHash, address, message);
+      try { return that._module.get_tx_proof(that._cppAddress, txHash, address, message); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1216,7 +1224,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return new MoneroCheckTx(JSON.parse(GenUtils.stringifyBIs(that._module.check_tx_proof(that._cppAddress, txHash, address, message, signature))));
+      try { return new MoneroCheckTx(JSON.parse(GenUtils.stringifyBIs(that._module.check_tx_proof(that._cppAddress, txHash, address, message, signature)))); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1225,7 +1234,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.get_spend_proof(that._cppAddress, txHash, message);
+      try { return that._module.get_spend_proof(that._cppAddress, txHash, message); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1233,7 +1243,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.check_spend_proof(that._cppAddress, txHash, message, signature);
+      try { return that._module.check_spend_proof(that._cppAddress, txHash, message, signature); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1242,7 +1253,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.get_reserve_proof_wallet(that._cppAddress, message);
+      try { return that._module.get_reserve_proof_wallet(that._cppAddress, message); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1251,7 +1263,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return that._module.get_reserve_proof_account(that._cppAddress, accountIdx, amount.toString(), message);
+      try { return that._module.get_reserve_proof_account(that._cppAddress, accountIdx, amount.toString(), message); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
 
@@ -1259,7 +1272,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return new MoneroCheckReserve(JSON.parse(GenUtils.stringifyBIs(that._module.check_reserve_proof(that._cppAddress, address, message, signature))));
+      try { return new MoneroCheckReserve(JSON.parse(GenUtils.stringifyBIs(that._module.check_reserve_proof(that._cppAddress, address, message, signature)))); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1267,7 +1281,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      return JSON.parse(that._module.get_tx_notes(that._cppAddress, JSON.stringify({txHashes: txHashes}))).txNotes;
+      try { return JSON.parse(that._module.get_tx_notes(that._cppAddress, JSON.stringify({txHashes: txHashes}))).txNotes; }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1275,7 +1290,8 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      that._module.set_tx_notes(that._cppAddress, JSON.stringify({txHashes: txHashes, txNotes: notes}));
+      try { that._module.set_tx_notes(that._cppAddress, JSON.stringify({txHashes: txHashes, txNotes: notes})); }
+      catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
   
@@ -1529,7 +1545,7 @@ class MoneroWalletFull extends MoneroWalletKeys {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-
+      
       // store views in array
       let views = [];
       

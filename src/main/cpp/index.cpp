@@ -9,6 +9,7 @@ EMSCRIPTEN_BINDINGS(module)
 {
   // ------------------------------ UTILITIES ---------------------------------
 
+  emscripten::function("get_exception_message", &monero_wasm_bridge::get_exception_message);
   emscripten::function("malloc_binary_from_json", &monero_wasm_bridge::malloc_binary_from_json);
   emscripten::function("binary_to_json", &monero_wasm_bridge::binary_to_json);
   emscripten::function("binary_blocks_to_json", &monero_wasm_bridge::binary_blocks_to_json);

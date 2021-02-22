@@ -1706,6 +1706,7 @@ class TestMoneroWalletCommon {
         assert(txs.length > 0, "No transactions found with outgoing destinations");
         for (let tx of txs) {
           let key = await that.wallet.getTxKey(tx.getHash());
+          assert(tx.getOutgoingTransfer().getDestinations().length > 0);
           for (let destination of tx.getOutgoingTransfer().getDestinations()) {
             let check = await that.wallet.checkTxKey(tx.getHash(), key, destination.getAddress());
             if (destination.getAmount().compare(new BigInteger()) > 0) {

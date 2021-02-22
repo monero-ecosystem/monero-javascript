@@ -15,6 +15,7 @@ namespace monero_wasm_bridge
 
   // ------------------------------ UTILITIES ---------------------------------
 
+  string get_exception_message(int exception_ptr);
   string malloc_binary_from_json(const string &args_string);
   string binary_to_json(const string &args_string);
   string binary_blocks_to_json(const string &args_string);

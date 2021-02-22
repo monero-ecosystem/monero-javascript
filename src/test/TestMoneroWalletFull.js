@@ -377,6 +377,37 @@ class TestMoneroWalletFull extends TestMoneroWalletCommon {
         if (err) throw err;
       });
       
+      if (testConfig.testNonRelays && !GenUtils.isBrowser())
+      it("Is compatible with monero-wallet-rpc's wallet files", async function() {
+        
+        // create wallet using monero-wallet-rpc
+        let walletName = GenUtils.getUUID();
+        let walletRpc = await TestUtils.getWalletRpc();
+        await walletRpc.createWallet(new MoneroWalletConfig().setPath(walletName).setPassword(TestUtils.WALLET_PASSWORD).setMnemonic(TestUtils.MNEMONIC).setRestoreHeight(TestUtils.FIRST_RECEIVE_HEIGHT));
+        await walletRpc.sync();
+        await walletRpc.close(true);
+        
+        // open as full wallet
+        let walletFull = await monerojs.openWalletFull(new MoneroWalletConfig().setPath(TestUtils.WALLET_RPC_LOCAL_WALLET_DIR + "/" + walletName).setPassword(TestUtils.WALLET_PASSWORD).setNetworkType(TestUtils.NETWORK_TYPE).setServer(TestUtils.DAEMON_RPC_CONFIG));
+        await walletFull.sync();
+        assert.equal(TestUtils.MNEMONIC, await walletFull.getMnemonic());
+        assert.equal(TestUtils.ADDRESS, await walletFull.getPrimaryAddress());
+        await walletFull.close(true);
+                
+        // create full wallet
+        walletName = GenUtils.getUUID();
+        walletFull = await monerojs.createWalletFull(new MoneroWalletConfig().setPath(TestUtils.WALLET_RPC_LOCAL_WALLET_DIR + "/" + walletName).setPassword(TestUtils.WALLET_PASSWORD).setNetworkType(TestUtils.NETWORK_TYPE).setMnemonic(TestUtils.MNEMONIC).setRestoreHeight(TestUtils.FIRST_RECEIVE_HEIGHT).setServer(TestUtils.DAEMON_RPC_CONFIG));
+        await walletFull.sync();
+        await walletFull.close(true);
+        
+        // open wallet using monero-wallet-rpc
+        await walletRpc.openWallet(new MoneroWalletConfig().setPath(walletName).setPassword(TestUtils.WALLET_PASSWORD));
+        await walletRpc.sync();
+        assert.equal(TestUtils.MNEMONIC, await walletRpc.getMnemonic());
+        assert.equal(TestUtils.ADDRESS, await walletRpc.getPrimaryAddress());
+        await walletRpc.close(true);
+      });
+      
       // TODO monero-project: cannot re-sync from lower block height after wallet saved
       if (testConfig.testNonRelays && !testConfig.liteMode && false)
       it("Can re-sync an existing wallet from scratch", async function() {

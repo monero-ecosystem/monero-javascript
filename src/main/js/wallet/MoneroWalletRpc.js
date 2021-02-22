@@ -613,7 +613,7 @@ class MoneroWalletRpc extends MoneroWallet {
   }
   
   async stopSyncing() {
-    return rpc.sendJsonRequest("auto_refresh", { enable: false });
+    return this.rpc.sendJsonRequest("auto_refresh", { enable: false });
   }
   
   async rescanSpent() {

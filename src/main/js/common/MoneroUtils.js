@@ -86,6 +86,7 @@ class MoneroUtils {
    * TODO: improve validation, use network type
    * 
    * @param {string} address - address
+   * @return {boolean} true if the address is valid, false otherwise
    */
   static isValidAddress(address) {
     try {

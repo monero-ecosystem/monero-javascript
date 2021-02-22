@@ -160,9 +160,9 @@ Compiled WebAssembly binaries are committed to ./dist for convenience, but these
 #### Running tests in Node.js
 
 * Run all tests: `npm test`
-* Run tests by their description: `npm run test -- --grep "Can get transactions"`
+* Run tests by their description, e.g.: `npm run test -- --grep "Can get transactions"`
 
-#### Running tests in the browser
+#### Running tests in a browser
 
 1. Start monero-wallet-rpc servers used by tests: `./bin/start_wallet_rpc_test_servers.sh`
 2. In another terminal, build browser tests: `./bin/build_browser_tests.sh`
