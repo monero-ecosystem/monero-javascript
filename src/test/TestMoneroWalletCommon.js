@@ -3165,6 +3165,17 @@ class TestMoneroWalletCommon {
         config.setSubaddressIndices([fromSubaddress.getIndex()]);
         let reqCopy = config.copy();
         
+        // test sending to invalid address
+        try {
+          config.setAddress("my invalid address");
+          if (config.getCanSplit() !== false) await that.wallet.createTxs(config);
+          else await that.wallet.createTx(config);
+          throw new Error("Should have thrown error creating tx with invalid address");
+        } catch (err) {
+          assert.equal(config.getPaymentId() === undefined ? "Invalid destination address" : "Standalone payment IDs are obsolete. Use subaddresses or integrated addresses instead", err.message);
+          config.setAddress(address);
+        }
+        
         // send to self
         if (config.getCanSplit() !== false) {
           for (let tx of await that.wallet.createTxs(config)) txs.push(tx);
@@ -3222,7 +3233,7 @@ class TestMoneroWalletCommon {
         // test transactions
         assert(txs.length > 0);
         for (let tx of txs) {
-          await that._testTxWallet(tx, {wallet: that.wallet, config: config, isSendResponse: config.getRelay()});
+          await that._testTxWallet(tx, {wallet: that.wallet, config: config, isSendResponse: config.getRelay() === true});
           assert.equal(tx.getOutgoingTransfer().getAccountIndex(), fromAccount.getIndex());
           assert.equal(tx.getOutgoingTransfer().getSubaddressIndices().length, 1);
           assert.equal(tx.getOutgoingTransfer().getSubaddressIndices()[0], fromSubaddress.getIndex());

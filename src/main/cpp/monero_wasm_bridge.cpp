@@ -17,6 +17,10 @@ string strip_last_char(const string& str) {
   return str.substr(0, str.size() - 1);
 }
 
+std::string tools::dns_utils::get_account_address_as_str_from_url(const std::string& url, bool& dnssec_valid, std::function<std::string(const std::string&, const std::vector<std::string>&, bool)> dns_confirm) {
+  throw std::runtime_error("Invalid destination address");
+}
+
 /**
  * Listens for wallet notifications and notifies the listener in JavaScript.
  */
@@ -65,7 +69,8 @@ struct wallet_wasm_listener : public monero_wallet_listener {
 
 // ------------------------------- UTILITIES ----------------------------------
 
-string monero_wasm_bridge::get_exception_message(int exception_ptr) {
+string monero_wasm_bridge::get_exception_message(int exception_ptr)
+{
   return std::string(reinterpret_cast<std::exception *>(exception_ptr)->what());
 }
 

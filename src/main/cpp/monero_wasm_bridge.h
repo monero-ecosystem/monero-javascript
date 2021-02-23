@@ -10,6 +10,12 @@
 using namespace std;
 using namespace emscripten;
 
+// override implementation to throw exception
+namespace tools::dns_utils
+{
+  std::string get_account_address_as_str_from_url(const std::string& url, bool& dnssec_valid, std::function<std::string(const std::string&, const std::vector<std::string>&, bool)> dns_confirm);
+}
+
 namespace monero_wasm_bridge
 {
 
