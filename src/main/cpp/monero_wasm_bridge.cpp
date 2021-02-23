@@ -69,6 +69,16 @@ struct wallet_wasm_listener : public monero_wallet_listener {
 
 // ------------------------------- UTILITIES ----------------------------------
 
+string monero_wasm_bridge::validate_address(const string& address, int network_type)
+{
+  try {
+    monero_utils::validate_address(address, static_cast<monero_network_type>(network_type));
+    return "";
+  } catch (exception& e) {
+    return string(e.what());
+  }
+}
+
 string monero_wasm_bridge::get_exception_message(int exception_ptr)
 {
   return std::string(reinterpret_cast<std::exception *>(exception_ptr)->what());

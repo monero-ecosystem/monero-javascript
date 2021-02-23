@@ -2,6 +2,7 @@ const assert = require("assert");
 const GenUtils = require("./GenUtils");
 const LibraryUtils = require("./LibraryUtils");
 const MoneroError = require("./MoneroError");
+const MoneroNetworkType = require("../daemon/model/MoneroNetworkType");
 
 /**
  * Collection of Monero utilities.
@@ -82,13 +83,12 @@ class MoneroUtils {
   
   /**
    * Determine if the given address is valid.
-   *
-   * TODO: improve validation, use network type
    * 
    * @param {string} address - address
+   * @param {MoneroNetworkType} networkType - network type of the address to validate
    * @return {boolean} true if the address is valid, false otherwise
    */
-  static isValidAddress(address) {
+  static isValidAddress(address, networkType) {
     try {
       MoneroUtils.validateAddress(address);
       return true;
@@ -100,14 +100,21 @@ class MoneroUtils {
   /**
    * Validate the given address, throw an error if invalid.
    *
-   * TODO: improve validation, use network type
-   * 
    * @param {string} address - address to validate
+   * @param {MoneroNetworkType} networkType - network type of the address to validate
    */
-  static validateAddress(address) {
+  static validateAddress(address, networkType) {
     assert(typeof address === "string", "Address is not string");
     assert(address.length > 0, "Address is empty");
     assert(GenUtils.isBase58(address), "Address is not base 58");
+    MoneroNetworkType.validate(networkType);
+    
+    // wasm module must be preloaded
+    if (LibraryUtils.getWasmModule() === undefined) throw MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
+    
+    // validate address with wasm module
+    let errMsg = LibraryUtils.getWasmModule().validate_address(address, networkType);
+    if (errMsg) throw new Error(errMsg);
   }
   
   /**
@@ -203,7 +210,7 @@ class MoneroUtils {
    */
   static jsonToBinary(json) {
     
-    // wasm module must be pre-loaded
+    // wasm module must be preloaded
     if (LibraryUtils.getWasmModule() === undefined) throw MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
     
     // serialize json to binary which is stored in c++ heap
@@ -235,7 +242,7 @@ class MoneroUtils {
    */
   static binaryToJson(uint8arr) {
     
-    // wasm module must be pre-loaded
+    // wasm module must be preloaded
     if (LibraryUtils.getWasmModule() === undefined) throw MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
     
     // allocate space in c++ heap for binary
@@ -267,7 +274,7 @@ class MoneroUtils {
    */
   static binaryBlocksToJson(uint8arr) {
     
-    // wasm module must be pre-loaded
+    // wasm module must be preloaded
     if (LibraryUtils.getWasmModule() === undefined) throw MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
     
     // allocate space in c++ heap for binary

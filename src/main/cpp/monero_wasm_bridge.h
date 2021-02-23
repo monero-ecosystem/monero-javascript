@@ -10,10 +10,11 @@
 using namespace std;
 using namespace emscripten;
 
-// override implementation to throw exception
-namespace tools::dns_utils
-{
-  std::string get_account_address_as_str_from_url(const std::string& url, bool& dnssec_valid, std::function<std::string(const std::string&, const std::vector<std::string>&, bool)> dns_confirm);
+// override tools::dns_utils::get_account_address_as_str_from_url() to throw exception
+namespace tools {
+  namespace dns_utils {
+    std::string get_account_address_as_str_from_url(const std::string& url, bool& dnssec_valid, std::function<std::string(const std::string&, const std::vector<std::string>&, bool)> dns_confirm);
+  }
 }
 
 namespace monero_wasm_bridge
@@ -21,10 +22,11 @@ namespace monero_wasm_bridge
 
   // ------------------------------ UTILITIES ---------------------------------
 
+  string validate_address(const string& address, int network_type);
   string get_exception_message(int exception_ptr);
-  string malloc_binary_from_json(const string &args_string);
-  string binary_to_json(const string &args_string);
-  string binary_blocks_to_json(const string &args_string);
+  string malloc_binary_from_json(const string& args_string);
+  string binary_to_json(const string& args_string);
+  string binary_blocks_to_json(const string& args_string);
 
   // ------------------------- STATIC WALLET UTILS ----------------------------
 
