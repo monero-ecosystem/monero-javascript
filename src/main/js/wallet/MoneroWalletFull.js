@@ -1011,9 +1011,6 @@ class MoneroWalletFull extends MoneroWalletKeys {
     config = MoneroWallet._normalizeCreateTxsConfig(config);
     if (config.getCanSplit() === undefined) config.setCanSplit(true);
     
-    // check for payment id to avoid error in wasm 
-    if (config.getPaymentId()) throw new MoneroError("Standalone payment IDs are obsolete. Use subaddresses or integrated addresses instead"); // TODO: this should no longer be necessary, remove and re-test
-    
     // return promise which resolves on callback
     let that = this;
     return that._module.queueTask(async function() {

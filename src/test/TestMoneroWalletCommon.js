@@ -3103,11 +3103,12 @@ class TestMoneroWalletCommon {
       
       // NOTE: this test will be invalid when payment ids are fully removed
       if (testConfig.testRelays)
-      it("Can send to an address in a single transaction with a payment id.", async function() {
+      it("Can send to an address in a single transaction with a payment id", async function() {
         let integratedAddress = await that.wallet.getIntegratedAddress();
         let paymentId = integratedAddress.getPaymentId();
         try {
           await testSendToSingle(new MoneroTxConfig().setCanSplit(false).setPaymentId(paymentId + paymentId + paymentId + paymentId));  // 64 character payment id
+          throw new Error("fail");
         } catch (e) {
           assert.equal(e.message, "Standalone payment IDs are obsolete. Use subaddresses or integrated addresses instead");
         }
@@ -3172,7 +3173,7 @@ class TestMoneroWalletCommon {
           else await that.wallet.createTx(config);
           throw new Error("Should have thrown error creating tx with invalid address");
         } catch (err) {
-          assert.equal(config.getPaymentId() === undefined ? "Invalid destination address" : "Standalone payment IDs are obsolete. Use subaddresses or integrated addresses instead", err.message);
+          assert.equal(err.message, "Invalid destination address");
           config.setAddress(address);
         }
         
