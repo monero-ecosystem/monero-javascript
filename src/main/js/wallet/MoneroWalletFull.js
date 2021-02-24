@@ -1176,7 +1176,6 @@ class MoneroWalletFull extends MoneroWalletKeys {
       that._assertNotClosed();
       let resultJson;
       try {
-        MoneroUtils.validateAddress(address);   // avoid tools::dns_utils::get_account_address_as_str_from_url() on bad address
         resultJson = JSON.parse(that._module.verify_message(that._cppAddress, message, address, signature));
       } catch (err) {
         resultJson = {isGood: false};
