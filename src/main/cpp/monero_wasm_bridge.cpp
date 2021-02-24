@@ -318,8 +318,12 @@ string monero_wasm_bridge::get_address(int handle, const uint32_t account_idx, c
 
 string monero_wasm_bridge::get_address_index(int handle, const string& address) {
   monero_wallet* wallet = (monero_wallet*) handle;
-  monero_subaddress subaddress = wallet->get_address_index(address);
-  return subaddress.serialize();
+  try {
+    monero_subaddress subaddress = wallet->get_address_index(address);
+    return subaddress.serialize();
+  } catch (exception& e) {
+    return e.what();
+  }
 }
 
 string monero_wasm_bridge::get_integrated_address(int handle, const string& standardAddress, const string& payment_id) {

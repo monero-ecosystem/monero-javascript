@@ -271,16 +271,12 @@ class MoneroWalletKeys extends MoneroWallet {
   
   async getAddressIndex(address) {
     this._assertNotClosed();
-    if (!MoneroUtils.isValidAddress(address)) throw new MoneroError("Invalid address");
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      try {
-        let subaddressJson = JSON.parse(that._module.get_address_index(that._cppAddress, address));
-        return new MoneroSubaddress(subaddressJson);
-      } catch (e) {
-        throw new Error("Address doesn't belong to the wallet");
-      }
+      let resp = that._module.get_address_index(that._cppAddress, address);
+      if (resp.charAt(0) !== '{') throw new Error(resp);
+      return new MoneroSubaddress(JSON.parse(resp));
     });
   }
   

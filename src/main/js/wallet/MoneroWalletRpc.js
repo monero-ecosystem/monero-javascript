@@ -993,8 +993,14 @@ class MoneroWalletRpc extends MoneroWallet {
     else params.get_tx_key = true;
     
     // send request
-    let resp = await this.rpc.sendJsonRequest(config.getCanSplit() ? "transfer_split" : "transfer", params);
-    let result = resp.result;
+    let result;
+    try {
+      let resp = await this.rpc.sendJsonRequest(config.getCanSplit() ? "transfer_split" : "transfer", params);
+      result = resp.result;
+    } catch (err) {
+      if (err.message.indexOf("WALLET_RPC_ERROR_CODE_WRONG_ADDRESS") > -1) throw new MoneroError("Invalid destination address");
+      throw err;
+    }
     
     // pre-initialize txs iff present.  multisig and view-only wallets will have tx set without transactions
     let txs;

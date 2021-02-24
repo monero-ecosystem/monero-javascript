@@ -173,7 +173,7 @@ class TestMoneroWalletCommon {
           let path; try { path = await wallet.getPath(); } catch(e) { }  // TODO: factor out keys-only tests?
           let e2 = undefined;
           try {
-            MoneroUtils.validateAddress(await wallet.getPrimaryAddress());
+            MoneroUtils.validateAddress(await wallet.getPrimaryAddress(), TestUtils.NETWORK_TYPE);
             MoneroUtils.validatePrivateViewKey(await wallet.getPrivateViewKey());
             MoneroUtils.validatePrivateSpendKey(await wallet.getPrivateSpendKey());
             MoneroUtils.validateMnemonic(await wallet.getMnemonic());
@@ -406,7 +406,7 @@ class TestMoneroWalletCommon {
       if (testConfig.testNonRelays)
       it("Can get the primary address", async function() {
         let primaryAddress = await that.wallet.getPrimaryAddress();
-        MoneroUtils.validateAddress(primaryAddress);
+        MoneroUtils.validateAddress(primaryAddress, TestUtils.NETWORK_TYPE);
         let subaddress = (await that.wallet.getSubaddress(0, 0));
         assert.equal(primaryAddress, (await that.wallet.getSubaddress(0, 0)).getAddress());
       });
@@ -4302,7 +4302,7 @@ class TestMoneroWalletCommon {
       
       // print final multisig address
       let participant = participants[0];
-      MoneroUtils.validateAddress(await participant.getPrimaryAddress());
+      MoneroUtils.validateAddress(await participant.getPrimaryAddress(), TestUtils.NETWORK_TYPE);
       //console.log("FINAL MULTISIG ADDRESS: " + await participant.getPrimaryAddress());
       this._testMultisigInfo(await participant.getMultisigInfo(), m, n);
       
@@ -4551,7 +4551,7 @@ function testAccount(account) {
   // test account
   assert(account);
   assert(account.getIndex() >= 0);
-  MoneroUtils.validateAddress(account.getPrimaryAddress());
+  MoneroUtils.validateAddress(account.getPrimaryAddress(), TestUtils.NETWORK_TYPE);
   TestUtils.testUnsignedBigInteger(account.getBalance());
   TestUtils.testUnsignedBigInteger(account.getUnlockedBalance());
   

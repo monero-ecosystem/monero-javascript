@@ -10,7 +10,7 @@
 using namespace std;
 using namespace emscripten;
 
-// override tools::dns_utils::get_account_address_as_str_from_url() to throw exception
+// override tools::dns_utils::get_account_address_as_str_from_url() so error caught when sending to invalid address
 namespace tools {
   namespace dns_utils {
     std::string get_account_address_as_str_from_url(const std::string& url, bool& dnssec_valid, std::function<std::string(const std::string&, const std::vector<std::string>&, bool)> dns_confirm);

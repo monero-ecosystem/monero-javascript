@@ -90,7 +90,7 @@ class MoneroUtils {
    */
   static isValidAddress(address, networkType) {
     try {
-      MoneroUtils.validateAddress(address);
+      MoneroUtils.validateAddress(address, networkType);
       return true;
     } catch (e) {
       return false;
@@ -110,7 +110,7 @@ class MoneroUtils {
     MoneroNetworkType.validate(networkType);
     
     // wasm module must be preloaded
-    if (LibraryUtils.getWasmModule() === undefined) throw MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
+    if (LibraryUtils.getWasmModule() === undefined) throw new MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
     
     // validate address with wasm module
     let errMsg = LibraryUtils.getWasmModule().validate_address(address, networkType);
@@ -211,7 +211,7 @@ class MoneroUtils {
   static jsonToBinary(json) {
     
     // wasm module must be preloaded
-    if (LibraryUtils.getWasmModule() === undefined) throw MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
+    if (LibraryUtils.getWasmModule() === undefined) throw new MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
     
     // serialize json to binary which is stored in c++ heap
     let binMemInfoStr = LibraryUtils.getWasmModule().malloc_binary_from_json(JSON.stringify(json));
@@ -243,7 +243,7 @@ class MoneroUtils {
   static binaryToJson(uint8arr) {
     
     // wasm module must be preloaded
-    if (LibraryUtils.getWasmModule() === undefined) throw MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
+    if (LibraryUtils.getWasmModule() === undefined) throw new MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
     
     // allocate space in c++ heap for binary
     let ptr = LibraryUtils.getWasmModule()._malloc(uint8arr.length * uint8arr.BYTES_PER_ELEMENT);
@@ -275,7 +275,7 @@ class MoneroUtils {
   static binaryBlocksToJson(uint8arr) {
     
     // wasm module must be preloaded
-    if (LibraryUtils.getWasmModule() === undefined) throw MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
+    if (LibraryUtils.getWasmModule() === undefined) throw new MoneroError("WASM module is not loaded; call 'await LibraryUtils.loadKeysModule()' to load");
     
     // allocate space in c++ heap for binary
     let ptr = LibraryUtils.getWasmModule()._malloc(uint8arr.length * uint8arr.BYTES_PER_ELEMENT);

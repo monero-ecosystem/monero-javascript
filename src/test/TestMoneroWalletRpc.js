@@ -160,7 +160,7 @@ class TestMoneroWalletRpc extends TestMoneroWalletCommon {
         let mnemonic = await wallet.getMnemonic();
         MoneroUtils.validateMnemonic(mnemonic);
         assert.notEqual(mnemonic, TestUtils.MNEMONIC);
-        MoneroUtils.validateAddress(await wallet.getPrimaryAddress());
+        MoneroUtils.validateAddress(await wallet.getPrimaryAddress(), TestUtils.NETWORK_TYPE);
         await wallet.sync();  // very quick because restore height is chain height
         await that.closeWallet(wallet);
 
@@ -170,7 +170,7 @@ class TestMoneroWalletRpc extends TestMoneroWalletCommon {
         MoneroUtils.validateMnemonic(await wallet.getMnemonic());
         assert.notEqual(await wallet.getMnemonic(), mnemonic);
         mnemonic = await wallet.getMnemonic();
-        MoneroUtils.validateAddress(await wallet.getPrimaryAddress());
+        MoneroUtils.validateAddress(await wallet.getPrimaryAddress(), TestUtils.NETWORK_TYPE);
         
         // attempt to create wallet which already exists
         try {
