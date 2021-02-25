@@ -1,3 +1,4 @@
+createTx({amount: 7.5105817301385e+26}) causes Error: conversion of data to type "y" failed
 mjs wallets incompatible with monero-java/monero-project
 deprecated dependencies
 esling config?

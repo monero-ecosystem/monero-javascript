@@ -2942,6 +2942,34 @@ class TestMoneroWalletCommon {
       
       //  ----------------------------- TEST RELAYS ---------------------------
       
+      if (testConfig.testNonRelays)
+      it("Validates inputs when sending funds", async function() {
+        
+        // try sending with invalid address
+        try {
+          await that.wallet.createTx({address: "my invalid address", accountIndex: 0, amount: TestUtils.MAX_FEE});
+          throw new Error("fail");
+        } catch (err) {
+          assert.equal(err.message, "Invalid destination address");
+        }
+        
+        // try sending with invalid amount
+        try {
+          await that.wallet.createTx({address: await that.wallet.getPrimaryAddress(), accountIndex: 0, amount: "my invalid amount"});
+          throw new Error("fail");
+        } catch (err) {
+          assert.equal(err.message, "Invalid destination amount: my invalid amount");
+        }
+        
+        // try sending with js number
+        try {
+          await that.wallet.createTx({address: await that.wallet.getPrimaryAddress(), accountIndex: 0, amount: 12345});
+          throw new Error("fail");
+        } catch (err) {
+          assert.equal(err.message, "Destination amount must be BigInteger or string");
+        }
+      });
+      
       if (testConfig.testRelays)
       it("Can send to an external address", async function() {
         let err;
@@ -3165,17 +3193,6 @@ class TestMoneroWalletCommon {
         config.setAccountIndex(fromAccount.getIndex());
         config.setSubaddressIndices([fromSubaddress.getIndex()]);
         let reqCopy = config.copy();
-        
-        // test sending to invalid address
-        try {
-          config.setAddress("my invalid address");
-          if (config.getCanSplit() !== false) await that.wallet.createTxs(config);
-          else await that.wallet.createTx(config);
-          throw new Error("Should have thrown error creating tx with invalid address");
-        } catch (err) {
-          assert.equal(err.message, "Invalid destination address");
-          config.setAddress(address);
-        }
         
         // send to self
         if (config.getCanSplit() !== false) {

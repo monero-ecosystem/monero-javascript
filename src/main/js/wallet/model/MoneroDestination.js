@@ -1,5 +1,6 @@
 const BigInteger = require("../../common/biginteger").BigInteger;
 const GenUtils = require("../../common/GenUtils");
+const MoneroError = require("../../common/MoneroError");
 
 /**
  * Models an outgoing transfer destination.
@@ -28,7 +29,11 @@ class MoneroDestination {
       
     // deserialize amount  
     if (amount) this.state.amount = amount;
-    if (this.state.amount !== undefined && !(this.state.amount instanceof BigInteger)) this.state.amount = BigInteger.parse(this.state.amount);
+    if (this.state.amount !== undefined && !(this.state.amount instanceof BigInteger)) {
+      if (typeof this.state.amount === "number") throw new MoneroError("Destination amount must be BigInteger or string");
+      try { this.state.amount = BigInteger.parse(this.state.amount); }
+      catch (err) { throw new MoneroError("Invalid destination amount: " + this.state.amount); }
+    }
   }
   
   getAddress() {
