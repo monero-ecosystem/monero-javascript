@@ -305,19 +305,19 @@ class MoneroUtils {
   /**
    * Convert XMR to atomic units.
    * 
-   * @param {number} amountXmr - amount in XMR to convert to atomic units
+   * @param {number|string} amountXmr - amount in XMR to convert to atomic units
    * @return {BigInteger} - amount in atomic units
    */
   static xmrToAtomicUnits(amountXmr) {
-    if (typeof amountXmr !== "number") throw new MoneroError("Must provide XMR amount as js number to convert to atomic units");
-    let amountXmrStr = "" + amountXmr;
+    if (typeof amountXmr === "number") amountXmr = "" + amountXmr;
+    else if (typeof amountXmr !== "string") throw new MoneroError("Must provide XMR amount as a string or js number to convert to atomic units");
     let decimalDivisor = 1;
-    let decimalIdx = amountXmrStr.indexOf('.');
+    let decimalIdx = amountXmr.indexOf('.');
     if (decimalIdx > -1) {
-      decimalDivisor = Math.pow(10, amountXmrStr.length - decimalIdx - 1);
-      amountXmrStr = Number(amountXmrStr.slice(0, decimalIdx) + amountXmrStr.slice(decimalIdx + 1)) + "";
+      decimalDivisor = Math.pow(10, amountXmr.length - decimalIdx - 1);
+      amountXmr = Number(amountXmr.slice(0, decimalIdx) + amountXmr.slice(decimalIdx + 1)) + "";
     }
-    return new BigInteger(amountXmrStr).multiply(new BigInteger(MoneroUtils.AU_PER_XMR)).divide(new BigInteger(decimalDivisor));
+    return new BigInteger(amountXmr).multiply(new BigInteger(MoneroUtils.AU_PER_XMR)).divide(new BigInteger(decimalDivisor));
   }
   
   /**
