@@ -1,4 +1,5 @@
 const assert = require("assert");
+const BigInteger = require("./biginteger").BigInteger;
 const GenUtils = require("./GenUtils");
 const LibraryUtils = require("./LibraryUtils");
 const MoneroError = require("./MoneroError");
@@ -300,10 +301,41 @@ class MoneroUtils {
     json.txs = json.txs.map(txs => txs ? txs.map(tx => JSON.parse(tx.replace(",", "{") + "}")) : []); // modify tx string to proper json and parse // TODO: more efficient way than this json manipulation?
     return json;
   }
+  
+  /**
+   * Convert XMR to atomic units.
+   * 
+   * @param {number} amountXmr - amount in XMR to convert to atomic units
+   * @return {BigInteger} - amount in atomic units
+   */
+  static xmrToAtomicUnits(amountXmr) {
+    if (typeof amountXmr !== "number") throw new MoneroError("Must provide XMR amount as js number to convert to atomic units");
+    let amountXmrStr = "" + amountXmr;
+    let decimalDivisor = 1;
+    let decimalIdx = amountXmrStr.indexOf('.');
+    if (decimalIdx > -1) {
+      decimalDivisor =  Math.pow(10, amountXmrStr.length - decimalIdx - 1);
+      amountXmrStr = Number(amountXmrStr.slice(0, decimalIdx) + amountXmrStr.slice(decimalIdx + 1)) + "";
+    }
+    return new BigInteger(amountXmrStr).multiply(new BigInteger(MoneroUtils.AU_PER_XMR)).divide(new BigInteger(decimalDivisor));
+  }
+  
+  /**
+   * Convert atomic units to XMR.
+   * 
+   * @param {BigInteger} amountAtomicUnits - amount in atomic units to convert to XMR
+   * @return {number} - amount in XMR 
+   */
+  static atomicUnitsToXmr(amountAtomicUnits) {
+    if (!(amountAtomicUnits instanceof BigInteger)) throw new MoneroError("Must provide atomic units as BigInteger to convert to XMR");
+    let quotientAndRemainder = amountAtomicUnits.divRem(new BigInteger(MoneroUtils.AU_PER_XMR));
+    return Number(quotientAndRemainder[0].toJSValue() + quotientAndRemainder[1].toJSValue() / MoneroUtils.AU_PER_XMR);
+  }
 }
 
 MoneroUtils.NUM_MNEMONIC_WORDS = 25;
 MoneroUtils.RING_SIZE = 12;
 MoneroUtils.MAX_REQUESTS_PER_SECOND = 50;
+MoneroUtils.AU_PER_XMR = 1000000000000;
 
 module.exports = MoneroUtils;
