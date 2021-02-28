@@ -1119,11 +1119,11 @@ class MoneroWalletFull extends MoneroWalletKeys {
     });
   }
   
-  async parseTxSet(txSet) {
+  async describeTxSet(txSet) {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
-      try { return new MoneroTxSet(JSON.parse(GenUtils.stringifyBIs(that._module.parse_tx_set(that._cppAddress, JSON.stringify(txSet.toJson()))))); }
+      try { return new MoneroTxSet(JSON.parse(GenUtils.stringifyBIs(that._module.describe_tx_set(that._cppAddress, JSON.stringify(txSet.toJson()))))); }
       catch (err) { throw new Error(that._module.get_exception_message(err)); }
     });
   }
@@ -2313,8 +2313,8 @@ class MoneroWalletFullProxy extends MoneroWallet {
     return this._invokeWorker("relayTxs", [txMetadatas]);
   }
   
-  async parseTxSet(txSet) {
-    return new MoneroTxSet(await this._invokeWorker("parseTxSet", [txSet.toJson()]));
+  async describeTxSet(txSet) {
+    return new MoneroTxSet(await this._invokeWorker("describeTxSet", [txSet.toJson()]));
   }
   
   async signTxs(unsignedTxHex) {

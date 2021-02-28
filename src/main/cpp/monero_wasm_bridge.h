@@ -101,7 +101,7 @@ namespace monero_wasm_bridge
   void sweep_unlocked(int handle, const string& config_json, emscripten::val callback);
   void sweep_dust(int handle, bool relay, emscripten::val callback);
   void relay_txs(int handle, const string& args, emscripten::val callback);
-  string parse_tx_set(int handle, const string& tx_set_str);
+  string describe_tx_set(int handle, const string& tx_set_str);
   string sign_txs(int handle, const string& unsigned_tx_hex);
   void submit_txs(int handle, const string& signed_tx_hex, emscripten::val callback);
   string sign_message(int handle, const string& msg, uint32_t signature_type_num, uint32_t account_idx, uint32_t subaddress_idx);

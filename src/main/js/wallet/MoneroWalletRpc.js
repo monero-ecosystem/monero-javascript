@@ -1123,7 +1123,7 @@ class MoneroWalletRpc extends MoneroWallet {
     return txSet.getTxs();
   }
   
-  async parseTxSet(txSet) {
+  async describeTxSet(txSet) {
     let resp = await this.rpc.sendJsonRequest("describe_transfer", {
       unsigned_txset: txSet.getUnsignedTxHex(),
       multisig_txset: txSet.getMultisigTxHex()

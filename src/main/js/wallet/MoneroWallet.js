@@ -740,12 +740,12 @@ class MoneroWallet {
   }
   
   /**
-   * Parse a tx set containing unsigned or multisig tx hex to a new tx set containing structured transactions.
+   * Describe a tx set containing unsigned or multisig tx hex to a new tx set containing structured transactions.
    * 
    * @param {MoneroTxSet} txSet - a tx set containing unsigned or multisig tx hex
-   * @return {MoneroTxSet} the parsed tx set containing structured transactions
+   * @return {MoneroTxSet} - the tx set containing structured transactions
    */
-  async parseTxSet(txSet) {
+  async describeTxSet(txSet) {
     throw new MoneroError("Not supported");
   }
   

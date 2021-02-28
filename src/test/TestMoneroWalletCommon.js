@@ -3485,8 +3485,8 @@ class TestMoneroWalletCommon {
           assert(signedTxHex.length > 0);
           
           // parse or "describe" unsigned tx set
-          let parsedTxSet = await offlineWallet.parseTxSet(unsignedTx.getTxSet());
-          testParsedTxSet(parsedTxSet);
+          let describedTxSet = await offlineWallet.describeTxSet(unsignedTx.getTxSet());
+          testDescribedTxSet(describedTxSet);
           
           // submit signed tx using view-only wallet
           if (testConfig.testRelays) {
@@ -4427,7 +4427,7 @@ class TestMoneroWalletCommon {
         assert.equal(txSet.getUnsignedTxHex(), undefined);
         
         // parse multisig tx hex and test
-        testParsedTxSet(await participant.parseTxSet(txSet));
+        testDescribedTxSet(await participant.describeTxSet(txSet));
         
         // sign the tx with participants 1 through m - 1 to meet threshold
         let multisigTxHex = txSet.getMultisigTxHex();
@@ -4502,7 +4502,7 @@ class TestMoneroWalletCommon {
         assert.equal(txSet.getUnsignedTxHex(), undefined);
         
         // parse multisig tx hex and test
-        testParsedTxSet(await participant.parseTxSet(txSet));
+        testDescribedTxSet(await participant.describeTxSet(txSet));
         
         // sign the tx with participants 1 through m - 1 to meet threshold
         multisigTxHex = txSet.getMultisigTxHex();
@@ -4792,34 +4792,34 @@ function testCheckReserve(check) {
   }
 }
 
-function testParsedTxSet(parsedTxSet) {
-  assert.notEqual(parsedTxSet, undefined);
-  assert(parsedTxSet.getTxs().length > 0);
-  assert.equal(parsedTxSet.getSignedTxHex(), undefined);
-  assert.equal(parsedTxSet.getUnsignedTxHex(), undefined);
+function testDescribedTxSet(describedTxSet) {
+  assert.notEqual(describedTxSet, undefined);
+  assert(describedTxSet.getTxs().length > 0);
+  assert.equal(describedTxSet.getSignedTxHex(), undefined);
+  assert.equal(describedTxSet.getUnsignedTxHex(), undefined);
   
   // test each transaction        
   // TODO: use common tx wallet test?
-  assert.equal(parsedTxSet.getMultisigTxHex(), undefined);
-  for (let parsedTx of parsedTxSet.getTxs()) {
-    assert(parsedTx.getTxSet() === parsedTxSet);
-    TestUtils.testUnsignedBigInteger(parsedTx.getInputSum(), true);
-    TestUtils.testUnsignedBigInteger(parsedTx.getOutputSum(), true);
-    TestUtils.testUnsignedBigInteger(parsedTx.getFee());
-    TestUtils.testUnsignedBigInteger(parsedTx.getChangeAmount());
-    if (parsedTx.getChangeAmount().compare(new BigInteger(0)) === 0) assert.equal(parsedTx.getChangeAddress(), undefined);
-    else MoneroUtils.validateAddress(parsedTx.getChangeAddress(), TestUtils.NETWORK_TYPE);
-    assert(parsedTx.getRingSize() > 1);
-    assert(parsedTx.getUnlockHeight() >= 0);
-    assert(parsedTx.getNumDummyOutputs() >= 0);
-    assert(parsedTx.getExtraHex());
-    assert(parsedTx.getPaymentId() === undefined || parsedTx.getPaymentId().length > 0);
-    assert(parsedTx.isOutgoing());
-    assert.notEqual(parsedTx.getOutgoingTransfer(), undefined);
-    assert.notEqual(parsedTx.getOutgoingTransfer().getDestinations(), undefined);
-    assert(parsedTx.getOutgoingTransfer().getDestinations().length > 0);
-    assert.equal(parsedTx.isIncoming(), undefined);
-    for (let destination of parsedTx.getOutgoingTransfer().getDestinations()) {
+  assert.equal(describedTxSet.getMultisigTxHex(), undefined);
+  for (let describedTx of describedTxSet.getTxs()) {
+    assert(describedTx.getTxSet() === describedTxSet);
+    TestUtils.testUnsignedBigInteger(describedTx.getInputSum(), true);
+    TestUtils.testUnsignedBigInteger(describedTx.getOutputSum(), true);
+    TestUtils.testUnsignedBigInteger(describedTx.getFee());
+    TestUtils.testUnsignedBigInteger(describedTx.getChangeAmount());
+    if (describedTx.getChangeAmount().compare(new BigInteger(0)) === 0) assert.equal(describedTx.getChangeAddress(), undefined);
+    else MoneroUtils.validateAddress(describedTx.getChangeAddress(), TestUtils.NETWORK_TYPE);
+    assert(describedTx.getRingSize() > 1);
+    assert(describedTx.getUnlockHeight() >= 0);
+    assert(describedTx.getNumDummyOutputs() >= 0);
+    assert(describedTx.getExtraHex());
+    assert(describedTx.getPaymentId() === undefined || describedTx.getPaymentId().length > 0);
+    assert(describedTx.isOutgoing());
+    assert.notEqual(describedTx.getOutgoingTransfer(), undefined);
+    assert.notEqual(describedTx.getOutgoingTransfer().getDestinations(), undefined);
+    assert(describedTx.getOutgoingTransfer().getDestinations().length > 0);
+    assert.equal(describedTx.isIncoming(), undefined);
+    for (let destination of describedTx.getOutgoingTransfer().getDestinations()) {
       testDestination(destination);
     }
   }

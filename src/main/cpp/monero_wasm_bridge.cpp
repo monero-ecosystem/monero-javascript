@@ -824,11 +824,11 @@ void monero_wasm_bridge::relay_txs(int handle, const string& args, emscripten::v
   }
 }
 
-string monero_wasm_bridge::parse_tx_set(int handle, const string& tx_set_str) {
+string monero_wasm_bridge::describe_tx_set(int handle, const string& tx_set_str) {
   monero_wallet* wallet = (monero_wallet*) handle;
   monero_tx_set tx_set = monero_tx_set::deserialize(tx_set_str);
-  monero_tx_set parsed_tx_set = wallet->parse_tx_set(tx_set);
-  return parsed_tx_set.serialize();
+  monero_tx_set described_tx_set = wallet->describe_tx_set(tx_set);
+  return described_tx_set.serialize();
 }
 
 string monero_wasm_bridge::sign_txs(int handle, const string& unsigned_tx_hex) {

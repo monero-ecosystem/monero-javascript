@@ -753,8 +753,8 @@ self.relayTxs = async function(walletId, txMetadatas) {
   return self.WORKER_OBJECTS[walletId].relayTxs(txMetadatas);
 }
 
-self.parseTxSet = async function(walletId, txSetJson) {
-  return (await self.WORKER_OBJECTS[walletId].parseTxSet(new MoneroTxSet(txSetJson))).toJson();
+self.describeTxSet = async function(walletId, txSetJson) {
+  return (await self.WORKER_OBJECTS[walletId].describeTxSet(new MoneroTxSet(txSetJson))).toJson();
 }
 
 self.signTxs = async function(walletId, unsignedTxHex) {
