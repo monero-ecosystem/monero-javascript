@@ -131,10 +131,11 @@ class MoneroTxConfig {
     return this.state.destinations[0].getAmount();
   }
   
-  addDestination(destination) {
-    assert(destination instanceof MoneroDestination);
+  addDestination(destinationOrAddress, amount) {
+    if (typeof destinationOrAddress === "string") return this.addDestination(new MoneroDestination(destinationOrAddress, amount));
+    assert(destinationOrAddress instanceof MoneroDestination);
     if (this.state.destinations === undefined) this.state.destinations = [];
-    this.state.destinations.push(destination);
+    this.state.destinations.push(destinationOrAddress);
     return this;
   }
   

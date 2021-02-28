@@ -315,7 +315,7 @@ class MoneroUtils {
     let decimalIdx = amountXmr.indexOf('.');
     if (decimalIdx > -1) {
       decimalDivisor = Math.pow(10, amountXmr.length - decimalIdx - 1);
-      amountXmr = Number(amountXmr.slice(0, decimalIdx) + amountXmr.slice(decimalIdx + 1)) + "";
+      amountXmr = amountXmr.slice(0, decimalIdx) + amountXmr.slice(decimalIdx + 1);
     }
     return new BigInteger(amountXmr).multiply(new BigInteger(MoneroUtils.AU_PER_XMR)).divide(new BigInteger(decimalDivisor));
   }
