@@ -2360,8 +2360,8 @@ class TestMoneroWalletCommon {
         }
         
         // finally
-        await sender.removeListener(senderListener);
-        await receiver.removeListener(receiverListener);
+        if (senderListener) await sender.removeListener(senderListener);
+        if (receiverListener) await receiver.removeListener(receiverListener);
         if (!sameAccount && receiver !== undefined) await that.closeWallet(receiver);
         if (err) throw err;
       }
