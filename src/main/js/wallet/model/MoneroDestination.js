@@ -14,8 +14,6 @@ class MoneroDestination {
    * @param {BigInteger|string} amount - the destination amount
    */
   constructor(stateOrAddress, amount) {
-    
-    // initialize internal state
     if (!stateOrAddress) this.state = {};
     else if (stateOrAddress instanceof MoneroDestination) this.state = stateOrAddress.toJson();
     else if (typeof stateOrAddress === "object") this.state = Object.assign({}, stateOrAddress);
@@ -26,14 +24,7 @@ class MoneroDestination {
     } else {
       throw new MoneroError("stateOrAddress must be a MoneroDestination, JavaScript object, or hex string");
     }
-      
-    // deserialize amount  
-    if (amount) this.state.amount = amount;
-    if (this.state.amount !== undefined && !(this.state.amount instanceof BigInteger)) {
-      if (typeof this.state.amount === "number") throw new MoneroError("Destination amount must be BigInteger or string");
-      try { this.state.amount = BigInteger.parse(this.state.amount); }
-      catch (err) { throw new MoneroError("Invalid destination amount: " + this.state.amount); }
-    }
+    if (amount) this.setAmount(amount);
   }
   
   getAddress() {
@@ -50,6 +41,10 @@ class MoneroDestination {
   }
 
   setAmount(amount) {
+    if (amount !== undefined && !(this.state.amount instanceof BigInteger)) {
+      try { amount = BigInteger.parse(amount); }
+      catch (err) { throw new MoneroError("Invalid destination amount: " + amount); }
+    }
     this.state.amount = amount;
     return this;
   }

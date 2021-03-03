@@ -1,4 +1,5 @@
 const assert = require("assert");
+const BigInteger = require("../../common/biginteger").BigInteger;
 const MoneroDestination = require("./MoneroDestination");
 const MoneroError = require("../../common/MoneroError");
 
@@ -52,13 +53,15 @@ class MoneroTxConfig {
     // deserialize if necessary
     if (this.state.destinations) {
       assert(this.state.address === undefined && this.state.amount === undefined, "Tx configuration may specify destinations or an address/amount but not both");
+      for (let destination of this.state.destinations) if (typeof destination.amount === "number") throw new MoneroError("Destination amount must be BigInteger or string");
       this.setDestinations(this.state.destinations.map(destination => destination instanceof MoneroDestination ? destination : new MoneroDestination(destination)));
     }
     
     // alias 'address' and 'amount' to single destination to support e.g. createTx({address: "..."})
     if (this.state.address || this.state.amount) {
       assert(!this.state.destinations, "Tx configuration may specify destinations or an address/amount but not both");
-      this.setDestinations([new MoneroDestination(this.state.address, this.state.amount)]);
+      this.setAddress(this.state.address);
+      this.setAmount(this.state.amount);
       delete this.state.address;
       delete this.state.amount;
     }
@@ -111,10 +114,15 @@ class MoneroTxConfig {
   /**
    * Set the amount of a single-destination configuration.
    * 
-   * @param {BigInteger} amount - the amount to set for the single destination
+   * @param {BigInteger|string} amount - the amount to set for the single destination
    * @return {MoneroTxConfig} this configuration for chaining
    */
   setAmount(amount) {
+    if (amount !== undefined && !(this.state.amount instanceof BigInteger)) {
+      if (typeof amount === "number") throw new MoneroError("Destination amount must be BigInteger or string");
+      try { amount = BigInteger.parse(amount); }
+      catch (err) { throw new MoneroError("Invalid destination amount: " + amount); }
+    }
     if (this.state.destinations !== undefined && this.state.destinations.length > 1) throw new MoneroError("Cannot set amount because MoneroTxConfig already has multiple destinations");
     if (this.state.destinations === undefined || this.state.destinations.length === 0) this.addDestination(new MoneroDestination(undefined, amount));
     else this.state.destinations[0].setAmount(amount);
