@@ -1,8 +1,7 @@
 #!/bin/sh
 
-#source "$(realpath $(dirname $0))/emsdk_inc.sh"
-source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/emsdk_inc.sh"
-[ -f $(dirname $0)/colors.sh ] && source $(dirname $0)/colors.sh
+. $(dirname $0)/emsdk_inc.sh
+[ -f $(dirname $0)/colors.sh ] && . $(dirname $0)/colors.sh
 
 PLATFORM="emscripten"
 
@@ -106,14 +105,13 @@ mkdir "$INSTALL_PATH"
 
 HOST_NCORES=$(nproc 2>/dev/null|| shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 1)
 
-
-# threading=single \
-./b2 -q -a -j$HOST_NCORES     \
+./b2 -q -a -j $HOST_NCORES    \
   toolset=clang-emscripten    \
-  threading=single			      \
+  threading=single            \
   link=static                 \
   optimization=space          \
   variant=release             \
+  cxxflags=-no-pthread        \
   stage                       \
   --stagedir="$INSTALL_PATH"  \
   2>&1

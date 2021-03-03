@@ -10,7 +10,7 @@ local EMSCRIPTEN = [ os.environ EMSCRIPTEN ] ;
 
 using clang : emscripten
 :
-	emcc -v -s USE_ZLIB=1
+	emcc -v -s USE_ZLIB=1 -s USE_PTHREADS=0
 :
 	<root>$(EMSCRIPTEN)
 	<archiver>$(EMSCRIPTEN)/emar
