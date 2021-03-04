@@ -47,13 +47,15 @@ class MoneroTxConfig {
     // initialize internal state
     if (!config) this.state = {};
     else if (config instanceof MoneroTxConfig) this.state = config.toJson();
-    else if (typeof config === "object") this.state = Object.assign({}, config);
+    else if (typeof config === "object") {
+      this.state = Object.assign({}, config);
+      if (typeof this.state.amount === "number") this.state.amount = BigInteger.parse(this.state.amount);
+    }
     else throw new MoneroError("Invalid argument given to MoneroTxConfig: " + typeof config);
     
     // deserialize if necessary
     if (this.state.destinations) {
       assert(this.state.address === undefined && this.state.amount === undefined, "Tx configuration may specify destinations or an address/amount but not both");
-      for (let destination of this.state.destinations) if (typeof destination.amount === "number") throw new MoneroError("Destination amount must be BigInteger or string");
       this.setDestinations(this.state.destinations.map(destination => destination instanceof MoneroDestination ? destination : new MoneroDestination(destination)));
     }
     
