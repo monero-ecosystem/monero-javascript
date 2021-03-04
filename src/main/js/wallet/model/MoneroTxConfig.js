@@ -41,7 +41,7 @@ class MoneroTxConfig {
    * @param {boolean} config.sweepEachSubaddress - for sweep requests, sweep each subaddress individually instead of together if true
    * @param {string} config.keyImage - key image to sweep (ignored except in sweepOutput() requests)
    */
-  constructor(config) {
+  constructor(config, relaxValidation) {  // relax validation for internal use to process json from rpc or cpp
     if (arguments.length > 1) throw new MoneroError("MoneroTxConfig can be constructed with only one parameter but was given " + arguments.length)
     
     // initialize internal state
@@ -49,7 +49,7 @@ class MoneroTxConfig {
     else if (config instanceof MoneroTxConfig) this.state = config.toJson();
     else if (typeof config === "object") {
       this.state = Object.assign({}, config);
-      if (typeof this.state.amount === "number") this.state.amount = BigInteger.parse(this.state.amount);
+      if (relaxValidation && typeof this.state.amount === "number") this.state.amount = BigInteger.parse(this.state.amount);
     }
     else throw new MoneroError("Invalid argument given to MoneroTxConfig: " + typeof config);
     

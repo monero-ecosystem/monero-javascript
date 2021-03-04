@@ -1391,7 +1391,7 @@ class MoneroWalletFull extends MoneroWalletKeys {
     return that._module.queueTask(async function() {
       that._assertNotClosed();
       try {
-        return new MoneroTxConfig(JSON.parse(GenUtils.stringifyBIs(that._module.parse_payment_uri(that._cppAddress, uri))));
+        return new MoneroTxConfig(JSON.parse(GenUtils.stringifyBIs(that._module.parse_payment_uri(that._cppAddress, uri))), true); // relax validation for unquoted big integers
       } catch (err) {
         throw new MoneroError(err.message);
       }
