@@ -2391,7 +2391,6 @@ class WalletRpcPollListener {
     
     // fetch txs that are no longer locked
     let unlockedTxs = await this._wallet.getTxs(new MoneroTxQuery().setHashes(noLongerLockedHashes).setIncludeOutputs(true), []); // ignore missing tx hashes which could be removed due to re-org
-    console.log()
     
     // save locked txs for next comparison
     this._prevLockedTxs = lockedTxs;
