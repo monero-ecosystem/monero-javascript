@@ -100,29 +100,6 @@ class MoneroOutputQuery extends MoneroOutputWallet {
     return this;
   }
   
-  /**
-   * Indicates if the this query will fetch locked outputs, unlocked outputs, or both (null).
-   * 
-   * @return true if locked outputs queried, false of unlocked outputs queried, undefined if both
-   */
-  isLocked() {
-    if (this.state.txQuery === undefined) return undefined;
-    return txQuery.isLocked();
-  }
-  
-  /**
-   * Convenience method to query outputs by the locked state of their tx.
-   * 
-   * @param isLocked specifies if the output's tx must be locked or unlocked (optional)
-   * @return {MoneroOutputQuery} this query for chaining
-   */
-  setIsLocked(isLocked) {
-    const MoneroTxQuery = require("./MoneroTxQuery");
-    if (this.state.txQuery === undefined) this.state.txQuery = new MoneroTxQuery();
-    this.state.txQuery.setIsLocked(isLocked);
-    return this;
-  }
-  
   meetsCriteria(output, queryParent) {
     if (!(output instanceof MoneroOutputWallet)) throw new Error("Output not given to MoneroOutputQuery.meetsCriteria(output)");
     if (queryParent === undefined) queryParent = true;

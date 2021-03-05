@@ -42,7 +42,7 @@ class MoneroTxConfig {
    * @param {string} config.keyImage - key image to sweep (ignored except in sweepOutput() requests)
    */
   constructor(config, relaxValidation) {  // relax validation for internal use to process json from rpc or cpp
-    if (arguments.length > 1) throw new MoneroError("MoneroTxConfig can be constructed with only one parameter but was given " + arguments.length)
+    if (arguments.length > 2) throw new MoneroError("MoneroTxConfig can be constructed with only two parameters but was given " + arguments.length)
     
     // initialize internal state
     if (!config) this.state = {};

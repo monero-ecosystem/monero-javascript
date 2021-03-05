@@ -138,7 +138,9 @@ class TestDeveloperGuide {
         // get outputs available to be spent
         outputs = await wallet.getOutputs({
           isSpent: false,
-          isLocked: false
+          txQuery: {
+            isLocked: false
+          }
         });
         assert(outputs.length > 0);
         for (let output of outputs) {

@@ -92,7 +92,9 @@ let outputs = await wallet.getOutputs();
 // get outputs available to be spent
 let outputs = await wallet.getOutputs({
   isSpent: false,
-  isLocked: false
+  txQuery: {
+    isLocked: false
+  }
 });
 ```
 
