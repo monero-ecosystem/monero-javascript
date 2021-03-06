@@ -180,10 +180,13 @@ set(
     ${MONERO_PROJECT_SRC}/crypto/jh.c
     ${MONERO_PROJECT_SRC}/crypto/skein.c
     ${MONERO_PROJECT_SRC}/cryptonote_core/cryptonote_tx_utils.cpp
+    ${MONERO_PROJECT}/contrib/epee/src/byte_stream.cpp
+    ${MONERO_PROJECT}/contrib/epee/src/byte_slice.cpp
     ${MONERO_PROJECT}/contrib/epee/src/hex.cpp
     ${MONERO_PROJECT}/contrib/epee/src/string_tools.cpp
     ${MONERO_PROJECT}/contrib/epee/src/memwipe.c
     ${MONERO_PROJECT}/contrib/epee/src/mlocker.cpp
+    ${MONERO_PROJECT}/contrib/epee/src/portable_storage.cpp
     ${MONERO_PROJECT}/contrib/epee/src/wipeable_string.cpp
     ${MONERO_PROJECT_SRC}/common/base58.cpp
     ${MONERO_PROJECT_SRC}/device/device.cpp

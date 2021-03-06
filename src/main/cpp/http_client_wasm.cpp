@@ -295,7 +295,7 @@ bool http_client_wasm::invoke_binary(const boost::string_ref path, const boost::
   return m_response_info.m_response_code == 200;
 }
 
-bool http_client_wasm::invoke(const boost::string_ref path, const boost::string_ref method, const std::string& body, std::chrono::milliseconds timeout, const http_response_info** ppresponse_info, const fields_list& additional_params) {
+bool http_client_wasm::invoke(const boost::string_ref path, const boost::string_ref method, const boost::string_ref body, std::chrono::milliseconds timeout, const http_response_info** ppresponse_info, const fields_list& additional_params) {
   //cout << "invoke(" << path << ", " << method << ", ...)" << endl;
 
   if(!is_connected())
@@ -316,8 +316,8 @@ bool http_client_wasm::invoke(const boost::string_ref path, const boost::string_
   // invoke http call
   string path_str = path.data();
   bool is_binary = (0 == path_str.compare(path_str.length() - 4, 4, string(".bin")));
-  if (is_binary) return invoke_binary(path, method, body, timeout, ppresponse_info, additional_params);
-  else return invoke_json(path, method, body, timeout, ppresponse_info, additional_params);
+  if (is_binary) return invoke_binary(path, method, std::string(body.data(), body.size()), timeout, ppresponse_info, additional_params);
+  else return invoke_json(path, method, std::string(body.data(), body.size()), timeout, ppresponse_info, additional_params);
 }
 
 bool http_client_wasm::invoke_get(const boost::string_ref path, std::chrono::milliseconds timeout, const std::string& body, const http_response_info** ppresponse_info, const fields_list& additional_params) {
