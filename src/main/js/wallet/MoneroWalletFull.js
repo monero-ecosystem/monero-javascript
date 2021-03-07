@@ -951,22 +951,22 @@ class MoneroWalletFull extends MoneroWalletKeys {
     });
   }
   
-  async getOutputsHex() {
+  async exportOutputs(all) {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
       return new Promise(function(resolve, reject) {
-        that._module.get_outputs_hex(that._cppAddress, function(outputsHex) { resolve(outputsHex); });
+        that._module.export_outputs(that._cppAddress, all, function(outputsHex) { resolve(outputsHex); });
       });
     });
   }
   
-  async importOutputsHex(outputsHex) {
+  async importOutputs(outputsHex) {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
       return new Promise(function(resolve, reject) {
-        that._module.import_outputs_hex(that._cppAddress, outputsHex, function(numImported) { resolve(numImported); });
+        that._module.import_outputs(that._cppAddress, outputsHex, function(numImported) { resolve(numImported); });
       });
     });
   }
@@ -2258,12 +2258,12 @@ class MoneroWalletFullProxy extends MoneroWallet {
     return MoneroWalletFull._deserializeOutputs(query, JSON.stringify({blocks: blockJsons})); // initialize transfers from blocks json string TODO: this stringifies then utility parses, avoid
   }
   
-  async getOutputsHex() {
-    return this._invokeWorker("getOutputsHex");
+  async exportOutputs(all) {
+    return this._invokeWorker("exportOutputs", [all]);
   }
   
-  async importOutputsHex(outputsHex) {
-    return this._invokeWorker("importOutputsHex", [outputsHex]);
+  async importOutputs(outputsHex) {
+    return this._invokeWorker("importOutputs", [outputsHex]);
   }
   
   async getKeyImages() {

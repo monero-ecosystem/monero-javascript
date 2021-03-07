@@ -1538,21 +1538,26 @@ class TestMoneroWalletCommon {
       });
       
       if (testConfig.testNonRelays)
-      it("Can get outputs in hex format", async function() {
-        let outputsHex = await that.wallet.getOutputsHex();
+      it("Can export outputs in hex format", async function() {
+        let outputsHex = await that.wallet.exportOutputs();
         assert.equal(typeof outputsHex, "string");  // TODO: this will fail if wallet has no outputs; run these tests on new wallet
         assert(outputsHex.length > 0);
+        
+        // wallet only exports outputs since last export by default
+        outputsHex = await that.wallet.exportOutputs();
+        let outputsHexAll = await that.wallet.exportOutputs(true);
+        assert(outputsHexAll.length > outputsHex.length);
       });
       
       if (testConfig.testNonRelays)
       it("Can import outputs in hex format", async function() {
         
-        // get outputs hex
-        let outputsHex = await that.wallet.getOutputsHex();
+        // export outputs hex
+        let outputsHex = await that.wallet.exportOutputs();
         
         // import outputs hex
         if (outputsHex !== undefined) {
-          let numImported = await that.wallet.importOutputsHex(outputsHex);
+          let numImported = await that.wallet.importOutputs(outputsHex);
           assert(numImported > 0);
         }
       });
@@ -2027,11 +2032,11 @@ class TestMoneroWalletCommon {
       it("Can get new key images from the last import", async function() {
         
         // get outputs hex
-        let outputsHex = await that.wallet.getOutputsHex();
+        let outputsHex = await that.wallet.exportOutputs();
         
         // import outputs hex
         if (outputsHex !== undefined) {
-          let numImported = await that.wallet.importOutputsHex(outputsHex);
+          let numImported = await that.wallet.importOutputs(outputsHex);
           assert(numImported > 0);
         }
         
@@ -3426,82 +3431,21 @@ class TestMoneroWalletCommon {
       
       it("Supports view-only and offline wallets to create, sign, and submit transactions", async function() {
         
-        // wait for txs to confirm and for sufficient unlocked balance
-        await TestUtils.WALLET_TX_TRACKER.waitForWalletTxsToClearPool(that.wallet);
-        await TestUtils.WALLET_TX_TRACKER.waitForUnlockedBalance(that.wallet, 0, undefined, TestUtils.MAX_FEE.multiply(BigInteger.parse("4")));
+        // create view-only and offline wallets
+        let viewOnlyWallet = await that.createWallet({primaryAddress: await that.wallet.getPrimaryAddress(), privateViewKey: await that.wallet.getPrivateViewKey(), restoreHeight: TestUtils.FIRST_RECEIVE_HEIGHT});
+        let offlineWallet = await that.createWallet({primaryAddress: await that.wallet.getPrimaryAddress(), privateViewKey: await that.wallet.getPrivateViewKey(), privateSpendKey: await that.wallet.getPrivateSpendKey(), serverUri: "", restoreHeight: 0});
         
-        // collect info from main test wallet
-        let primaryAddress = await that.wallet.getPrimaryAddress();
-        let privateViewKey = await that.wallet.getPrivateViewKey();
-        let privateSpendKey = await that.wallet.getPrivateSpendKey();
-        
-        //  create, sign, and submit transactions using view-only and offline wallets
-        let viewOnlyWallet;
-        let offlineWallet;
+        // test tx signing with wallets
         let err;
         try {
-          
-          // create and sync view-only wallet
-          viewOnlyWallet = await that.createWallet({primaryAddress: primaryAddress, privateViewKey: privateViewKey, restoreHeight: TestUtils.FIRST_RECEIVE_HEIGHT});
-          assert.equal(await viewOnlyWallet.getPrimaryAddress(), primaryAddress);
-          assert.equal(await viewOnlyWallet.getPrivateViewKey(), privateViewKey);
-          assert.equal(await viewOnlyWallet.getPrivateSpendKey(), undefined);
-          assert.equal(await viewOnlyWallet.getMnemonic(), undefined);
-          assert.equal(await viewOnlyWallet.getMnemonicLanguage(), undefined);
-          assert(await viewOnlyWallet.isViewOnly());
-          assert(await viewOnlyWallet.isConnected(), "Wallet created from keys is not connected to authenticated daemon");  // TODO
-          assert.equal(await viewOnlyWallet.getMnemonic(), undefined);
-          let viewOnlyPath = await viewOnlyWallet.getPath();
-          await viewOnlyWallet.sync();
-          assert((await viewOnlyWallet.getTxs()).length > 0);
-          
-          // export outputs from view-only wallet
-          let outputsHex = await viewOnlyWallet.getOutputsHex();
-          
-          // create offline wallet
-          offlineWallet = await that.createWallet({primaryAddress: primaryAddress, privateViewKey: privateViewKey, privateSpendKey: privateSpendKey, serverUri: "", restoreHeight: 0});
-          assert(!await offlineWallet.isConnected());
-          assert(!await offlineWallet.isViewOnly());
-          if (!(offlineWallet instanceof MoneroWalletRpc)) assert.equal(await offlineWallet.getMnemonic(), TestUtils.MNEMONIC); // TODO monero-project: cannot get mnemonic from offline wallet rpc
-          if (!(offlineWallet instanceof MoneroWalletRpc)) assert.equal((await offlineWallet.getTxs()).length, 0); // TODO: monero-wallet-rpc has these transactions cached on startup
-          let offlineWalletPath = await offlineWallet.getPath();
-          
-          // import outputs to offline wallet
-          await offlineWallet.importOutputsHex(outputsHex);
-          
-          // export key images from offline wallet
-          let keyImages = await offlineWallet.getKeyImages();
-          
-          // import key images to view-only wallet
-          await viewOnlyWallet.importKeyImages(keyImages);
-          
-          // create unsigned tx using view-only wallet
-          let unsignedTx = await viewOnlyWallet.createTx({accountIndex: 0, address: primaryAddress, amount: TestUtils.MAX_FEE.multiply(BigInteger.parse("3"))});
-          assert.equal(typeof unsignedTx.getTxSet().getUnsignedTxHex(), "string");
-          assert(unsignedTx.getTxSet().getUnsignedTxHex());
-          
-          // sign tx using offline wallet
-          let signedTxHex = await offlineWallet.signTxs(unsignedTx.getTxSet().getUnsignedTxHex());
-          assert(signedTxHex.length > 0);
-          
-          // parse or "describe" unsigned tx set
-          let describedTxSet = await offlineWallet.describeTxSet(unsignedTx.getTxSet());
-          testDescribedTxSet(describedTxSet);
-          
-          // submit signed tx using view-only wallet
-          if (testConfig.testRelays) {
-            let txHashes = await viewOnlyWallet.submitTxs(signedTxHex);
-            assert.equal(txHashes.length, 1);
-            assert.equal(txHashes[0].length, 64);
-            await TestUtils.WALLET_TX_TRACKER.waitForWalletTxsToClearPool(viewOnlyWallet); // wait for confirmation for other tests
-          }
+          await that._testViewOnlyAndOfflineWallets(viewOnlyWallet, offlineWallet);
         } catch (e) {
           err = e;
         }
         
         // finally
-        try { await that.closeWallet(viewOnlyWallet); } catch (e) { }
-        try { await that.closeWallet(offlineWallet); } catch (e) { }
+        await that.closeWallet(viewOnlyWallet);
+        await that.closeWallet(offlineWallet);
         if (err) throw err;
       });
       
@@ -4559,6 +4503,71 @@ class TestMoneroWalletCommon {
     assert(info.isReady());
     assert.equal(info.getThreshold(), m);
     assert.equal(info.getNumParticipants(), n);
+  }
+  
+  async _testViewOnlyAndOfflineWallets(viewOnlyWallet, offlineWallet) {
+    
+    // wait for txs to confirm and for sufficient unlocked balance
+    await TestUtils.WALLET_TX_TRACKER.waitForWalletTxsToClearPool(this.wallet);
+    await TestUtils.WALLET_TX_TRACKER.waitForUnlockedBalance(this.wallet, 0, undefined, TestUtils.MAX_FEE.multiply(BigInteger.parse("4")));
+    
+    // collect info from main test wallet
+    let primaryAddress = await this.wallet.getPrimaryAddress();
+    let privateViewKey = await this.wallet.getPrivateViewKey();
+    let privateSpendKey = await this.wallet.getPrivateSpendKey();
+    
+    // test and sync view-only wallet
+    assert.equal(await viewOnlyWallet.getPrimaryAddress(), primaryAddress);
+    assert.equal(await viewOnlyWallet.getPrivateViewKey(), privateViewKey);
+    assert.equal(await viewOnlyWallet.getPrivateSpendKey(), undefined);
+    assert.equal(await viewOnlyWallet.getMnemonic(), undefined);
+    assert.equal(await viewOnlyWallet.getMnemonicLanguage(), undefined);
+    assert(await viewOnlyWallet.isViewOnly());
+    assert(await viewOnlyWallet.isConnected(), "Wallet created from keys is not connected to authenticated daemon");  // TODO
+    assert.equal(await viewOnlyWallet.getMnemonic(), undefined);
+    let viewOnlyPath = await viewOnlyWallet.getPath();
+    await viewOnlyWallet.sync();
+    assert((await viewOnlyWallet.getTxs()).length > 0);
+    
+    // export outputs from view-only wallet
+    let outputsHex = await viewOnlyWallet.exportOutputs();
+    
+    // test offline wallet
+    assert(!await offlineWallet.isConnected());
+    assert(!await offlineWallet.isViewOnly());
+    if (!(offlineWallet instanceof MoneroWalletRpc)) assert.equal(await offlineWallet.getMnemonic(), TestUtils.MNEMONIC); // TODO monero-project: cannot get mnemonic from offline wallet rpc
+    if (!(offlineWallet instanceof MoneroWalletRpc)) assert.equal((await offlineWallet.getTxs()).length, 0); // TODO: monero-wallet-rpc has these transactions cached on startup
+    let offlineWalletPath = await offlineWallet.getPath();
+    
+    // import outputs to offline wallet
+    await offlineWallet.importOutputs(outputsHex);
+    
+    // export key images from offline wallet
+    let keyImages = await offlineWallet.getKeyImages();
+    
+    // import key images to view-only wallet
+    await viewOnlyWallet.importKeyImages(keyImages);
+    
+    // create unsigned tx using view-only wallet
+    let unsignedTx = await viewOnlyWallet.createTx({accountIndex: 0, address: primaryAddress, amount: TestUtils.MAX_FEE.multiply(BigInteger.parse("3"))});
+    assert.equal(typeof unsignedTx.getTxSet().getUnsignedTxHex(), "string");
+    assert(unsignedTx.getTxSet().getUnsignedTxHex());
+    
+    // sign tx using offline wallet
+    let signedTxHex = await offlineWallet.signTxs(unsignedTx.getTxSet().getUnsignedTxHex());
+    assert(signedTxHex.length > 0);
+    
+    // parse or "describe" unsigned tx set
+    let describedTxSet = await offlineWallet.describeTxSet(unsignedTx.getTxSet());
+    testDescribedTxSet(describedTxSet);
+    
+    // submit signed tx using view-only wallet
+    if (this.testConfig.testRelays) {
+      let txHashes = await viewOnlyWallet.submitTxs(signedTxHex);
+      assert.equal(txHashes.length, 1);
+      assert.equal(txHashes[0].length, 64);
+      await TestUtils.WALLET_TX_TRACKER.waitForWalletTxsToClearPool(viewOnlyWallet); // wait for confirmation for other tests
+    }
   }
 }
 

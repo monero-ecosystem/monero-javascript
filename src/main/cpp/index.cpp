@@ -73,8 +73,8 @@ EMSCRIPTEN_BINDINGS(module)
   emscripten::function("get_txs", &monero_wasm_bridge::get_txs);
   emscripten::function("get_transfers", &monero_wasm_bridge::get_transfers);
   emscripten::function("get_outputs", &monero_wasm_bridge::get_outputs);
-  emscripten::function("get_outputs_hex", &monero_wasm_bridge::get_outputs_hex);
-  emscripten::function("import_outputs_hex", &monero_wasm_bridge::import_outputs_hex);
+  emscripten::function("export_outputs", &monero_wasm_bridge::export_outputs);
+  emscripten::function("import_outputs", &monero_wasm_bridge::import_outputs);
   emscripten::function("get_key_images", &monero_wasm_bridge::get_key_images);
   emscripten::function("import_key_images", &monero_wasm_bridge::import_key_images);
 //  emscripten::function("get_new_key_images_from_last_import", &monero_wasm_bridge::get_new_key_images_from_last_import);

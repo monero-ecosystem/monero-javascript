@@ -378,13 +378,16 @@ class TestMoneroWalletFull extends TestMoneroWalletCommon {
       });
       
       if (testConfig.testNonRelays && !GenUtils.isBrowser())
-      it("Is compatible with monero-wallet-rpc's wallet files", async function() {
+      it("Is compatible with monero-wallet-rpc wallet files", async function() {
         
         // create wallet using monero-wallet-rpc
         let walletName = GenUtils.getUUID();
         let walletRpc = await TestUtils.getWalletRpc();
         await walletRpc.createWallet(new MoneroWalletConfig().setPath(walletName).setPassword(TestUtils.WALLET_PASSWORD).setMnemonic(TestUtils.MNEMONIC).setRestoreHeight(TestUtils.FIRST_RECEIVE_HEIGHT));
         await walletRpc.sync();
+        let balance = await walletRpc.getBalance();
+        let outputsHex = await walletRpc.exportOutputs();
+        assert(outputsHex.length > 0);
         await walletRpc.close(true);
         
         // open as full wallet
@@ -392,12 +395,16 @@ class TestMoneroWalletFull extends TestMoneroWalletCommon {
         await walletFull.sync();
         assert.equal(TestUtils.MNEMONIC, await walletFull.getMnemonic());
         assert.equal(TestUtils.ADDRESS, await walletFull.getPrimaryAddress());
+        assert.equal(balance.toString(), (await walletFull.getBalance()).toString());
+        assert.equal(outputsHex.length, (await walletFull.exportOutputs()).length);
         await walletFull.close(true);
-                
+        
         // create full wallet
         walletName = GenUtils.getUUID();
         walletFull = await monerojs.createWalletFull(new MoneroWalletConfig().setPath(TestUtils.WALLET_RPC_LOCAL_WALLET_DIR + "/" + walletName).setPassword(TestUtils.WALLET_PASSWORD).setNetworkType(TestUtils.NETWORK_TYPE).setMnemonic(TestUtils.MNEMONIC).setRestoreHeight(TestUtils.FIRST_RECEIVE_HEIGHT).setServer(TestUtils.DAEMON_RPC_CONFIG));
         await walletFull.sync();
+        balance = await walletFull.getBalance();
+        outputsHex = await walletFull.exportOutputs();
         await walletFull.close(true);
         
         // open wallet using monero-wallet-rpc
@@ -405,7 +412,29 @@ class TestMoneroWalletFull extends TestMoneroWalletCommon {
         await walletRpc.sync();
         assert.equal(TestUtils.MNEMONIC, await walletRpc.getMnemonic());
         assert.equal(TestUtils.ADDRESS, await walletRpc.getPrimaryAddress());
+        assert.equal(balance.toString(), (await walletRpc.getBalance()).toString());
+        assert.equal(outputsHex.length, (await walletRpc.exportOutputs()).length);
         await walletRpc.close(true);
+      });
+      
+      it("Is compatible with monero-wallet-rpc outputs and offline transaction signing", async function() {
+        
+        // create view-only wallet in wallet rpc process
+        let viewOnlyWallet = await TestUtils.startWalletRpcProcess();
+        await viewOnlyWallet.createWallet({path: GenUtils.getUUID(), password: TestUtils.WALLET_PASSWORD, primaryAddress: await that.wallet.getPrimaryAddress(), privateViewKey: await that.wallet.getPrivateViewKey(), restoreHeight: TestUtils.FIRST_RECEIVE_HEIGHT});
+        
+        // create offline full wallet
+        let offlineWallet = await that.createWallet({primaryAddress: await that.wallet.getPrimaryAddress(), privateViewKey: await that.wallet.getPrivateViewKey(), privateSpendKey: await that.wallet.getPrivateSpendKey(), serverUri: "", restoreHeight: 0});
+        
+        // test tx signing with wallets
+        let err;
+        try { await that._testViewOnlyAndOfflineWallets(viewOnlyWallet, offlineWallet); }
+        catch (e) { err = e; }
+        
+        // finally
+        TestUtils.stopWalletRpcProcess(viewOnlyWallet);
+        await that.closeWallet(offlineWallet);
+        if (err) throw err;
       });
       
       // TODO monero-project: cannot re-sync from lower block height after wallet saved

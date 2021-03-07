@@ -585,11 +585,12 @@ class MoneroWallet {
   }
   
   /**
-   * Export all outputs in hex format.
-   * 
-   * @return {string} all outputs in hex format, undefined if no outputs
+   * Export outputs in hex format.
+   *
+   * @param {boolean} all - export all outputs if true, else only the outputs since the last export
+   * @return {string} outputs in hex format
    */
-  async getOutputsHex() {
+  async exportOutputs(all) {
     throw new MoneroError("Not supported");
   }
   
@@ -599,7 +600,7 @@ class MoneroWallet {
    * @param {string} outputsHex - outputs in hex format
    * @return {int} the number of outputs imported
    */
-  async importOutputsHex(outputsHex) {
+  async importOutputs(outputsHex) {
     throw new MoneroError("Not supported");
   }
   

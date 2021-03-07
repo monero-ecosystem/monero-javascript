@@ -678,19 +678,19 @@ void monero_wasm_bridge::get_outputs(int handle, const string& output_query_json
   }
 }
 
-void monero_wasm_bridge::get_outputs_hex(int handle, emscripten::val callback) {
+void monero_wasm_bridge::export_outputs(int handle, bool all, emscripten::val callback) {
   monero_wallet* wallet = (monero_wallet*) handle;
   try {
-    callback(wallet->get_outputs_hex());
+    callback(wallet->export_outputs(all));
   } catch (exception& e) {
     callback(string(e.what()));
   }
 }
 
-void monero_wasm_bridge::import_outputs_hex(int handle, const string& outputs_hex, emscripten::val callback) {
+void monero_wasm_bridge::import_outputs(int handle, const string& outputs_hex, emscripten::val callback) {
   monero_wallet* wallet = (monero_wallet*) handle;
   try {
-    callback(wallet->import_outputs_hex(outputs_hex));
+    callback(wallet->import_outputs(outputs_hex));
   } catch (exception& e) {
     callback(string(e.what()));
   }

@@ -916,11 +916,11 @@ class MoneroWalletRpc extends MoneroWallet {
     return outputs;
   }
   
-  async getOutputsHex() {
-    return (await this.rpc.sendJsonRequest("export_outputs")).result.outputs_data_hex;
+  async exportOutputs(all) {
+    return (await this.rpc.sendJsonRequest("export_outputs", {all: all})).result.outputs_data_hex;
   }
   
-  async importOutputsHex(outputsHex) {
+  async importOutputs(outputsHex) {
     let resp = await this.rpc.sendJsonRequest("import_outputs", {outputs_data_hex: outputsHex});
     return resp.result.num_imported;
   }
