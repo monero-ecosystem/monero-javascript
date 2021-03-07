@@ -587,7 +587,7 @@ class MoneroWallet {
   /**
    * Export outputs in hex format.
    *
-   * @param {boolean} all - export all outputs if true, else only the outputs since the last export
+   * @param {boolean} all - export all outputs if true, else export the outputs since the last export
    * @return {string} outputs in hex format
    */
   async exportOutputs(all) {
@@ -605,11 +605,12 @@ class MoneroWallet {
   }
   
   /**
-   * Get all signed key images.
+   * Export signed key images.
    * 
+   * @param {boolean} all - export all key images if true, else export the key images since the last export
    * @return {MoneroKeyImage[]} the wallet's signed key images
    */
-  async getKeyImages() {
+  async exportKeyImages(all) {
     throw new MoneroError("Not supported");
   }
   

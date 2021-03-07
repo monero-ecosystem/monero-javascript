@@ -45,7 +45,7 @@ let outputsHex = await viewOnlyWallet.exportOutputs();
 await offlineWallet.importOutputs(outputsHex);
   
 // export key images from offline wallet
-let keyImages = await offlineWallet.getKeyImages();
+let keyImages = await offlineWallet.exportKeyImages();
   
 // import key images to view-only wallet
 await viewOnlyWallet.importKeyImages(keyImages);

@@ -1543,7 +1543,7 @@ class TestMoneroWalletCommon {
         assert.equal(typeof outputsHex, "string");  // TODO: this will fail if wallet has no outputs; run these tests on new wallet
         assert(outputsHex.length > 0);
         
-        // wallet only exports outputs since last export by default
+        // wallet exports outputs since last export by default
         outputsHex = await that.wallet.exportOutputs();
         let outputsHexAll = await that.wallet.exportOutputs(true);
         assert(outputsHexAll.length > outputsHex.length);
@@ -2017,8 +2017,8 @@ class TestMoneroWalletCommon {
       });
       
       if (testConfig.testNonRelays)
-      it("Can get signed key images", async function() {
-        let images = await that.wallet.getKeyImages();
+      it("Can export signed key images", async function() {
+        let images = await that.wallet.exportKeyImages();
         assert(Array.isArray(images));
         assert(images.length > 0, "No signed key images in wallet");
         for (let image of images) {
@@ -2026,6 +2026,11 @@ class TestMoneroWalletCommon {
           assert(image.getHex());
           assert(image.getSignature());
         }
+        
+        // wallet exports key images since last export by default
+        images = await that.wallet.exportKeyImages();
+        let imagesAll = await that.wallet.exportKeyImages(true);
+        assert(imagesAll.length > images.length);
       });
       
       if (testConfig.testNonRelays)
@@ -2052,7 +2057,7 @@ class TestMoneroWalletCommon {
       
       if (testConfig.testNonRelays && false)  // TODO monero-project: importing key images can cause erasure of incoming transfers per wallet2.cpp:11957
       it("Can import key images", async function() {
-        let images = await that.wallet.getKeyImages();
+        let images = await that.wallet.exportKeyImages();
         assert(Array.isArray(images));
         assert(images.length > 0, "Wallet does not have any key images; run send tests");
         let result = await that.wallet.importKeyImages(images);
@@ -4525,7 +4530,6 @@ class TestMoneroWalletCommon {
     assert(await viewOnlyWallet.isViewOnly());
     assert(await viewOnlyWallet.isConnected(), "Wallet created from keys is not connected to authenticated daemon");  // TODO
     assert.equal(await viewOnlyWallet.getMnemonic(), undefined);
-    let viewOnlyPath = await viewOnlyWallet.getPath();
     await viewOnlyWallet.sync();
     assert((await viewOnlyWallet.getTxs()).length > 0);
     
@@ -4537,13 +4541,13 @@ class TestMoneroWalletCommon {
     assert(!await offlineWallet.isViewOnly());
     if (!(offlineWallet instanceof MoneroWalletRpc)) assert.equal(await offlineWallet.getMnemonic(), TestUtils.MNEMONIC); // TODO monero-project: cannot get mnemonic from offline wallet rpc
     if (!(offlineWallet instanceof MoneroWalletRpc)) assert.equal((await offlineWallet.getTxs()).length, 0); // TODO: monero-wallet-rpc has these transactions cached on startup
-    let offlineWalletPath = await offlineWallet.getPath();
     
     // import outputs to offline wallet
     await offlineWallet.importOutputs(outputsHex);
     
     // export key images from offline wallet
-    let keyImages = await offlineWallet.getKeyImages();
+    let keyImages = await offlineWallet.exportKeyImages();
+    assert(keyImages.length > 0);
     
     // import key images to view-only wallet
     await viewOnlyWallet.importKeyImages(keyImages);

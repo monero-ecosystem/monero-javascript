@@ -971,7 +971,7 @@ class MoneroWalletFull extends MoneroWalletKeys {
     });
   }
   
-  async getKeyImages() {
+  async exportKeyImages(all) {
     let that = this;
     return that._module.queueTask(async function() {
       that._assertNotClosed();
@@ -981,7 +981,7 @@ class MoneroWalletFull extends MoneroWalletKeys {
           for (let keyImageJson of JSON.parse(GenUtils.stringifyBIs(keyImagesStr)).keyImages) keyImages.push(new MoneroKeyImage(keyImageJson));
           resolve(keyImages);
         }
-        that._module.get_key_images(that._cppAddress, callback);
+        that._module.export_key_images(that._cppAddress, all, callback);
       });
     });
   }
@@ -2266,9 +2266,9 @@ class MoneroWalletFullProxy extends MoneroWallet {
     return this._invokeWorker("importOutputs", [outputsHex]);
   }
   
-  async getKeyImages() {
+  async exportKeyImages(all) {
     let keyImages = [];
-    for (let keyImageJson of await this._invokeWorker("getKeyImages")) keyImages.push(new MoneroKeyImage(keyImageJson));
+    for (let keyImageJson of await this._invokeWorker("getKeyImages", [all])) keyImages.push(new MoneroKeyImage(keyImageJson));
     return keyImages;
   }
   

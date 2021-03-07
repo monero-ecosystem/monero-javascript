@@ -925,8 +925,8 @@ class MoneroWalletRpc extends MoneroWallet {
     return resp.result.num_imported;
   }
   
-  async getKeyImages() {
-    return await this._rpcExportKeyImages(true);
+  async exportKeyImages(all) {
+    return await this._rpcExportKeyImages(all);
   }
   
   async importKeyImages(keyImages) {

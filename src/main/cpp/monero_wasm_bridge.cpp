@@ -696,10 +696,10 @@ void monero_wasm_bridge::import_outputs(int handle, const string& outputs_hex, e
   }
 }
 
-void monero_wasm_bridge::get_key_images(int handle, emscripten::val callback) {
+void monero_wasm_bridge::export_key_images(int handle, bool all, emscripten::val callback) {
   monero_wallet* wallet = (monero_wallet*) handle;
   try {
-    vector<shared_ptr<monero_key_image>> key_images = wallet->get_key_images();
+    vector<shared_ptr<monero_key_image>> key_images = wallet->export_key_images(all);
 
     // wrap and serialize key images
     rapidjson::Document doc;

@@ -706,9 +706,9 @@ self.importOutputs = async function(walletId, outputsHex) {
   return self.WORKER_OBJECTS[walletId].importOutputs(outputsHex);
 }
 
-self.getKeyImages = async function(walletId) {
+self.getKeyImages = async function(walletId, all) {
   let keyImagesJson = [];
-  for (let keyImage of await self.WORKER_OBJECTS[walletId].getKeyImages()) keyImagesJson.push(keyImage.toJson());
+  for (let keyImage of await self.WORKER_OBJECTS[walletId].exportKeyImages(all)) keyImagesJson.push(keyImage.toJson());
   return keyImagesJson;
 }
 

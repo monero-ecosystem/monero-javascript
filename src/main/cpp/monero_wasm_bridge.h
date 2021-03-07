@@ -93,7 +93,7 @@ namespace monero_wasm_bridge
   void get_outputs(int handle, const string& output_query_json, emscripten::val callback);
   void export_outputs(int handle, bool all, emscripten::val callback);
   void import_outputs(int handle, const string& outputs_hex, emscripten::val callback);
-  void get_key_images(int handle, emscripten::val callback);
+  void export_key_images(int handle, bool all, emscripten::val callback);
   void import_key_images(int handle, const string& key_images_str, emscripten::val callback);
   //  emscripten::function("get_new_key_images_from_last_import", &monero_wasm_bridge::get_new_key_images_from_last_import);
   void create_txs(int handle, const string& config_json, emscripten::val callback);
