@@ -2017,8 +2017,8 @@ class TestMoneroWalletCommon {
       });
       
       if (testConfig.testNonRelays)
-      it("Can export signed key images", async function() {
-        let images = await that.wallet.exportKeyImages();
+      it("Can export key images", async function() {
+        let images = await that.wallet.exportKeyImages(true);
         assert(Array.isArray(images));
         assert(images.length > 0, "No signed key images in wallet");
         for (let image of images) {
