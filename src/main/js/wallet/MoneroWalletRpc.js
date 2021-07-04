@@ -244,6 +244,10 @@ class MoneroWalletRpc extends MoneroWallet {
    */
   async openWallet(pathOrConfig, password) {
     
+    // Safely close opened wallet.
+    // See https://github.com/monero-ecosystem/monero-javascript/issues/58
+    await this.closeWallet()
+
     // normalize and validate config
     let config = new MoneroWalletConfig(typeof pathOrConfig === "string" ? {path: pathOrConfig, password: password} : pathOrConfig);
     // TODO: ensure other fields are uninitialized?
@@ -258,6 +262,32 @@ class MoneroWalletRpc extends MoneroWallet {
     // set daemon if provided
     if (config.getServer()) return this.setDaemonConnection(config.getServer());
     return this;
+  }
+
+  /**
+   * Safely close any wallet RPC may have opened.
+   */
+  async closeWallet(){
+    try {
+
+      /**
+       * Manually save wallet.
+       * 
+       * As per monero documentation, this is done automatically within "close_wallet" but bugs
+       * are a reality. Proceeding with caution...
+       */
+      await this.rpc.sendJsonRequest('store' )
+
+      // Safely close the wallet
+      await this.rpc.sendJsonRequest('close_wallet' )
+
+    } catch(e) {
+
+      // 'No wallet file' is tolerated. 
+      // All others are not expected.
+      if(e.message !== 'No wallet file')
+        throw e
+    }
   }
   
   /**
